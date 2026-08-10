@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LMP — Automação com IA para empresas | Tudo que se repete, a IA assume</title>
+<meta name="description" content="A LMP implanta IA na operação da sua empresa: atendimento que ninguém percebe que é IA, follow-up, cotação, relatórios e rotina administrativa — medido em produção."/>
+<meta property="og:title" content="LMP — Tudo que se repete na sua empresa, a IA assume"/>
+<meta property="og:description" content="Automação com IA implantada e operada: atendimento, follow-up, cotação, relatórios. Resultado medido em sistemas reais."/>
+<meta property="og:type" content="website"/>
+<meta property="og:locale" content="pt_BR"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23102C4A'/%3E%3Ctext x='16' y='22' font-family='Arial,sans-serif' font-size='13' font-weight='700' text-anchor='middle' fill='%23FBFAF8'%3ELMP%3C/text%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --paper:#FBFAF8;
+  --navy:#102C4A;
+  --navy-deep:#0B1F35;
+  --ink:#17222F;
+  --ink-soft:#5A6572;
+  --laranja:#DC6A24;
+  --ciano:#0E9AA6;
+  --line:rgba(16,44,74,.12);
+  --display:'Space Grotesk',sans-serif;
+  --body:'Inter',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--navy);color:var(--paper)}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);transition:background .35s,box-shadow .35s}
+.nav.solida{background:rgba(251,250,248,.92);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
+.marca{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em;color:var(--navy);display:flex;align-items:baseline;gap:2px}
+.marca .ponto{color:var(--ciano);font-size:26px;line-height:0}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--ink-soft)}
+.nav-links a:hover{color:var(--navy)}
+.btn{display:inline-block;font-family:var(--body);font-weight:600;font-size:15px;padding:13px 26px;border-radius:999px;transition:transform .25s,box-shadow .25s,filter .25s;cursor:pointer}
+.btn-cta{background:var(--laranja);color:#fff;box-shadow:0 6px 22px rgba(220,106,36,.28)}
+.btn-cta:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.btn-quieto{border:1.5px solid var(--line);color:var(--navy);background:transparent}
+.btn-quieto:hover{border-color:var(--navy)}
+.nav .btn{padding:10px 20px;font-size:14px}
+@media(max-width:720px){.nav-links a:not(.btn){display:none}}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px clamp(20px,6vw,72px) 64px;position:relative}
+.hero .selo{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ciano);margin-bottom:26px}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(38px,7.2vw,84px);line-height:1.04;letter-spacing:-.025em;color:var(--navy);max-width:15ch}
+.hero h1 .linha{display:block;overflow:hidden}
+.hero h1 .linha>span{display:inline-block;transform:translateY(110%)}
+.hero .sub{margin-top:30px;font-size:clamp(17px,2vw,21px);color:var(--ink-soft);max-width:56ch;opacity:0}
+.hero .sub strong{color:var(--ink);font-weight:600}
+.hero .acoes{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;opacity:0}
+.hero .rolagem{position:absolute;bottom:28px;left:clamp(20px,6vw,72px);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);opacity:0}
+.fita{position:absolute;right:clamp(16px,4vw,56px);top:50%;transform:translateY(-50%);display:none;flex-direction:column;gap:10px}
+@media(min-width:1060px){.fita{display:flex}}
+.fita span{font-family:var(--display);font-size:14px;font-weight:500;color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;padding:8px 18px;background:#fff;opacity:0;transform:translateX(24px)}
+.fita span b{color:var(--navy);font-weight:600}
+
+/* ---------- seções base ---------- */
+.secao{padding:clamp(72px,10vw,130px) clamp(20px,6vw,72px)}
+.miolo{max-width:1140px;margin:0 auto}
+.rotulo{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ciano);margin-bottom:18px}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.4vw,50px);line-height:1.12;letter-spacing:-.02em;color:var(--navy);max-width:22ch}
+.lede{margin-top:20px;font-size:clamp(16px,1.7vw,19px);color:var(--ink-soft);max-width:62ch}
+
+/* ---------- a conta ---------- */
+.repete{background:var(--navy);color:#EAF0F6}
+.repete .rotulo{color:#7FC7CE}
+.repete h2{color:#fff}
+.repete .lede{color:#A9B8C8}
+.tarefas{margin-top:54px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.09);border-radius:18px;overflow:hidden}
+.tarefa{background:var(--navy-deep);padding:26px 26px 30px}
+.tarefa .num{font-family:var(--display);font-size:13px;color:#7FC7CE;letter-spacing:.1em}
+.tarefa h3{font-family:var(--display);font-size:19px;font-weight:600;color:#fff;margin:10px 0 8px}
+.tarefa p{font-size:15px;color:#A9B8C8;line-height:1.6}
+.repete .fecho{margin-top:44px;font-family:var(--display);font-size:clamp(20px,2.6vw,28px);font-weight:600;color:#fff;max-width:32ch}
+.repete .fecho em{font-style:normal;color:#F0A468}
+
+/* ---------- automações ---------- */
+.cards{margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 26px;transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(16,44,74,.10)}
+.card .icone{width:44px;height:44px;border-radius:12px;background:rgba(14,154,166,.10);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.card .icone svg{width:22px;height:22px;stroke:var(--ciano);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-family:var(--display);font-size:18px;font-weight:600;color:var(--navy);margin-bottom:8px}
+.card p{font-size:15px;color:var(--ink-soft);line-height:1.6}
+.card.destaque{background:var(--navy);border-color:var(--navy)}
+.card.destaque h3{color:#fff}
+.card.destaque p{color:#A9B8C8}
+.card.destaque .icone{background:rgba(240,164,104,.15)}
+.card.destaque .icone svg{stroke:#F0A468}
+
+/* ---------- prova ---------- */
+.prova{background:#F4F1EB}
+.numeros{margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.numero{background:#fff;border:1px solid var(--line);border-radius:18px;padding:34px 28px}
+.numero .valor{font-family:var(--display);font-weight:700;font-size:clamp(44px,5.6vw,64px);letter-spacing:-.03em;color:var(--navy);font-variant-numeric:tabular-nums}
+.numero .valor .sufixo{font-size:.5em;color:var(--laranja)}
+.numero p{margin-top:8px;font-size:15px;color:var(--ink-soft)}
+.prova .fonte{margin-top:22px;font-size:13px;color:var(--ink-soft)}
+.prova .demo{margin-top:36px}
+
+/* ---------- como funciona ---------- */
+.passos{margin-top:60px;display:grid;gap:0}
+.passo{display:grid;grid-template-columns:88px 1fr;gap:26px;padding:34px 0;border-top:1px solid var(--line);align-items:start}
+.passo:last-child{border-bottom:1px solid var(--line)}
+.passo .n{font-family:var(--display);font-weight:700;font-size:44px;color:transparent;-webkit-text-stroke:1.4px var(--navy);line-height:1}
+.passo h3{font-family:var(--display);font-size:22px;font-weight:600;color:var(--navy);margin-bottom:8px}
+.passo p{font-size:16px;color:var(--ink-soft);max-width:60ch}
+.passo p strong{color:var(--ink)}
+@media(max-width:600px){.passo{grid-template-columns:56px 1fr;gap:16px}.passo .n{font-size:32px}}
+
+/* ---------- quem faz ---------- */
+.quem{background:var(--navy);color:#EAF0F6}
+.quem .rotulo{color:#7FC7CE}
+.quem h2{color:#fff}
+.quem .grade{margin-top:48px;display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(28px,5vw,72px);align-items:start}
+@media(max-width:800px){.quem .grade{grid-template-columns:1fr}}
+.quem .texto p{font-size:17px;color:#C2CEDA;margin-bottom:18px;max-width:58ch}
+.quem .texto p strong{color:#fff;font-weight:600}
+.ficha{background:var(--navy-deep);border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:30px 28px}
+.ficha dt{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7FC7CE;margin-top:18px}
+.ficha dt:first-child{margin-top:0}
+.ficha dd{font-size:16px;color:#EAF0F6;margin-top:4px}
+
+/* ---------- cta final ---------- */
+.final{text-align:left}
+.final h2{max-width:26ch}
+.final .lede{max-width:58ch}
+.final .acoes{margin-top:38px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.final .whats{font-size:15px;color:var(--ink-soft)}
+.final .whats strong{color:var(--navy)}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:34px clamp(20px,6vw,72px);display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;justify-content:space-between;font-size:13px;color:var(--ink-soft)}
+footer .marca{font-size:17px}
+
+/* reveals (GSAP toma conta; estado inicial) */
+.rev{opacity:0;transform:translateY(34px)}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="marca" href="#">LMP<span class="ponto">.</span></a>
+  <div class="nav-links">
+    <a href="#automacoes">O que automatizamos</a>
+    <a href="#prova">Resultados</a>
+    <a href="#como">Como funciona</a>
+    <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">Pedir diagnóstico</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <p class="selo">LMP — Automação com IA</p>
+  <h1 aria-label="Tudo que se repete na sua empresa, a IA assume.">
+    <span class="linha"><span>Tudo que se repete</span></span>
+    <span class="linha"><span>na sua empresa,</span></span>
+    <span class="linha"><span>a IA assume.</span></span>
+  </h1>
+  <p class="sub">Atendimento que ninguém percebe que é IA é só a ponta visível. Por trás, a mesma inteligência assume <strong>cotação, follow-up, relatório, cobrança, agenda e conferência</strong> — o trabalho que consome a semana da sua equipe sem gerar uma venda a mais.</p>
+  <div class="acoes">
+    <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">Pedir um diagnóstico gratuito</a>
+    <a class="btn btn-quieto" href="#prova">Ver resultado medido</a>
+  </div>
+  <div class="fita" aria-hidden="true">
+    <span>responder <b>a mesma pergunta</b></span>
+    <span>montar <b>a mesma planilha</b></span>
+    <span>cobrar <b>o mesmo retorno</b></span>
+    <span>digitar <b>o mesmo orçamento</b></span>
+    <span>lembrar <b>o mesmo follow-up</b></span>
+  </div>
+  <p class="rolagem">Role para ver como</p>
+</header>
+
+<section class="secao repete">
+  <div class="miolo">
+    <p class="rotulo rev">A conta que ninguém faz</p>
+    <h2 class="rev">A sua operação paga salário para tarefa que não pensa.</h2>
+    <p class="lede rev">Pega a semana de qualquer pessoa da sua equipe e separa o que é decisão do que é repetição. A parte repetida costuma ser a maior — e é exatamente a parte que não precisa de gente.</p>
+    <div class="tarefas">
+      <div class="tarefa rev"><span class="num">01</span><h3>Atendimento</h3><p>As mesmas dez perguntas, todos os dias — e o cliente das 22h que fica sem resposta até amanhã.</p></div>
+      <div class="tarefa rev"><span class="num">02</span><h3>Comercial</h3><p>O lead que pediu proposta e ninguém lembrou de cobrar. O orçamento que levou três dias para sair.</p></div>
+      <div class="tarefa rev"><span class="num">03</span><h3>Administrativo</h3><p>Planilha alimentada à mão, relatório montado na sexta, nota conferida uma a uma, cobrança esquecida.</p></div>
+      <div class="tarefa rev"><span class="num">04</span><h3>Gestão</h3><p>Decidir sem número na mão, porque juntar o número dá mais trabalho que decidir.</p></div>
+    </div>
+    <p class="fecho rev">Não é falta de equipe. É equipe boa <em>presa em trabalho repetido</em>.</p>
+  </div>
+</section>
+
+<section class="secao" id="automacoes">
+  <div class="miolo">
+    <p class="rotulo rev">O que a LMP implanta</p>
+    <h2 class="rev">A IA assume a rotina. A sua equipe assume o que dá dinheiro.</h2>
+    <p class="lede rev">Cada implantação é montada em cima da SUA operação — estes são os blocos mais pedidos.</p>
+    <div class="cards">
+      <div class="card rev">
+        <div class="icone"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+        <h3>Atendimento 24h que parece gente</h3>
+        <p>Responde na hora, no tom da sua empresa, por texto e áudio. Cliente não percebe que é IA — e não fica sem resposta nunca.</p>
+      </div>
+      <div class="card rev">
+        <div class="icone"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3>Follow-up que não esquece</h3>
+        <p>Lead parado, proposta sem resposta, cliente que sumiu: o sistema lembra, retoma e avisa quando a conversa esquenta.</p>
+      </div>
+      <div class="card rev">
+        <div class="icone"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15h6"/><path d="M9 11h2"/></svg></div>
+        <h3>Cotação e orçamento na hora</h3>
+        <p>O pedido chega, a IA monta o orçamento com as suas regras de preço e devolve pronto — em minutos, não em dias.</p>
+      </div>
+      <div class="card rev">
+        <div class="icone"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+        <h3>Relatórios que se montam sozinhos</h3>
+        <p>Venda, atendimento, funil, campanha: o número chega pronto, no ritmo que você definir — sem ninguém abrir planilha.</p>
+      </div>
+      <div class="card rev">
+        <div class="icone"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></div>
+        <h3>Agenda e confirmação</h3>
+        <p>Marca reunião e visita direto na agenda, confirma na véspera e reagenda quem furou — sem vai-e-vem de mensagens.</p>
+      </div>
+      <div class="card rev">
+        <div class="icone"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h3>Cobrança e lembretes</h3>
+        <p>Boleto vencendo, pagamento em atraso, renovação chegando: a mensagem certa sai na data certa, com o tom certo.</p>
+      </div>
+      <div class="card rev">
+        <div class="icone"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3>Conferência e rotina interna</h3>
+        <p>Nota, cadastro, planilha, dado que entra errado: a IA confere, organiza e aponta o que precisa de um humano.</p>
+      </div>
+      <div class="card destaque rev">
+        <div class="icone"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.1-2.6 5.4-.8.8-1.4 1.9-1.4 3.1V19a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-1.5c0-1.2-.6-2.3-1.4-3.1C6.2 13.1 5 11.4 5 9a7 7 0 0 1 7-7z"/></svg></div>
+        <h3>Um cérebro que pensa o negócio junto</h3>
+        <p>Além de executar, a IA sugere: campanha para o produto parado, alerta de lead esfriando, ideia de oferta. É o que separa automação de piloto automático.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="secao prova" id="prova">
+  <div class="miolo">
+    <p class="rotulo rev">Resultado medido, não prometido</p>
+    <h2 class="rev">Um dos sistemas da LMP, em produção, em 30 dias:</h2>
+    <div class="numeros">
+      <div class="numero rev"><div class="valor"><span class="conta" data-alvo="157">0</span></div><p>leads atendidos em 30 dias, um a um, sem fila</p></div>
+      <div class="numero rev"><div class="valor"><span class="conta" data-alvo="0">0</span></div><p>leads sem resposta — incluindo madrugada e fim de semana</p></div>
+      <div class="numero rev"><div class="valor"><span class="conta" data-alvo="45">0</span><span class="sufixo">%</span></div><p>qualificados e organizados no funil sem nenhuma pessoa envolvida</p></div>
+    </div>
+    <p class="fonte rev">Números do painel de um sistema implantado pela LMP em operação imobiliária real — jul/2026.</p>
+    <div class="demo rev">
+      <a class="btn btn-quieto" href="https://levimpantarotto-commits.github.io/lmp-demo/?c=jslc" target="_blank" rel="noopener">Ver uma demonstração ao vivo →</a>
+    </div>
+  </div>
+</section>
+
+<section class="secao" id="como">
+  <div class="miolo">
+    <p class="rotulo rev">Como funciona</p>
+    <h2 class="rev">Você não configura nada. A gente implanta, opera e ajusta.</h2>
+    <div class="passos">
+      <div class="passo rev"><div class="n">01</div><div><h3>Diagnóstico</h3><p>Uma conversa para mapear <strong>o que se repete</strong> na sua operação: atendimento, comercial e administrativo. Você sai com a lista do que dá para automatizar e o que vem primeiro — <strong>sem custo e sem compromisso</strong>.</p></div></div>
+      <div class="passo rev"><div class="n">02</div><div><h3>Implantação</h3><p>A LMP monta o sistema com a sua carteira, as suas regras e o seu tom de conversa. Em <strong>semanas, não meses</strong> — e testado com você antes de encostar em cliente real.</p></div></div>
+      <div class="passo rev"><div class="n">03</div><div><h3>Operação assistida</h3><p>O sistema roda, você acompanha tudo pelo painel e assume qualquer conversa quando quiser. A LMP <strong>monitora, ajusta e evolui</strong> — automação boa é a que melhora todo mês.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="secao quem">
+  <div class="miolo">
+    <p class="rotulo rev">Quem faz</p>
+    <h2 class="rev">Implementação direta, sem camada de agência.</h2>
+    <div class="grade">
+      <div class="texto rev">
+        <p><strong>Levi Magno Pantarotto</strong> constrói e opera sistemas de IA que estão em produção hoje, atendendo clientes reais — do atendimento por WhatsApp com voz ao funil comercial e à rotina administrativa.</p>
+        <p>Quem faz o diagnóstico é quem implanta. Quem implanta é quem opera. Isso muda a conversa: você fala com quem põe a mão no sistema, não com um vendedor que repassa o projeto.</p>
+        <p>Background de 10 anos em marketing digital e tráfego pago — a automação nasce <strong>ligada à ponta comercial</strong>, não como projeto de TI.</p>
+      </div>
+      <dl class="ficha rev">
+        <dt>Empresa</dt><dd>LEVI MAGNO MARKETING LTDA</dd>
+        <dt>CNPJ</dt><dd>51.288.794/0001-71</dd>
+        <dt>Atuando desde</dt><dd>2023</dd>
+        <dt>Base</dt><dd>Imbituba/SC — atendimento em todo o Brasil</dd>
+        <dt>Contato</dt><dd>WhatsApp (11) 99611-2620</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="secao final">
+  <div class="miolo">
+    <p class="rotulo rev">Próximo passo</p>
+    <h2 class="rev">Me diga o que mais se repete na sua semana. Eu digo o que dava para sumir da rotina.</h2>
+    <p class="lede rev">O diagnóstico é uma conversa direta, sem custo. Se não fizer sentido automatizar, eu digo isso também — implantação mal indicada vira sistema abandonado, e sistema abandonado não indica ninguém.</p>
+    <div class="acoes rev">
+      <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">Chamar no WhatsApp</a>
+      <span class="whats">Quem responde é o <strong>Levi</strong>, direto. A IA cuida da rotina — proposta é conversa.</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a class="marca" href="#">LMP<span class="ponto">.</span></a>
+  <span>LEVI MAGNO MARKETING LTDA · CNPJ 51.288.794/0001-71 · Imbituba/SC</span>
+  <span><a href="https://wa.me/5511996112620" target="_blank" rel="noopener">WhatsApp</a> · <a href="https://www.linkedin.com/in/levimp" target="_blank" rel="noopener">LinkedIn</a></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+// Animação SEMPRE ligada (decisão de projeto: não respeitar prefers-reduced-motion).
+gsap.registerPlugin(ScrollTrigger);
+
+const lenis = new Lenis({ lerp: 0.11 });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((t) => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+
+// nav sólida ao rolar
+const nav = document.getElementById('nav');
+ScrollTrigger.create({
+  start: 80,
+  onUpdate: (self) => nav.classList.toggle('solida', self.scroll() > 80),
+});
+
+// hero: entrada orquestrada
+const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+tl.to('.hero h1 .linha > span', { y: 0, duration: 1.0, stagger: 0.12 }, 0.15)
+  .to('.hero .sub', { opacity: 1, duration: 0.8 }, 0.75)
+  .to('.hero .acoes', { opacity: 1, duration: 0.8 }, 0.95)
+  .to('.fita span', { opacity: 1, x: 0, duration: 0.6, stagger: 0.09 }, 1.0)
+  .to('.hero .rolagem', { opacity: 1, duration: 0.8 }, 1.4);
+
+// fita: respiração contínua
+gsap.to('.fita span', { y: -6, duration: 2.2, ease: 'sine.inOut', yoyo: true, repeat: -1, stagger: 0.35, delay: 2 });
+
+// reveals por seção
+document.querySelectorAll('.rev').forEach((el) => {
+  gsap.to(el, {
+    opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 86%' },
+  });
+});
+
+// contadores da prova
+document.querySelectorAll('.conta').forEach((el) => {
+  const alvo = parseInt(el.dataset.alvo, 10);
+  ScrollTrigger.create({
+    trigger: el, start: 'top 88%', once: true,
+    onEnter: () => {
+      const obj = { v: 0 };
+      gsap.to(obj, {
+        v: alvo, duration: 1.6, ease: 'power2.out',
+        onUpdate: () => { el.textContent = Math.round(obj.v); },
+      });
+    },
+  });
+});
+
+// âncoras suaves via lenis
+document.querySelectorAll('a[href^="#"]').forEach((a) => {
+  a.addEventListener('click', (e) => {
+    const alvo = document.querySelector(a.getAttribute('href'));
+    if (alvo) { e.preventDefault(); lenis.scrollTo(alvo, { offset: -70 }); }
+  });
+});
+</script>
+</body>
+</html>
