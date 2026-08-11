@@ -3,313 +3,596 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LMP — Automação com IA para empresas | Tudo que se repete, a IA assume</title>
-<meta name="description" content="A LMP implanta IA na operação da sua empresa: atendimento que ninguém percebe que é IA, follow-up, cotação, relatórios e rotina administrativa — medido em produção."/>
+<title>LMP — Tudo que se repete na sua empresa, a IA assume</title>
+<meta name="description" content="A LMP implanta IA na operação da sua empresa: atendimento que ninguém percebe que é IA, cotação, follow-up, relatório e rotina administrativa. Resultado medido em produção."/>
 <meta property="og:title" content="LMP — Tudo que se repete na sua empresa, a IA assume"/>
-<meta property="og:description" content="Automação com IA implantada e operada: atendimento, follow-up, cotação, relatórios. Resultado medido em sistemas reais."/>
+<meta property="og:description" content="Automação com IA implantada e operada: atendimento, cotação, follow-up, relatórios. Resultado medido em sistema real."/>
 <meta property="og:type" content="website"/>
 <meta property="og:locale" content="pt_BR"/>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23102C4A'/%3E%3Ctext x='16' y='22' font-family='Arial,sans-serif' font-size='13' font-weight='700' text-anchor='middle' fill='%23FBFAF8'%3ELMP%3C/text%3E%3C/svg%3E"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1B2E'/%3E%3Ctext x='16' y='21' font-family='Arial,sans-serif' font-size='12' font-weight='700' text-anchor='middle' fill='%23F7F5F1'%3ELMP%3C/text%3E%3Ccircle cx='25' cy='8' r='3' fill='%232FD4C4'/%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --paper:#FBFAF8;
+  --escuro:#0B1B2E;
+  --escuro-2:#071322;
   --navy:#102C4A;
-  --navy-deep:#0B1F35;
-  --ink:#17222F;
-  --ink-soft:#5A6572;
-  --laranja:#DC6A24;
-  --ciano:#0E9AA6;
-  --line:rgba(16,44,74,.12);
-  --display:'Space Grotesk',sans-serif;
-  --body:'Inter',sans-serif;
+  --paper:#F7F5F1;
+  --branco:#FFFFFF;
+  --ink:#141C26;
+  --ink-soft:#59636F;
+  --laranja:#E4641C;
+  --ciano:#2FD4C4;
+  --verde-zap:#25D366;
+  --linha:rgba(20,28,38,.11);
+  --linha-clara:rgba(255,255,255,.12);
+  --display:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:auto}
-body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-::selection{background:var(--navy);color:var(--paper)}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--ciano);color:var(--escuro)}
 a{color:inherit;text-decoration:none}
-img{max-width:100%}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.03em;line-height:1.03;text-wrap:balance}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-/* ---------- nav ---------- */
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);transition:background .35s,box-shadow .35s}
-.nav.solida{background:rgba(251,250,248,.92);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
-.marca{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em;color:var(--navy);display:flex;align-items:baseline;gap:2px}
-.marca .ponto{color:var(--ciano);font-size:26px;line-height:0}
-.nav-links{display:flex;align-items:center;gap:28px}
-.nav-links a{font-size:14px;font-weight:500;color:var(--ink-soft)}
-.nav-links a:hover{color:var(--navy)}
-.btn{display:inline-block;font-family:var(--body);font-weight:600;font-size:15px;padding:13px 26px;border-radius:999px;transition:transform .25s,box-shadow .25s,filter .25s;cursor:pointer}
-.btn-cta{background:var(--laranja);color:#fff;box-shadow:0 6px 22px rgba(220,106,36,.28)}
-.btn-cta:hover{transform:translateY(-2px);filter:brightness(1.05)}
-.btn-quieto{border:1.5px solid var(--line);color:var(--navy);background:transparent}
-.btn-quieto:hover{border-color:var(--navy)}
+/* ============ grain global ============ */
+.grao{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ============ nav ============ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:16px clamp(18px,4vw,52px);transition:background .4s,box-shadow .4s,padding .4s}
+.nav.presa{background:rgba(247,245,241,.90);backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 1px 0 var(--linha);padding-top:11px;padding-bottom:11px}
+.marca{font-family:var(--display);font-weight:800;font-size:23px;letter-spacing:-.04em;color:var(--paper);display:flex;align-items:center;gap:7px;transition:color .4s}
+.nav.presa .marca{color:var(--escuro)}
+.marca i{width:7px;height:7px;border-radius:50%;background:var(--ciano);box-shadow:0 0 12px var(--ciano);display:block;animation:pulso 2.6s ease-in-out infinite}
+@keyframes pulso{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.72)}}
+.nav-links{display:flex;align-items:center;gap:26px}
+.nav-links a:not(.btn){font-size:14px;font-weight:500;color:rgba(247,245,241,.72);transition:color .4s}
+.nav.presa .nav-links a:not(.btn){color:var(--ink-soft)}
+.nav-links a:not(.btn):hover{color:var(--ciano)}
+.nav.presa .nav-links a:not(.btn):hover{color:var(--laranja)}
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--body);font-weight:600;font-size:15px;
+  padding:13px 25px;border-radius:100px;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,filter .3s;will-change:transform}
+.btn-cta{background:var(--laranja);color:#fff;box-shadow:0 10px 30px -8px rgba(228,100,28,.6)}
+.btn-cta:hover{transform:translateY(-3px) scale(1.015);filter:brightness(1.07);box-shadow:0 18px 44px -10px rgba(228,100,28,.7)}
+.btn-vidro{border:1px solid var(--linha-clara);color:var(--paper);background:rgba(255,255,255,.05);backdrop-filter:blur(6px)}
+.btn-vidro:hover{background:rgba(255,255,255,.11);transform:translateY(-2px)}
+.btn-linha{border:1.5px solid var(--linha);color:var(--escuro)}
+.btn-linha:hover{border-color:var(--escuro);transform:translateY(-2px)}
 .nav .btn{padding:10px 20px;font-size:14px}
-@media(max-width:720px){.nav-links a:not(.btn){display:none}}
+@media(max-width:840px){.nav-links a:not(.btn){display:none}}
 
-/* ---------- hero ---------- */
-.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px clamp(20px,6vw,72px) 64px;position:relative}
-.hero .selo{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ciano);margin-bottom:26px}
-.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(38px,7.2vw,84px);line-height:1.04;letter-spacing:-.025em;color:var(--navy);max-width:15ch}
-.hero h1 .linha{display:block;overflow:hidden}
-.hero h1 .linha>span{display:inline-block;transform:translateY(110%)}
-.hero .sub{margin-top:30px;font-size:clamp(17px,2vw,21px);color:var(--ink-soft);max-width:56ch;opacity:0}
-.hero .sub strong{color:var(--ink);font-weight:600}
-.hero .acoes{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;opacity:0}
-.hero .rolagem{position:absolute;bottom:28px;left:clamp(20px,6vw,72px);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);opacity:0}
-.fita{position:absolute;right:clamp(16px,4vw,56px);top:50%;transform:translateY(-50%);display:none;flex-direction:column;gap:10px}
-@media(min-width:1060px){.fita{display:flex}}
-.fita span{font-family:var(--display);font-size:14px;font-weight:500;color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;padding:8px 18px;background:#fff;opacity:0;transform:translateX(24px)}
-.fita span b{color:var(--navy);font-weight:600}
+/* ============ HERO ============ */
+.hero{position:relative;min-height:100svh;background:var(--escuro);color:var(--paper);overflow:hidden;
+  display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(20px,4vw,60px);align-items:center;
+  padding:118px clamp(18px,4vw,52px) 60px}
+@media(max-width:960px){.hero{grid-template-columns:1fr;padding-top:104px;padding-bottom:40px}}
+.mesh{position:absolute;inset:-30%;z-index:0;filter:blur(70px);opacity:.85}
+.mesh b{position:absolute;display:block;border-radius:50%}
+.mesh .b1{width:52%;height:52%;left:-6%;top:2%;background:radial-gradient(circle,rgba(47,212,196,.36),transparent 66%)}
+.mesh .b2{width:56%;height:56%;right:-10%;top:-8%;background:radial-gradient(circle,rgba(228,100,28,.30),transparent 66%)}
+.mesh .b3{width:60%;height:60%;left:22%;bottom:-24%;background:radial-gradient(circle,rgba(28,86,150,.55),transparent 68%)}
+.malha{position:absolute;inset:0;z-index:1;opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(ellipse 90% 70% at 40% 40%,#000 30%,transparent 78%)}
+.hero-txt{position:relative;z-index:3;max-width:640px}
+.selo{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ciano);border:1px solid rgba(47,212,196,.3);background:rgba(47,212,196,.07);border-radius:100px;padding:7px 15px;margin-bottom:26px}
+.selo s{width:6px;height:6px;border-radius:50%;background:var(--ciano);text-decoration:none;animation:pulso 2s ease-in-out infinite}
+h1{font-size:clamp(40px,6.6vw,80px);font-weight:800;font-variation-settings:'opsz' 84}
+h1 .l{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
+h1 .l>span{display:inline-block;transform:translateY(112%)}
+h1 em{font-style:normal;position:relative;white-space:nowrap}
+h1 em .risco{position:absolute;left:0;right:0;bottom:.08em;height:.10em;background:var(--laranja);border-radius:2px;transform:scaleX(0);transform-origin:left}
+.sub{margin-top:26px;font-size:clamp(16.5px,1.65vw,20px);color:rgba(247,245,241,.74);max-width:54ch;opacity:0}
+.sub b{color:var(--paper);font-weight:600}
+.acoes{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;opacity:0}
+.abaixo{margin-top:26px;display:flex;gap:22px;flex-wrap:wrap;opacity:0}
+.abaixo div{font-size:13px;color:rgba(247,245,241,.5)}
+.abaixo b{display:block;font-family:var(--mono);font-size:21px;font-weight:700;color:var(--paper);letter-spacing:-.02em}
+.abaixo b i{font-style:normal;color:var(--ciano)}
 
-/* ---------- seções base ---------- */
-.secao{padding:clamp(72px,10vw,130px) clamp(20px,6vw,72px)}
-.miolo{max-width:1140px;margin:0 auto}
-.rotulo{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ciano);margin-bottom:18px}
-h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.4vw,50px);line-height:1.12;letter-spacing:-.02em;color:var(--navy);max-width:22ch}
-.lede{margin-top:20px;font-size:clamp(16px,1.7vw,19px);color:var(--ink-soft);max-width:62ch}
+/* ---- palco: celular + cards ---- */
+/* telefone encostado à direita; a coluna de cards ocupa a esquerda do palco.
+   Cards por cima da conversa escondiam o texto do chat — não repetir. */
+.palco{position:relative;z-index:3;height:min(74svh,660px);display:flex;align-items:center;justify-content:flex-end}
+@media(max-width:960px){.palco{height:auto;margin-top:46px}}
+.fone{position:relative;width:min(322px,84vw);border-radius:44px;padding:11px;
+  background:linear-gradient(160deg,#2A3A4E,#0D1620);box-shadow:0 50px 90px -30px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.09);
+  opacity:0;transform:translateY(44px) rotateX(9deg) rotateY(-8deg);transform-style:preserve-3d;perspective:900px}
+.tela{background:#0E1620;border-radius:34px;overflow:hidden;height:552px;display:flex;flex-direction:column}
+.zap-topo{display:flex;align-items:center;gap:10px;padding:14px 14px 12px;background:#182430;border-bottom:1px solid rgba(255,255,255,.06)}
+.av{width:33px;height:33px;border-radius:50%;background:linear-gradient(140deg,var(--ciano),#1C7A9B);display:grid;place-items:center;
+  font-family:var(--display);font-weight:800;font-size:13px;color:#06222A}
+.zap-topo p{font-size:13.5px;font-weight:600;color:#EAF1F5;line-height:1.25}
+.zap-topo span{font-size:11px;color:var(--verde-zap)}
+.hora{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:rgba(234,241,245,.45)}
+.chat{flex:1;padding:16px 13px;display:flex;flex-direction:column;gap:9px;overflow:hidden;
+  background:#0E1620 radial-gradient(circle at 70% 10%,rgba(47,212,196,.06),transparent 55%)}
+.b{max-width:83%;padding:9px 12px;border-radius:15px;font-size:13.4px;line-height:1.45;opacity:0;transform:translateY(10px) scale(.96)}
+.b.ele{align-self:flex-start;background:#1E2C39;color:#E7EEF3;border-bottom-left-radius:5px}
+.b.ia{align-self:flex-end;background:#134C3C;color:#DFF6EE;border-bottom-right-radius:5px}
+.b small{display:block;margin-top:4px;font-family:var(--mono);font-size:9.5px;opacity:.5}
+.digitando{align-self:flex-end;display:flex;gap:4px;padding:11px 14px;background:#134C3C;border-radius:15px 15px 5px 15px;opacity:0}
+.digitando i{width:5px;height:5px;border-radius:50%;background:#8FE3CD;display:block}
+.zap-baixo{padding:10px 13px;background:#182430;display:flex;align-items:center;gap:9px}
+.campo{flex:1;height:33px;border-radius:100px;background:#0E1620;border:1px solid rgba(255,255,255,.07)}
+.enviar{width:33px;height:33px;border-radius:50%;background:var(--verde-zap);display:grid;place-items:center}
+.enviar svg{width:15px;height:15px;fill:#0A2A16}
 
-/* ---------- a conta ---------- */
-.repete{background:var(--navy);color:#EAF0F6}
-.repete .rotulo{color:#7FC7CE}
-.repete h2{color:#fff}
-.repete .lede{color:#A9B8C8}
-.tarefas{margin-top:54px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.09);border-radius:18px;overflow:hidden}
-.tarefa{background:var(--navy-deep);padding:26px 26px 30px}
-.tarefa .num{font-family:var(--display);font-size:13px;color:#7FC7CE;letter-spacing:.1em}
-.tarefa h3{font-family:var(--display);font-size:19px;font-weight:600;color:#fff;margin:10px 0 8px}
-.tarefa p{font-size:15px;color:#A9B8C8;line-height:1.6}
-.repete .fecho{margin-top:44px;font-family:var(--display);font-size:clamp(20px,2.6vw,28px);font-weight:600;color:#fff;max-width:32ch}
-.repete .fecho em{font-style:normal;color:#F0A468}
+/* cards flutuantes */
+.flut{position:absolute;z-index:4;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-radius:16px;
+  padding:13px 15px;box-shadow:0 26px 54px -16px rgba(0,0,0,.6);opacity:0;min-width:186px}
+.flut h4{font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:5px}
+.flut p{font-family:var(--display);font-weight:700;font-size:16.5px;color:var(--escuro);letter-spacing:-.02em;line-height:1.2}
+.flut span{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:#0E8A5F;font-weight:600}
+.flut span::before{content:"";width:6px;height:6px;border-radius:50%;background:#12B378}
+/* posições: coluna à esquerda, escalonada. Sempre DENTRO do palco e nunca
+   sobre a conversa — os dois defeitos da primeira revisão. */
+.f1{top:5%;left:0}
+.f3{top:39%;left:5%}
+.f2{bottom:6%;left:0}
+@media(max-width:1320px){.f3{display:none}}
+@media(max-width:960px){.flut{position:static;margin:12px auto 0;opacity:1!important;transform:none!important}.palco{flex-direction:column}}
 
-/* ---------- automações ---------- */
-.cards{margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:18px}
-.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px 26px;transition:transform .3s,box-shadow .3s}
-.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(16,44,74,.10)}
-.card .icone{width:44px;height:44px;border-radius:12px;background:rgba(14,154,166,.10);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
-.card .icone svg{width:22px;height:22px;stroke:var(--ciano);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.card h3{font-family:var(--display);font-size:18px;font-weight:600;color:var(--navy);margin-bottom:8px}
-.card p{font-size:15px;color:var(--ink-soft);line-height:1.6}
-.card.destaque{background:var(--navy);border-color:var(--navy)}
-.card.destaque h3{color:#fff}
-.card.destaque p{color:#A9B8C8}
-.card.destaque .icone{background:rgba(240,164,104,.15)}
-.card.destaque .icone svg{stroke:#F0A468}
+/* ============ marquee ============ */
+.fita-faixa{background:var(--escuro-2);color:rgba(247,245,241,.4);padding:19px 0;overflow:hidden;border-top:1px solid var(--linha-clara);white-space:nowrap}
+.fita-trilha{display:inline-flex;gap:46px;font-family:var(--display);font-weight:600;font-size:clamp(16px,2vw,23px);letter-spacing:-.02em;padding-right:46px}
+.fita-trilha b{color:var(--ciano);font-weight:600}
+.fita-trilha i{font-style:normal;opacity:.3}
 
-/* ---------- prova ---------- */
-.prova{background:#F4F1EB}
-.numeros{margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-.numero{background:#fff;border:1px solid var(--line);border-radius:18px;padding:34px 28px}
-.numero .valor{font-family:var(--display);font-weight:700;font-size:clamp(44px,5.6vw,64px);letter-spacing:-.03em;color:var(--navy);font-variant-numeric:tabular-nums}
-.numero .valor .sufixo{font-size:.5em;color:var(--laranja)}
-.numero p{margin-top:8px;font-size:15px;color:var(--ink-soft)}
-.prova .fonte{margin-top:22px;font-size:13px;color:var(--ink-soft)}
-.prova .demo{margin-top:36px}
+/* ============ seções ============ */
+.secao{padding:clamp(74px,9.5vw,132px) clamp(18px,4vw,52px);position:relative}
+.miolo{max-width:1180px;margin:0 auto}
+.rotulo{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--laranja);margin-bottom:20px}
+.rotulo::before{content:"";width:26px;height:1.5px;background:var(--laranja)}
+h2{font-size:clamp(30px,4.6vw,55px);font-weight:700;max-width:23ch;font-variation-settings:'opsz' 60}
+.lede{margin-top:20px;font-size:clamp(16px,1.6vw,19px);color:var(--ink-soft);max-width:60ch}
+.lede b{color:var(--ink);font-weight:600}
 
-/* ---------- como funciona ---------- */
-.passos{margin-top:60px;display:grid;gap:0}
-.passo{display:grid;grid-template-columns:88px 1fr;gap:26px;padding:34px 0;border-top:1px solid var(--line);align-items:start}
-.passo:last-child{border-bottom:1px solid var(--line)}
-.passo .n{font-family:var(--display);font-weight:700;font-size:44px;color:transparent;-webkit-text-stroke:1.4px var(--navy);line-height:1}
-.passo h3{font-family:var(--display);font-size:22px;font-weight:600;color:var(--navy);margin-bottom:8px}
-.passo p{font-size:16px;color:var(--ink-soft);max-width:60ch}
-.passo p strong{color:var(--ink)}
-@media(max-width:600px){.passo{grid-template-columns:56px 1fr;gap:16px}.passo .n{font-size:32px}}
+/* rotina — grade */
+.grade{margin-top:54px;display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:16px}
+.bloco{position:relative;background:var(--branco);border:1px solid var(--linha);border-radius:20px;padding:26px 24px 28px;overflow:hidden;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s;will-change:transform}
+.bloco:hover{transform:translateY(-7px);box-shadow:0 30px 60px -22px rgba(11,27,46,.3);border-color:transparent}
+.bloco::after{content:"";position:absolute;inset:0;border-radius:20px;padding:1px;opacity:0;transition:opacity .45s;
+  background:linear-gradient(140deg,var(--ciano),transparent 45%,var(--laranja));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.bloco:hover::after{opacity:1}
+.bloco .ic{width:46px;height:46px;border-radius:14px;background:rgba(47,212,196,.11);display:grid;place-items:center;margin-bottom:18px;transition:transform .45s,background .45s}
+.bloco:hover .ic{transform:scale(1.09) rotate(-5deg);background:rgba(47,212,196,.2)}
+.bloco .ic svg{width:22px;height:22px;stroke:#12857C;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.bloco h3{font-size:19px;font-weight:700;color:var(--escuro);margin-bottom:9px}
+.bloco p{font-size:15px;color:var(--ink-soft)}
+.bloco .tag{position:absolute;top:22px;right:22px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(20,28,38,.28)}
+.bloco.escuro{background:var(--escuro);border-color:transparent}
+.bloco.escuro h3{color:#fff}
+.bloco.escuro p{color:rgba(247,245,241,.66)}
+.bloco.escuro .tag{color:rgba(255,255,255,.3)}
+.bloco.escuro .ic{background:rgba(228,100,28,.18)}
+.bloco.escuro .ic svg{stroke:#FF9A5E}
 
-/* ---------- quem faz ---------- */
-.quem{background:var(--navy);color:#EAF0F6}
-.quem .rotulo{color:#7FC7CE}
+/* ===== antes/depois ===== */
+.fluxo{background:var(--escuro);color:var(--paper);overflow:hidden}
+.fluxo .rotulo{color:var(--ciano)}
+.fluxo .rotulo::before{background:var(--ciano)}
+.fluxo h2{color:#fff}
+.fluxo .lede{color:rgba(247,245,241,.66)}
+.fluxo .lede b{color:#fff}
+.trilhas{margin-top:56px;display:grid;gap:30px}
+.trilha{border:1px solid var(--linha-clara);border-radius:22px;padding:26px clamp(16px,2.4vw,28px);background:rgba(255,255,255,.028)}
+.trilha header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.trilha h3{font-size:20px;font-weight:700;color:#fff}
+.trilha .qtd{font-family:var(--mono);font-size:12.5px;padding:4px 11px;border-radius:100px}
+.trilha.hoje .qtd{background:rgba(228,100,28,.16);color:#FFA974}
+.trilha.lmp .qtd{background:rgba(47,212,196,.16);color:var(--ciano)}
+/* grade fixa, não scroll nem flex-wrap: com overflow as 2 últimas etapas do
+   "hoje" ficavam cortadas (some o contraste 7 x 3, que é o argumento da seção),
+   e com flex-wrap a 7ª esticava sozinha na linha de baixo. 4+3 fica parelho. */
+.etapas{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.trilha.lmp .etapas{grid-template-columns:repeat(3,1fr)}
+@media(max-width:780px){.etapas,.trilha.lmp .etapas{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:440px){.etapas,.trilha.lmp .etapas{grid-template-columns:1fr}}
+.etapa{border-radius:14px;padding:14px 13px 26px;font-size:13px;line-height:1.35;position:relative;opacity:0;transform:translateY(14px)}
+.trilha.hoje .etapa{background:rgba(255,255,255,.055);border:1px dashed rgba(255,169,116,.4);color:rgba(247,245,241,.85)}
+.trilha.lmp .etapa{background:rgba(47,212,196,.1);border:1px solid rgba(47,212,196,.34);color:#DFFBF6}
+.etapa b{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;opacity:.6;margin-bottom:6px}
+.etapa.mao::after{content:"manual";position:absolute;bottom:7px;right:10px;font-family:var(--mono);font-size:8.5px;color:#FFA974;opacity:.85}
+.etapa.auto::after{content:"IA";position:absolute;bottom:7px;right:10px;font-family:var(--mono);font-size:8.5px;color:var(--ciano)}
+.saldo{margin-top:34px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-family:var(--display);font-size:clamp(18px,2.4vw,26px);font-weight:700;color:#fff}
+.saldo u{text-decoration:none;color:var(--ciano)}
+
+/* ===== prova / painel ===== */
+.prova{background:linear-gradient(180deg,var(--paper) 0%,#EFEBE4 100%)}
+.painel{margin-top:52px;border-radius:24px;background:var(--branco);border:1px solid var(--linha);
+  box-shadow:0 40px 80px -40px rgba(11,27,46,.4);overflow:hidden}
+.painel-topo{display:flex;align-items:center;gap:9px;padding:14px 18px;border-bottom:1px solid var(--linha);background:#FCFBF9}
+.painel-topo i{width:10px;height:10px;border-radius:50%;background:#DDD8D0;display:block}
+.painel-topo p{margin-left:8px;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft)}
+.painel-topo .vivo{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;color:#0E8A5F}
+.painel-topo .vivo::before{content:"";width:7px;height:7px;border-radius:50%;background:#12B378;animation:pulso 1.9s ease-in-out infinite}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr))}
+.kpi{padding:26px 24px;border-right:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+.kpi h4{font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px}
+.kpi .v{font-family:var(--display);font-weight:800;font-size:clamp(38px,4.6vw,54px);letter-spacing:-.04em;color:var(--escuro);line-height:1}
+.kpi .v s{text-decoration:none;font-size:.46em;color:var(--laranja);margin-left:2px}
+.kpi p{margin-top:9px;font-size:13.5px;color:var(--ink-soft);line-height:1.4}
+.kpi svg{margin-top:14px;width:100%;height:34px;overflow:visible}
+.kpi svg path.linha-g{fill:none;stroke:var(--ciano);stroke-width:2;stroke-linecap:round}
+.kpi svg path.area-g{fill:url(#fade);opacity:.28}
+.rodape-painel{padding:16px 24px;font-size:12.5px;color:var(--ink-soft);background:#FCFBF9;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rodape-painel b{color:var(--ink);font-weight:600}
+.prova .cta-linha{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.prova .cta-linha span{font-size:14px;color:var(--ink-soft)}
+
+/* ===== passos ===== */
+.passos{margin-top:56px}
+.passo{display:grid;grid-template-columns:96px 1fr;gap:clamp(14px,2.6vw,34px);padding:34px 0;border-top:1px solid var(--linha);align-items:start;position:relative}
+.passo:last-child{border-bottom:1px solid var(--linha)}
+.passo .n{font-family:var(--display);font-weight:800;font-size:clamp(34px,4.4vw,52px);letter-spacing:-.05em;
+  color:transparent;-webkit-text-stroke:1.4px rgba(20,28,38,.3);line-height:.9}
+.passo h3{font-size:clamp(20px,2.3vw,26px);font-weight:700;color:var(--escuro);margin-bottom:9px}
+.passo p{font-size:16.5px;color:var(--ink-soft);max-width:62ch}
+.passo p b{color:var(--ink);font-weight:600}
+.passo .marca-tempo{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+  color:var(--laranja);border:1px solid rgba(228,100,28,.3);border-radius:100px;padding:4px 12px}
+@media(max-width:620px){.passo{grid-template-columns:58px 1fr}}
+
+/* ===== quem ===== */
+.quem{background:var(--escuro);color:var(--paper)}
+.quem .rotulo{color:var(--ciano)}.quem .rotulo::before{background:var(--ciano)}
 .quem h2{color:#fff}
-.quem .grade{margin-top:48px;display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(28px,5vw,72px);align-items:start}
-@media(max-width:800px){.quem .grade{grid-template-columns:1fr}}
-.quem .texto p{font-size:17px;color:#C2CEDA;margin-bottom:18px;max-width:58ch}
-.quem .texto p strong{color:#fff;font-weight:600}
-.ficha{background:var(--navy-deep);border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:30px 28px}
-.ficha dt{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7FC7CE;margin-top:18px}
-.ficha dt:first-child{margin-top:0}
+.quem .par{margin-top:46px;display:grid;grid-template-columns:1.25fr .9fr;gap:clamp(26px,5vw,68px);align-items:start}
+@media(max-width:860px){.quem .par{grid-template-columns:1fr}}
+.quem .par p{font-size:17px;color:rgba(247,245,241,.74);margin-bottom:17px;max-width:56ch}
+.quem .par p b{color:#fff;font-weight:600}
+.ficha{border:1px solid var(--linha-clara);border-radius:20px;padding:28px 26px;background:rgba(255,255,255,.03)}
+.ficha dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ciano);margin-top:19px}
+.ficha dt:first-of-type{margin-top:0}
 .ficha dd{font-size:16px;color:#EAF0F6;margin-top:4px}
+.ferramentas{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px}
+.ferramentas s{text-decoration:none;font-family:var(--mono);font-size:11.5px;color:rgba(247,245,241,.62);
+  border:1px solid var(--linha-clara);border-radius:100px;padding:5px 12px}
 
-/* ---------- cta final ---------- */
-.final{text-align:left}
-.final h2{max-width:26ch}
-.final .lede{max-width:58ch}
-.final .acoes{margin-top:38px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
-.final .whats{font-size:15px;color:var(--ink-soft)}
-.final .whats strong{color:var(--navy)}
+/* ===== final ===== */
+.final{background:var(--paper);text-align:left}
+.final .caixa{max-width:1180px;margin:0 auto;background:var(--escuro);border-radius:28px;padding:clamp(34px,5.5vw,72px);position:relative;overflow:hidden}
+.final .caixa .mesh{inset:-40%;opacity:.6}
+.final .conteudo{position:relative;z-index:2}
+.final h2{color:#fff;max-width:24ch}
+.final .lede{color:rgba(247,245,241,.7);max-width:56ch}
+.final .acoes{margin-top:34px;opacity:1;align-items:center}
+.final .obs{font-size:14.5px;color:rgba(247,245,241,.62)}
+.final .obs b{color:#fff}
 
-/* ---------- footer ---------- */
-footer{border-top:1px solid var(--line);padding:34px clamp(20px,6vw,72px);display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;justify-content:space-between;font-size:13px;color:var(--ink-soft)}
-footer .marca{font-size:17px}
+footer{border-top:1px solid var(--linha);padding:32px clamp(18px,4vw,52px);display:flex;flex-wrap:wrap;gap:12px 32px;
+  align-items:center;justify-content:space-between;font-size:13px;color:var(--ink-soft)}
+footer .marca{color:var(--escuro);font-size:18px}
+footer a:hover{color:var(--laranja)}
 
-/* reveals (GSAP toma conta; estado inicial) */
-.rev{opacity:0;transform:translateY(34px)}
+.rev{opacity:0;transform:translateY(32px)}
 </style>
 </head>
 <body>
+<div class="grao"></div>
 
 <nav class="nav" id="nav">
-  <a class="marca" href="#">LMP<span class="ponto">.</span></a>
+  <a class="marca" href="#">LMP<i></i></a>
   <div class="nav-links">
-    <a href="#automacoes">O que automatizamos</a>
-    <a href="#prova">Resultados</a>
-    <a href="#como">Como funciona</a>
+    <a href="#rotina">O que automatizamos</a>
+    <a href="#fluxo">Antes e depois</a>
+    <a href="#prova">Resultado</a>
     <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">Pedir diagnóstico</a>
   </div>
 </nav>
 
+<!-- ============================== HERO ============================== -->
 <header class="hero">
-  <p class="selo">LMP — Automação com IA</p>
-  <h1 aria-label="Tudo que se repete na sua empresa, a IA assume.">
-    <span class="linha"><span>Tudo que se repete</span></span>
-    <span class="linha"><span>na sua empresa,</span></span>
-    <span class="linha"><span>a IA assume.</span></span>
-  </h1>
-  <p class="sub">Atendimento que ninguém percebe que é IA é só a ponta visível. Por trás, a mesma inteligência assume <strong>cotação, follow-up, relatório, cobrança, agenda e conferência</strong> — o trabalho que consome a semana da sua equipe sem gerar uma venda a mais.</p>
-  <div class="acoes">
-    <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">Pedir um diagnóstico gratuito</a>
-    <a class="btn btn-quieto" href="#prova">Ver resultado medido</a>
+  <div class="mesh" aria-hidden="true"><b class="b1"></b><b class="b2"></b><b class="b3"></b></div>
+  <div class="malha" aria-hidden="true"></div>
+
+  <div class="hero-txt">
+    <span class="selo"><s></s>LMP · Automação com IA</span>
+    <h1 aria-label="Tudo que se repete na sua empresa, a IA assume.">
+      <span class="l"><span>Tudo que <em>se repete<i class="risco"></i></em></span></span>
+      <span class="l"><span>na sua empresa,</span></span>
+      <span class="l"><span>a IA assume.</span></span>
+    </h1>
+    <p class="sub">Atendimento que ninguém percebe que é IA é só a ponta visível. A mesma inteligência assume <b>cotação, follow-up, relatório, cobrança e conferência</b> — o trabalho que consome a semana da sua equipe sem gerar uma venda a mais.</p>
+    <div class="acoes">
+      <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">
+        Pedir um diagnóstico gratuito
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+      <a class="btn btn-vidro" href="#fluxo">Ver como funciona</a>
+    </div>
+    <div class="abaixo">
+      <div><b class="conta" data-alvo="157">0</b>leads atendidos em 30 dias</div>
+      <div><b class="conta" data-alvo="0">0</b>ficaram sem resposta</div>
+      <div><b><span class="conta" data-alvo="45">0</span><i>%</i></b>qualificados sem ninguém</div>
+    </div>
   </div>
-  <div class="fita" aria-hidden="true">
-    <span>responder <b>a mesma pergunta</b></span>
-    <span>montar <b>a mesma planilha</b></span>
-    <span>cobrar <b>o mesmo retorno</b></span>
-    <span>digitar <b>o mesmo orçamento</b></span>
-    <span>lembrar <b>o mesmo follow-up</b></span>
+
+  <div class="palco">
+    <div class="fone" id="fone">
+      <div class="tela">
+        <div class="zap-topo">
+          <div class="av">IA</div>
+          <div><p>Atendimento · sua empresa</p><span>online</span></div>
+          <span class="hora">23:47</span>
+        </div>
+        <div class="chat" id="chat">
+          <div class="b ele" data-t="0">Boa noite, ainda tem o apartamento de 2 quartos do anúncio?</div>
+          <div class="b ia" data-t="1">Boa noite! Tenho sim — o de 2 quartos no [bairro], 68 m² com vaga coberta.<br/>Você procura pra morar ou pra investir?<small>respondido em 4 segundos</small></div>
+          <div class="b ele" data-t="2">Pra morar. Aceita financiamento?</div>
+          <div class="b ia" data-t="3">Aceita, e o proprietário já tem a documentação pronta.<br/>Consigo te encaixar numa visita amanhã: 10h ou 17h?<small>qualificando</small></div>
+          <div class="b ele" data-t="4">17h fica ótimo 👍</div>
+          <div class="b ia" data-t="5">Agendado pra amanhã, 17h. Já mandei o endereço e avisei o corretor.<br/>Até amanhã!<small>visita na agenda · corretor notificado</small></div>
+        </div>
+        <div class="zap-baixo">
+          <div class="campo"></div>
+          <div class="enviar"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flut f1">
+      <h4>Cotação</h4>
+      <p>Orçamento #4192</p>
+      <span>gerado e enviado — 40 s</span>
+    </div>
+    <div class="flut f2">
+      <h4>Follow-up</h4>
+      <p>11 clientes retomados</p>
+      <span>sem ninguém lembrar</span>
+    </div>
+    <div class="flut f3">
+      <h4>Relatório</h4>
+      <p>Fechamento do dia</p>
+      <span>na sua caixa, 18h</span>
+    </div>
   </div>
-  <p class="rolagem">Role para ver como</p>
 </header>
 
-<section class="secao repete">
-  <div class="miolo">
-    <p class="rotulo rev">A conta que ninguém faz</p>
-    <h2 class="rev">A sua operação paga salário para tarefa que não pensa.</h2>
-    <p class="lede rev">Pega a semana de qualquer pessoa da sua equipe e separa o que é decisão do que é repetição. A parte repetida costuma ser a maior — e é exatamente a parte que não precisa de gente.</p>
-    <div class="tarefas">
-      <div class="tarefa rev"><span class="num">01</span><h3>Atendimento</h3><p>As mesmas dez perguntas, todos os dias — e o cliente das 22h que fica sem resposta até amanhã.</p></div>
-      <div class="tarefa rev"><span class="num">02</span><h3>Comercial</h3><p>O lead que pediu proposta e ninguém lembrou de cobrar. O orçamento que levou três dias para sair.</p></div>
-      <div class="tarefa rev"><span class="num">03</span><h3>Administrativo</h3><p>Planilha alimentada à mão, relatório montado na sexta, nota conferida uma a uma, cobrança esquecida.</p></div>
-      <div class="tarefa rev"><span class="num">04</span><h3>Gestão</h3><p>Decidir sem número na mão, porque juntar o número dá mais trabalho que decidir.</p></div>
-    </div>
-    <p class="fecho rev">Não é falta de equipe. É equipe boa <em>presa em trabalho repetido</em>.</p>
+<!-- marquee -->
+<div class="fita-faixa" aria-hidden="true">
+  <div class="fita-trilha" id="fita1">
+    <span>responder <b>a mesma pergunta</b></span><i>/</i>
+    <span>digitar <b>o mesmo orçamento</b></span><i>/</i>
+    <span>montar <b>a mesma planilha</b></span><i>/</i>
+    <span>cobrar <b>o mesmo retorno</b></span><i>/</i>
+    <span>conferir <b>a mesma nota</b></span><i>/</i>
+    <span>lembrar <b>o mesmo follow-up</b></span><i>/</i>
   </div>
-</section>
+</div>
 
-<section class="secao" id="automacoes">
+<!-- ============================== ROTINA ============================== -->
+<section class="secao" id="rotina">
   <div class="miolo">
     <p class="rotulo rev">O que a LMP implanta</p>
-    <h2 class="rev">A IA assume a rotina. A sua equipe assume o que dá dinheiro.</h2>
-    <p class="lede rev">Cada implantação é montada em cima da SUA operação — estes são os blocos mais pedidos.</p>
-    <div class="cards">
-      <div class="card rev">
-        <div class="icone"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+    <h2 class="rev">A IA assume a rotina. Sua equipe assume o que dá dinheiro.</h2>
+    <p class="lede rev">Não é um chatbot. É a sua operação com as partes repetidas passadas pra máquina — <b>cada implantação montada em cima do seu processo</b>. Estes são os blocos mais pedidos.</p>
+
+    <div class="grade">
+      <div class="bloco rev"><span class="tag">01</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
         <h3>Atendimento 24h que parece gente</h3>
-        <p>Responde na hora, no tom da sua empresa, por texto e áudio. Cliente não percebe que é IA — e não fica sem resposta nunca.</p>
-      </div>
-      <div class="card rev">
-        <div class="icone"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <p>Responde em segundos, no tom da sua empresa, por texto e por áudio. O cliente não percebe que é IA — e não fica sem resposta nem às 23h de domingo.</p></div>
+
+      <div class="bloco rev"><span class="tag">02</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></div>
         <h3>Follow-up que não esquece</h3>
-        <p>Lead parado, proposta sem resposta, cliente que sumiu: o sistema lembra, retoma e avisa quando a conversa esquenta.</p>
-      </div>
-      <div class="card rev">
-        <div class="icone"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15h6"/><path d="M9 11h2"/></svg></div>
+        <p>Lead parado, proposta sem resposta, cliente que sumiu: o sistema retoma na hora certa e te avisa quando a conversa esquenta.</p></div>
+
+      <div class="bloco rev"><span class="tag">03</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15h6"/><path d="M9 11h2"/></svg></div>
         <h3>Cotação e orçamento na hora</h3>
-        <p>O pedido chega, a IA monta o orçamento com as suas regras de preço e devolve pronto — em minutos, não em dias.</p>
-      </div>
-      <div class="card rev">
-        <div class="icone"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+        <p>O pedido chega, a IA aplica as suas regras de preço e devolve o orçamento pronto. Em minutos, não em dias — e sem depender de quem está de folga.</p></div>
+
+      <div class="bloco rev"><span class="tag">04</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
         <h3>Relatórios que se montam sozinhos</h3>
-        <p>Venda, atendimento, funil, campanha: o número chega pronto, no ritmo que você definir — sem ninguém abrir planilha.</p>
-      </div>
-      <div class="card rev">
-        <div class="icone"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></div>
+        <p>Venda, atendimento, funil, campanha: o número chega pronto no ritmo que você definir. Ninguém abre planilha na sexta-feira.</p></div>
+
+      <div class="bloco rev"><span class="tag">05</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
         <h3>Agenda e confirmação</h3>
-        <p>Marca reunião e visita direto na agenda, confirma na véspera e reagenda quem furou — sem vai-e-vem de mensagens.</p>
-      </div>
-      <div class="card rev">
-        <div class="icone"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <p>Marca reunião e visita direto na agenda, confirma na véspera e reagenda quem furou — sem vai-e-vem de mensagem.</p></div>
+
+      <div class="bloco rev"><span class="tag">06</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
         <h3>Cobrança e lembretes</h3>
-        <p>Boleto vencendo, pagamento em atraso, renovação chegando: a mensagem certa sai na data certa, com o tom certo.</p>
-      </div>
-      <div class="card rev">
-        <div class="icone"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <p>Boleto vencendo, pagamento atrasado, renovação chegando: a mensagem certa sai na data certa, com o tom certo.</p></div>
+
+      <div class="bloco rev"><span class="tag">07</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div>
         <h3>Conferência e rotina interna</h3>
-        <p>Nota, cadastro, planilha, dado que entra errado: a IA confere, organiza e aponta o que precisa de um humano.</p>
-      </div>
-      <div class="card destaque rev">
-        <div class="icone"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.1-2.6 5.4-.8.8-1.4 1.9-1.4 3.1V19a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-1.5c0-1.2-.6-2.3-1.4-3.1C6.2 13.1 5 11.4 5 9a7 7 0 0 1 7-7z"/></svg></div>
+        <p>Nota, cadastro, planilha, dado que entra errado: a IA confere, organiza e aponta só o que precisa de um humano.</p></div>
+
+      <div class="bloco escuro rev"><span class="tag">08</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.1-2.6 5.4-.8.8-1.4 1.9-1.4 3.1V19a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-1.5c0-1.2-.6-2.3-1.4-3.1C6.2 13.1 5 11.4 5 9a7 7 0 0 1 7-7z"/></svg></div>
         <h3>Um cérebro que pensa o negócio junto</h3>
-        <p>Além de executar, a IA sugere: campanha para o produto parado, alerta de lead esfriando, ideia de oferta. É o que separa automação de piloto automático.</p>
-      </div>
+        <p>Além de executar, ele sugere: campanha pro produto parado, alerta de lead esfriando, ideia de oferta. É o que separa automação de piloto automático.</p></div>
     </div>
   </div>
 </section>
 
+<!-- ============================== ANTES / DEPOIS ============================== -->
+<section class="secao fluxo" id="fluxo">
+  <div class="miolo">
+    <p class="rotulo rev">Antes e depois</p>
+    <h2 class="rev">O mesmo pedido de orçamento, dos dois jeitos.</h2>
+    <p class="lede rev">Este é um processo real de empresa de serviço. Repare que <b>não muda o que a empresa faz</b> — muda quantas vezes uma pessoa precisa parar o que estava fazendo.</p>
+
+    <div class="trilhas">
+      <div class="trilha hoje rev">
+        <header><h3>Como acontece hoje</h3><span class="qtd">7 etapas · 6 manuais · ~2 dias</span></header>
+        <div class="etapas">
+          <div class="etapa mao"><b>01</b>Cliente manda o pedido no WhatsApp</div>
+          <div class="etapa mao"><b>02</b>Alguém lê quando puder</div>
+          <div class="etapa mao"><b>03</b>Consulta preço no sistema</div>
+          <div class="etapa mao"><b>04</b>Monta o orçamento na planilha</div>
+          <div class="etapa mao"><b>05</b>Envia por e-mail ou zap</div>
+          <div class="etapa mao"><b>06</b>Anota no CRM (às vezes)</div>
+          <div class="etapa mao"><b>07</b>Follow-up: só se lembrarem</div>
+        </div>
+      </div>
+
+      <div class="trilha lmp rev">
+        <header><h3>Como acontece com a LMP</h3><span class="qtd">3 etapas · 0 manuais · ~40 segundos</span></header>
+        <div class="etapas">
+          <div class="etapa auto"><b>01</b>IA recebe, entende e confirma o pedido</div>
+          <div class="etapa auto"><b>02</b>Consulta preço e monta o orçamento pelas suas regras</div>
+          <div class="etapa auto"><b>03</b>Envia, registra no CRM e agenda o follow-up</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="saldo rev">Sobram <u>4 interrupções por pedido</u> na semana da sua equipe. Multiplique pelo número de pedidos do mês.</p>
+  </div>
+</section>
+
+<!-- ============================== PROVA ============================== -->
 <section class="secao prova" id="prova">
   <div class="miolo">
     <p class="rotulo rev">Resultado medido, não prometido</p>
-    <h2 class="rev">Um dos sistemas da LMP, em produção, em 30 dias:</h2>
-    <div class="numeros">
-      <div class="numero rev"><div class="valor"><span class="conta" data-alvo="157">0</span></div><p>leads atendidos em 30 dias, um a um, sem fila</p></div>
-      <div class="numero rev"><div class="valor"><span class="conta" data-alvo="0">0</span></div><p>leads sem resposta — incluindo madrugada e fim de semana</p></div>
-      <div class="numero rev"><div class="valor"><span class="conta" data-alvo="45">0</span><span class="sufixo">%</span></div><p>qualificados e organizados no funil sem nenhuma pessoa envolvida</p></div>
+    <h2 class="rev">Um sistema da LMP, em produção, em 30 dias.</h2>
+    <p class="lede rev">Não é projeção nem teste em laboratório: são os números do painel de um sistema que atende clientes reais todos os dias.</p>
+
+    <div class="painel rev">
+      <div class="painel-topo">
+        <i></i><i></i><i></i>
+        <p>painel.lmp / operação · últimos 30 dias</p>
+        <span class="vivo">em produção</span>
+      </div>
+      <svg width="0" height="0" style="position:absolute"><defs>
+        <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2FD4C4"/><stop offset="100%" stop-color="#2FD4C4" stop-opacity="0"/>
+        </linearGradient>
+      </defs></svg>
+
+      <div class="kpis">
+        <div class="kpi">
+          <h4>Leads atendidos</h4>
+          <div class="v"><span class="conta" data-alvo="157">0</span></div>
+          <p>Um por um, sem fila e sem horário comercial.</p>
+          <svg viewBox="0 0 120 34" preserveAspectRatio="none">
+            <path class="area-g" d="M0,30 L14,27 L28,22 L42,24 L56,17 L70,12 L84,14 L98,7 L112,4 L120,3 L120,34 L0,34 Z"/>
+            <path class="linha-g spark" d="M0,30 L14,27 L28,22 L42,24 L56,17 L70,12 L84,14 L98,7 L112,4 L120,3"/>
+          </svg>
+        </div>
+        <div class="kpi">
+          <h4>Sem resposta</h4>
+          <div class="v"><span class="conta" data-alvo="0">0</span></div>
+          <p>Inclusive madrugada, fim de semana e feriado.</p>
+          <svg viewBox="0 0 120 34" preserveAspectRatio="none">
+            <path class="linha-g spark" d="M0,31 L20,31 L40,31 L60,31 L80,31 L100,31 L120,31"/>
+          </svg>
+        </div>
+        <div class="kpi">
+          <h4>Qualificados sozinho</h4>
+          <div class="v"><span class="conta" data-alvo="45">0</span><s>%</s></div>
+          <p>Chegaram no funil organizados, sem ninguém da equipe.</p>
+          <svg viewBox="0 0 120 34" preserveAspectRatio="none">
+            <path class="area-g" d="M0,32 L20,28 L40,29 L60,21 L80,16 L100,13 L120,9 L120,34 L0,34 Z"/>
+            <path class="linha-g spark" d="M0,32 L20,28 L40,29 L60,21 L80,16 L100,13 L120,9"/>
+          </svg>
+        </div>
+        <div class="kpi">
+          <h4>Resposta média</h4>
+          <div class="v"><span class="conta" data-alvo="4">0</span><s>s</s></div>
+          <p>O tempo entre a mensagem chegar e o cliente ser atendido.</p>
+          <svg viewBox="0 0 120 34" preserveAspectRatio="none">
+            <path class="linha-g spark" d="M0,8 L20,12 L40,10 L60,18 L80,24 L100,27 L120,29"/>
+          </svg>
+        </div>
+      </div>
+      <div class="rodape-painel">Números de um sistema implantado e operado pela LMP em operação real — <b>julho de 2026</b>. Nome do cliente preservado.</div>
     </div>
-    <p class="fonte rev">Números do painel de um sistema implantado pela LMP em operação imobiliária real — jul/2026.</p>
-    <div class="demo rev">
-      <a class="btn btn-quieto" href="https://levimpantarotto-commits.github.io/lmp-demo/?c=jslc" target="_blank" rel="noopener">Ver uma demonstração ao vivo →</a>
+
+    <div class="cta-linha rev">
+      <a class="btn btn-linha" href="https://levimpantarotto-commits.github.io/lmp-demo/?c=jslc" target="_blank" rel="noopener">Ver uma demonstração ao vivo →</a>
+      <span>40 segundos, sem cadastro.</span>
     </div>
   </div>
 </section>
 
-<section class="secao" id="como">
+<!-- ============================== COMO FUNCIONA ============================== -->
+<section class="secao">
   <div class="miolo">
     <p class="rotulo rev">Como funciona</p>
-    <h2 class="rev">Você não configura nada. A gente implanta, opera e ajusta.</h2>
+    <h2 class="rev">Você não configura nada. A LMP implanta, opera e ajusta.</h2>
     <div class="passos">
-      <div class="passo rev"><div class="n">01</div><div><h3>Diagnóstico</h3><p>Uma conversa para mapear <strong>o que se repete</strong> na sua operação: atendimento, comercial e administrativo. Você sai com a lista do que dá para automatizar e o que vem primeiro — <strong>sem custo e sem compromisso</strong>.</p></div></div>
-      <div class="passo rev"><div class="n">02</div><div><h3>Implantação</h3><p>A LMP monta o sistema com a sua carteira, as suas regras e o seu tom de conversa. Em <strong>semanas, não meses</strong> — e testado com você antes de encostar em cliente real.</p></div></div>
-      <div class="passo rev"><div class="n">03</div><div><h3>Operação assistida</h3><p>O sistema roda, você acompanha tudo pelo painel e assume qualquer conversa quando quiser. A LMP <strong>monitora, ajusta e evolui</strong> — automação boa é a que melhora todo mês.</p></div></div>
+      <div class="passo rev"><div class="n">01</div><div>
+        <h3>Diagnóstico</h3>
+        <p>Uma conversa pra mapear <b>o que se repete</b> na sua operação — atendimento, comercial e administrativo. Você sai com a lista do que dá pra automatizar, o impacto de cada item e o que vem primeiro.</p>
+        <span class="marca-tempo">gratuito · sem compromisso</span>
+      </div></div>
+      <div class="passo rev"><div class="n">02</div><div>
+        <h3>Implantação</h3>
+        <p>Monto o sistema com os seus dados, as suas regras e o seu tom de conversa. Testado com você antes de encostar em cliente real — <b>ninguém da sua equipe precisa aprender ferramenta nova</b>.</p>
+        <span class="marca-tempo">semanas, não meses</span>
+      </div></div>
+      <div class="passo rev"><div class="n">03</div><div>
+        <h3>Operação assistida</h3>
+        <p>O sistema roda, você acompanha tudo pelo painel e assume qualquer conversa quando quiser. Eu <b>monitoro, ajusto e evoluo</b> — automação boa é a que melhora todo mês.</p>
+        <span class="marca-tempo">acompanhamento contínuo</span>
+      </div></div>
     </div>
   </div>
 </section>
 
+<!-- ============================== QUEM FAZ ============================== -->
 <section class="secao quem">
   <div class="miolo">
     <p class="rotulo rev">Quem faz</p>
     <h2 class="rev">Implementação direta, sem camada de agência.</h2>
-    <div class="grade">
-      <div class="texto rev">
-        <p><strong>Levi Magno Pantarotto</strong> constrói e opera sistemas de IA que estão em produção hoje, atendendo clientes reais — do atendimento por WhatsApp com voz ao funil comercial e à rotina administrativa.</p>
-        <p>Quem faz o diagnóstico é quem implanta. Quem implanta é quem opera. Isso muda a conversa: você fala com quem põe a mão no sistema, não com um vendedor que repassa o projeto.</p>
-        <p>Background de 10 anos em marketing digital e tráfego pago — a automação nasce <strong>ligada à ponta comercial</strong>, não como projeto de TI.</p>
+    <div class="par">
+      <div class="rev">
+        <p><b>Levi Magno Pantarotto.</b> Construo e opero sistemas de IA que estão em produção hoje, atendendo clientes reais — do atendimento por WhatsApp com voz até o funil comercial e a rotina administrativa.</p>
+        <p>Quem faz o diagnóstico é quem implanta. Quem implanta é quem opera. Isso muda a conversa: você fala com quem põe a mão no sistema, não com um vendedor que repassa o projeto pra um time que você nunca vê.</p>
+        <p>Dez anos em marketing digital e tráfego pago antes disso — a automação nasce <b>ligada à ponta comercial</b>, não como projeto de TI.</p>
+        <div class="ferramentas" aria-label="Tecnologias usadas">
+          <s>WhatsApp Cloud API</s><s>Claude</s><s>Gemini</s><s>GPT</s><s>Meta Ads API</s><s>Google Workspace</s><s>Node.js</s><s>ElevenLabs</s><s>CRM próprio</s>
+        </div>
       </div>
       <dl class="ficha rev">
-        <dt>Empresa</dt><dd>LEVI MAGNO MARKETING LTDA</dd>
-        <dt>CNPJ</dt><dd>51.288.794/0001-71</dd>
-        <dt>Atuando desde</dt><dd>2023</dd>
-        <dt>Base</dt><dd>Imbituba/SC — atendimento em todo o Brasil</dd>
-        <dt>Contato</dt><dd>WhatsApp (11) 99611-2620</dd>
+        <dt>Empresa</dt><dd>Levi Magno Marketing LTDA</dd>
+        <dt>CNPJ</dt><dd class="num">51.288.794/0001-71</dd>
+        <dt>Atuando desde</dt><dd class="num">2023</dd>
+        <dt>Base</dt><dd>Imbituba/SC — atende todo o Brasil</dd>
+        <dt>Contato</dt><dd class="num">(11) 99611-2620</dd>
       </dl>
     </div>
   </div>
 </section>
 
+<!-- ============================== FINAL ============================== -->
 <section class="secao final">
-  <div class="miolo">
-    <p class="rotulo rev">Próximo passo</p>
-    <h2 class="rev">Me diga o que mais se repete na sua semana. Eu digo o que dava para sumir da rotina.</h2>
-    <p class="lede rev">O diagnóstico é uma conversa direta, sem custo. Se não fizer sentido automatizar, eu digo isso também — implantação mal indicada vira sistema abandonado, e sistema abandonado não indica ninguém.</p>
-    <div class="acoes rev">
-      <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">Chamar no WhatsApp</a>
-      <span class="whats">Quem responde é o <strong>Levi</strong>, direto. A IA cuida da rotina — proposta é conversa.</span>
+  <div class="caixa">
+    <div class="mesh" aria-hidden="true"><b class="b1"></b><b class="b2"></b><b class="b3"></b></div>
+    <div class="conteudo">
+      <p class="rotulo rev" style="color:var(--ciano)">Próximo passo</p>
+      <h2 class="rev">Me diga o que mais se repete na sua semana. Eu digo o que dava pra sumir da rotina.</h2>
+      <p class="lede rev">O diagnóstico é uma conversa direta, sem custo. Se não fizer sentido automatizar, eu digo isso também — implantação mal indicada vira sistema abandonado, e sistema abandonado não indica ninguém.</p>
+      <div class="acoes rev">
+        <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">
+          Chamar no WhatsApp
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <span class="obs">Quem responde é o <b>Levi</b>, direto. A IA cuida da rotina — proposta é conversa.</span>
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <a class="marca" href="#">LMP<span class="ponto">.</span></a>
-  <span>LEVI MAGNO MARKETING LTDA · CNPJ 51.288.794/0001-71 · Imbituba/SC</span>
+  <a class="marca" href="#">LMP<i style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ciano);margin-left:5px"></i></a>
+  <span class="num">Levi Magno Marketing LTDA · CNPJ 51.288.794/0001-71 · Imbituba/SC</span>
   <span><a href="https://wa.me/5511996112620" target="_blank" rel="noopener">WhatsApp</a> · <a href="https://www.linkedin.com/in/levimp" target="_blank" rel="noopener">LinkedIn</a></span>
 </footer>
 
@@ -317,56 +600,135 @@ footer .marca{font-size:17px}
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
 <script>
-// Animação SEMPRE ligada (decisão de projeto: não respeitar prefers-reduced-motion).
+/* Animação SEMPRE ligada — decisão de projeto: NÃO respeitar prefers-reduced-motion
+   (o Windows do dono tem "reduzir movimento" ligado e isso apagaria o site inteiro). */
 gsap.registerPlugin(ScrollTrigger);
 
-const lenis = new Lenis({ lerp: 0.11 });
+const lenis = new Lenis({ lerp: 0.1 });
 lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add((t) => lenis.raf(t * 1000));
 gsap.ticker.lagSmoothing(0);
 
-// nav sólida ao rolar
+/* ---------- nav ---------- */
 const nav = document.getElementById('nav');
-ScrollTrigger.create({
-  start: 80,
-  onUpdate: (self) => nav.classList.toggle('solida', self.scroll() > 80),
+ScrollTrigger.create({ start: 90, onUpdate: (s) => nav.classList.toggle('presa', s.scroll() > 90) });
+// quem abre direto numa âncora já chega fora do hero: sem isto, a marca branca
+// fica invisível sobre o fundo claro.
+if (window.scrollY > 90) nav.classList.add('presa');
+
+/* ---------- mesh respirando ---------- */
+document.querySelectorAll('.mesh b').forEach((b, i) => {
+  gsap.to(b, {
+    x: () => gsap.utils.random(-70, 70), y: () => gsap.utils.random(-60, 60),
+    scale: () => gsap.utils.random(0.85, 1.2),
+    duration: 9 + i * 2.5, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: i * 0.6,
+  });
 });
 
-// hero: entrada orquestrada
+/* ---------- entrada do hero ---------- */
 const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-tl.to('.hero h1 .linha > span', { y: 0, duration: 1.0, stagger: 0.12 }, 0.15)
-  .to('.hero .sub', { opacity: 1, duration: 0.8 }, 0.75)
-  .to('.hero .acoes', { opacity: 1, duration: 0.8 }, 0.95)
-  .to('.fita span', { opacity: 1, x: 0, duration: 0.6, stagger: 0.09 }, 1.0)
-  .to('.hero .rolagem', { opacity: 1, duration: 0.8 }, 1.4);
+tl.to('h1 .l > span', { y: 0, duration: 1.05, stagger: 0.11 }, 0.15)
+  .to('h1 .risco', { scaleX: 1, duration: 0.7, ease: 'power2.inOut' }, 1.0)
+  .to('.sub', { opacity: 1, duration: 0.8 }, 0.8)
+  .to('.acoes', { opacity: 1, y: 0, duration: 0.8 }, 1.0)
+  .to('.abaixo', { opacity: 1, duration: 0.8 }, 1.15)
+  .to('#fone', { opacity: 1, y: 0, rotateX: 0, rotateY: 0, duration: 1.5, ease: 'power3.out' }, 0.45);
 
-// fita: respiração contínua
-gsap.to('.fita span', { y: -6, duration: 2.2, ease: 'sine.inOut', yoyo: true, repeat: -1, stagger: 0.35, delay: 2 });
+/* ---------- conversa do WhatsApp (loop) ---------- */
+const bolhas = [...document.querySelectorAll('#chat .b')];
+const digit = document.createElement('div');
+digit.className = 'digitando';
+digit.innerHTML = '<i></i><i></i><i></i>';
+document.getElementById('chat').appendChild(digit);
+gsap.to(digit.querySelectorAll('i'), { y: -4, duration: 0.34, stagger: 0.11, repeat: -1, yoyo: true, ease: 'sine.inOut' });
 
-// reveals por seção
+function rodarConversa() {
+  const c = gsap.timeline({ delay: 1.6, onComplete: () => {
+    gsap.to(bolhas, { opacity: 0, y: -8, duration: 0.5, stagger: 0.04, delay: 3.4, onComplete: rodarConversa });
+  }});
+  bolhas.forEach((b) => {
+    const ehIA = b.classList.contains('ia');
+    if (ehIA) {
+      c.set(digit, { opacity: 1 }).to({}, { duration: 0.85 }).set(digit, { opacity: 0 });
+    }
+    c.to(b, { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'back.out(1.6)' })
+     .to({}, { duration: ehIA ? 0.95 : 0.75 });
+  });
+  c.set(digit, { opacity: 0 });
+}
+gsap.set(bolhas, { opacity: 0, y: 10, scale: 0.96 });
+rodarConversa();
+
+/* ---------- cards flutuantes ---------- */
+gsap.to('.flut', { opacity: 1, y: 0, duration: 0.9, stagger: 0.28, delay: 1.5, ease: 'power3.out' });
+document.querySelectorAll('.flut').forEach((f, i) => {
+  gsap.to(f, { y: i % 2 ? 12 : -12, duration: 3.4 + i * 0.7, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 2.4 });
+});
+
+/* ---------- parallax do palco ---------- */
+gsap.to('.palco', { yPercent: -9, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
+gsap.to('.malha', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
+
+/* ---------- marquee infinito ---------- */
+(function marquee() {
+  const trilha = document.getElementById('fita1');
+  const faixa = trilha.parentElement;
+  trilha.parentElement.appendChild(trilha.cloneNode(true));
+  gsap.to(faixa.children, {
+    xPercent: -100, duration: 26, ease: 'none', repeat: -1,
+  });
+})();
+
+/* ---------- reveals ---------- */
 document.querySelectorAll('.rev').forEach((el) => {
-  gsap.to(el, {
-    opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-    scrollTrigger: { trigger: el, start: 'top 86%' },
+  gsap.to(el, { opacity: 1, y: 0, duration: 0.95, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 88%' } });
+});
+
+/* ---------- etapas do fluxo, com scrub ---------- */
+document.querySelectorAll('.trilha').forEach((t) => {
+  gsap.to(t.querySelectorAll('.etapa'), {
+    opacity: 1, y: 0, duration: 0.5, stagger: 0.13, ease: 'power2.out',
+    scrollTrigger: { trigger: t, start: 'top 78%' },
   });
 });
 
-// contadores da prova
-document.querySelectorAll('.conta').forEach((el) => {
+/* ---------- sparklines desenhando ---------- */
+document.querySelectorAll('.spark').forEach((p) => {
+  const len = p.getTotalLength();
+  gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+  gsap.to(p, { strokeDashoffset: 0, duration: 1.5, ease: 'power2.inOut',
+    scrollTrigger: { trigger: p.closest('.kpi') || p, start: 'top 88%' } });
+});
+
+/* ---------- contadores ----------
+   Os do hero rodam junto com a entrada (já estão visíveis no carregamento);
+   os do painel esperam o scroll. Amarrar TODOS ao ScrollTrigger deixava o
+   número do hero parado em zero. */
+function contar(el, atraso) {
   const alvo = parseInt(el.dataset.alvo, 10);
-  ScrollTrigger.create({
-    trigger: el, start: 'top 88%', once: true,
-    onEnter: () => {
-      const obj = { v: 0 };
-      gsap.to(obj, {
-        v: alvo, duration: 1.6, ease: 'power2.out',
-        onUpdate: () => { el.textContent = Math.round(obj.v); },
-      });
-    },
-  });
+  if (alvo === 0) { el.textContent = '0'; return; }
+  const o = { v: 0 };
+  gsap.to(o, { v: alvo, duration: 1.7, delay: atraso || 0, ease: 'power2.out',
+    onUpdate: () => { el.textContent = Math.round(o.v); } });
+}
+document.querySelectorAll('.hero .conta').forEach((el) => contar(el, 1.3));
+document.querySelectorAll('.kpi .conta').forEach((el) => {
+  ScrollTrigger.create({ trigger: el, start: 'top 92%', once: true, onEnter: () => contar(el) });
 });
 
-// âncoras suaves via lenis
+/* ---------- hover 3D nos blocos ---------- */
+document.querySelectorAll('.bloco').forEach((b) => {
+  b.addEventListener('mousemove', (e) => {
+    const r = b.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    gsap.to(b, { rotateY: px * 7, rotateX: -py * 7, transformPerspective: 900, duration: 0.5, ease: 'power2.out' });
+  });
+  b.addEventListener('mouseleave', () => gsap.to(b, { rotateY: 0, rotateX: 0, duration: 0.7, ease: 'power3.out' }));
+});
+
+/* ---------- âncoras ---------- */
 document.querySelectorAll('a[href^="#"]').forEach((a) => {
   a.addEventListener('click', (e) => {
     const alvo = document.querySelector(a.getAttribute('href'));
