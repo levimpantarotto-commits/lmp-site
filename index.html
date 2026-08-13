@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LMP — Eu mostro onde sua empresa perde dinheiro. Depois a IA tapa.</title>
+<title>LMP — Eu mostro onde sua empresa perde dinheiro. Depois a IA assume.</title>
 <meta name="description" content="Diagnóstico que mapeia o trabalho repetido que drena a sua operação — e implantação de IA que assume esse trabalho. Atendimento, cotação, follow-up, relatório e rotina administrativa."/>
-<meta property="og:title" content="LMP — Eu mostro onde sua empresa perde dinheiro. Depois a IA tapa."/>
+<meta property="og:title" content="LMP — Eu mostro onde sua empresa perde dinheiro. Depois a IA assume."/>
 <meta property="og:description" content="Diagnóstico do trabalho repetido que drena a sua operação, com a conta em horas e reais — e a implantação que assume esse trabalho."/>
 <meta property="og:type" content="website"/>
 <meta property="og:locale" content="pt_BR"/>
@@ -161,10 +161,11 @@ h1 em .risco{position:absolute;left:0;right:0;bottom:.08em;height:.10em;backgrou
 .flut p{font-family:var(--display);font-weight:700;font-size:16.5px;color:var(--escuro);letter-spacing:-.02em;line-height:1.2}
 .flut span{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:#0E8A5F;font-weight:600}
 .flut span::before{content:"";width:6px;height:6px;border-radius:50%;background:#12B378}
-/* único card flutuante, agora filho do .laudo — ancorado no canto de baixo
-   dele mesmo (não do palco inteiro), pra sempre encostar na borda, em
-   qualquer largura de tela, em vez de flutuar solto no fundo escuro. */
-.f2{bottom:-22px;left:-26px;z-index:6}
+/* único card flutuante, filho do .laudo — ancorado com top:100% (não bottom
+   negativo, que dependia da altura própria do card e acabava cobrindo o
+   saldo). Assim ele começa exatamente na borda de baixo do laudo e só sobe
+   14px para o efeito de crachá, sem nunca invadir o conteúdo do card. */
+.f2{top:100%;margin-top:-14px;left:-26px;z-index:6}
 @media(max-width:960px){.f2{position:static;margin:14px auto 0}}
 @media(max-width:960px){.flut{position:static;margin:12px auto 0;opacity:1!important;transform:none!important}.palco{flex-direction:column}}
 
@@ -339,12 +340,12 @@ footer a:hover{color:var(--laranja)}
 
   <div class="hero-txt">
     <span class="selo"><s></s>LMP · Diagnóstico e automação com IA</span>
-    <h1 aria-label="Eu mostro onde sua empresa perde dinheiro. Depois a IA tapa o buraco.">
+    <h1 aria-label="Eu mostro onde sua empresa perde dinheiro. Depois a IA assume.">
       <span class="l"><span>Eu mostro onde</span></span>
       <span class="l"><span>sua empresa <em>perde dinheiro<i class="risco"></i></em>.</span></span>
-      <span class="l"><span>Depois a IA tapa.</span></span>
+      <span class="l"><span>Depois a IA assume.</span></span>
     </h1>
-    <p class="sub">O vazamento não está no que dá errado — está no que <b>se repete</b>. O orçamento que leva dois dias, o cliente que ninguém retomou, a planilha de toda sexta. Eu mapeio isso na sua operação, ponho a conta em horas e reais, e <b>assumo com IA o que dá pra assumir</b>.</p>
+    <p class="sub">O vazamento não está no que dá errado — está no que <b>se repete</b>. O orçamento que leva dois dias, o cliente que ninguém retomou, a planilha de toda sexta. Eu mapeio isso na sua operação, ponho a conta em horas e reais, e <b>assumo com IA o que dá para assumir</b>.</p>
     <div class="acoes">
       <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20o%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">
         Quero ver o meu vazamento
@@ -491,7 +492,7 @@ footer a:hover{color:var(--laranja)}
           <div class="etapa mao"><b>02</b>Alguém lê quando puder</div>
           <div class="etapa mao"><b>03</b>Consulta preço no sistema</div>
           <div class="etapa mao"><b>04</b>Monta o orçamento na planilha</div>
-          <div class="etapa mao"><b>05</b>Envia por e-mail ou zap</div>
+          <div class="etapa mao"><b>05</b>Envia por e-mail ou WhatsApp</div>
           <div class="etapa mao"><b>06</b>Anota no CRM (às vezes)</div>
           <div class="etapa mao"><b>07</b>Follow-up: só se lembrarem</div>
         </div>
@@ -602,7 +603,7 @@ footer a:hover{color:var(--laranja)}
     </div>
 
     <div class="linha-oferta rev">
-      <p><b>O diagnóstico é pago e é abatido integralmente</b> se você seguir com a implantação. Ele existe pra você não comprar sistema por fé — e pra eu não implantar onde não faz sentido.</p>
+      <p><b>O diagnóstico é pago e é abatido integralmente</b> se você seguir com a implantação. Ele existe para você não comprar sistema por fé — e para eu não implantar onde não faz sentido.</p>
       <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20quero%20entender%20o%20diagn%C3%B3stico%20da%20LMP%20pra%20minha%20empresa." target="_blank" rel="noopener">
         Falar sobre o diagnóstico
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"/><path d="m12 5 7 7-7 7"/></svg>
@@ -644,7 +645,7 @@ footer a:hover{color:var(--laranja)}
     <div class="par">
       <div class="rev">
         <p><b>Levi Magno Pantarotto.</b> Construo e opero sistemas de IA que estão em produção hoje, atendendo clientes reais — do atendimento por WhatsApp com voz até o funil comercial e a rotina administrativa.</p>
-        <p>Quem faz o diagnóstico é quem implanta. Quem implanta é quem opera. Isso muda a conversa: você fala com quem põe a mão no sistema, não com um vendedor que repassa o projeto pra um time que você nunca vê.</p>
+        <p>Quem faz o diagnóstico é quem implanta. Quem implanta é quem opera. Isso muda a conversa: você fala com quem põe a mão no sistema, não com um vendedor que repassa o projeto para um time que você nunca vê.</p>
         <p>Dez anos em marketing digital e tráfego pago antes disso — a automação nasce <b>ligada à ponta comercial</b>, não como projeto de TI.</p>
         <div class="ferramentas" aria-label="Tecnologias usadas">
           <s>WhatsApp Cloud API</s><s>Claude</s><s>Gemini</s><s>GPT</s><s>Meta Ads API</s><s>Google Workspace</s><s>Node.js</s><s>ElevenLabs</s><s>CRM próprio</s>
@@ -668,7 +669,7 @@ footer a:hover{color:var(--laranja)}
     <div class="conteudo">
       <p class="rotulo rev" style="color:var(--ciano)">Próximo passo</p>
       <h2 class="rev">Me diga o que mais se repete na sua semana. Eu volto com a conta.</h2>
-      <p class="lede rev">A primeira conversa é direta e sem custo: eu escuto a operação e digo se tem vazamento suficiente pra justificar o diagnóstico. Se não tiver, eu falo — implantação mal indicada vira sistema abandonado, e sistema abandonado não indica ninguém.</p>
+      <p class="lede rev">A primeira conversa é direta e sem custo: eu escuto a operação e digo se tem vazamento suficiente para justificar o diagnóstico. Se não tiver, eu falo — implantação mal indicada vira sistema abandonado, e sistema abandonado não indica ninguém.</p>
       <div class="acoes rev">
         <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">
           Chamar no WhatsApp
