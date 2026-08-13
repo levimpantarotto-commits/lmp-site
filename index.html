@@ -128,7 +128,7 @@ h1 em .risco{position:absolute;left:0;right:0;bottom:.08em;height:.10em;backgrou
 
 /* o celular é PANO DE FUNDO: recuado, mais escuro e levemente desfocado, pra
    ler como camada de trás. Sem isso ele aparecia cortado, com jeito de bug. */
-.fone{position:absolute;right:-30px;top:50%;z-index:2;width:min(228px,70vw);border-radius:34px;padding:8px;
+.fone{position:absolute;right:-12px;top:50%;z-index:2;width:min(228px,70vw);border-radius:34px;padding:8px;
   background:linear-gradient(160deg,#22303F,#0B121B);box-shadow:0 40px 80px -26px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.07);
   opacity:0;transform:translateY(-52%) translateX(26px) rotate(4deg);filter:blur(.6px) saturate(.85)}
 .fone::after{content:"";position:absolute;inset:0;border-radius:34px;background:linear-gradient(90deg,rgba(11,27,46,.55),transparent 60%);pointer-events:none}
@@ -161,8 +161,10 @@ h1 em .risco{position:absolute;left:0;right:0;bottom:.08em;height:.10em;backgrou
 .flut p{font-family:var(--display);font-weight:700;font-size:16.5px;color:var(--escuro);letter-spacing:-.02em;line-height:1.2}
 .flut span{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:#0E8A5F;font-weight:600}
 .flut span::before{content:"";width:6px;height:6px;border-radius:50%;background:#12B378}
-/* único card flutuante, encostado no canto de baixo do laudo */
-.f2{bottom:12%;left:-7%;z-index:6}
+/* único card flutuante, agora filho do .laudo — ancorado no canto de baixo
+   dele mesmo (não do palco inteiro), pra sempre encostar na borda, em
+   qualquer largura de tela, em vez de flutuar solto no fundo escuro. */
+.f2{bottom:-22px;left:-26px;z-index:6}
 @media(max-width:960px){.f2{position:static;margin:14px auto 0}}
 @media(max-width:960px){.flut{position:static;margin:12px auto 0;opacity:1!important;transform:none!important}.palco{flex-direction:column}}
 
@@ -379,6 +381,12 @@ footer a:hover{color:var(--laranja)}
         <div><span>Trabalho repetido</span><b class="num">72 h/mês</b></div>
         <div class="ok"><span>3 automações resolvem</span><b class="num">~80%</b></div>
       </div>
+
+      <div class="flut f2">
+        <h4>Depois da implantação</h4>
+        <p>Orçamento #4192</p>
+        <span>gerado e enviado — 40 s</span>
+      </div>
     </div>
 
     <div class="fone" id="fone">
@@ -401,12 +409,6 @@ footer a:hover{color:var(--laranja)}
           <div class="enviar"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></div>
         </div>
       </div>
-    </div>
-
-    <div class="flut f2">
-      <h4>Depois da implantação</h4>
-      <p>Orçamento #4192</p>
-      <span>gerado e enviado — 40 s</span>
     </div>
   </div>
 </header>
