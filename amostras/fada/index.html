@@ -191,7 +191,9 @@ h1 .marca-sub{display:block;padding-left:.2em;margin-top:.1em;
   text-transform:lowercase;
   background:linear-gradient(96deg,var(--rosa) 0%,var(--roxo) 45%,var(--ouro) 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent}
-.heroTxt p.frase{font-family:'Shrikhand',cursive;font-size:clamp(26px,3.1vw,40px);line-height:1.16;color:#fff;font-weight:400;max-width:14ch;margin-top:var(--s3)}
+.heroTxt p.frase{font-family:'Shrikhand',cursive;font-size:clamp(19px,1.85vw,27px);line-height:1.26;
+  color:#fff;font-weight:400;max-width:min(46ch,88vw);margin:var(--s3) auto 0;
+  text-align:center;text-wrap:balance}
 .heroTxt p{margin-top:var(--s3);color:var(--mudo);font-size:17.5px;font-weight:300;max-width:46ch}
 .acoes{display:flex;gap:14px;margin-top:var(--s5);flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:12px;border-radius:var(--r-pill);
@@ -210,9 +212,10 @@ h1 .marca-sub{display:block;padding-left:.2em;margin-top:.1em;
 .hero{flex-direction:column;justify-content:center;text-align:center;overflow:hidden}
 .heroTxt{position:relative;z-index:3;max-width:none;margin-top:min(46vh,430px);
   display:flex;flex-direction:column;align-items:center}
-.heroTxt .frase{max-width:24ch;font-size:clamp(21px,2.1vw,30px)}
+.heroTxt .frase{max-width:min(46ch,88vw);font-size:clamp(19px,1.85vw,27px);line-height:1.24;
+  text-wrap:balance;text-align:center;margin-inline:auto}
 .heroTxt .acoes{justify-content:center}
-.heroTxt .dica{margin-top:var(--s4);font-family:inherit;font-size:11px;letter-spacing:.2em;
+.heroTxt .dica{position:static;margin-top:var(--s4);font-family:inherit;font-size:11px;letter-spacing:.2em;
   text-transform:uppercase;color:rgba(200,182,255,.55)}
 
 /* a logo da marca e a peca central do palco, com movimento por cima */
