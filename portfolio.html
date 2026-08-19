@@ -306,6 +306,33 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
   .post-card{width:260px}
   .cria-card{width:190px}
 }
+
+/* ===== v2: menos texto, mais obra ===== */
+/* parede de trabalhos atrás do nome: o efeito é feito com o material dele, não com shader genérico */
+.parede{position:absolute;top:0;bottom:0;right:0;left:48%;display:flex;gap:18px;justify-content:flex-end;padding-right:3vw;
+  overflow:hidden;pointer-events:none;z-index:0;
+  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.25) 14%,#000 42%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.25) 14%,#000 42%);
+  opacity:.62;
+}
+.coluna{width:min(19vw,260px);flex:none;display:flex;flex-direction:column;gap:18px;animation:sobe 46s linear infinite}
+.coluna:nth-child(2){animation:desce 54s linear infinite}
+.coluna:nth-child(3){animation:sobe 62s linear infinite}
+.coluna img{width:100%;border-radius:12px;border:1px solid var(--linha);box-shadow:var(--sombra-1);display:block}
+@keyframes sobe{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+@keyframes desce{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+@media(max-width:900px){.parede{left:0;opacity:.14;padding-right:0;justify-content:center;mask-image:none;-webkit-mask-image:none}.coluna:nth-child(3){display:none}}
+
+/* capacidades em linha, no lugar dos cinco blocos de texto */
+.chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:56px}
+.chip{
+  font-family:var(--mono);font-size:13px;letter-spacing:.02em;
+  border:1px solid var(--linha-clara);color:rgba(255,255,255,.82);
+  padding:12px 20px;border-radius:999px;background:rgba(255,255,255,.05);
+  transition:transform .25s ease,background .25s ease,border-color .25s ease;
+}
+.chip:hover{transform:translateY(-3px);background:rgba(47,212,196,.12);border-color:rgba(47,212,196,.45)}
+.chip b{color:var(--ciano);font-weight:700}
 </style>
 </head>
 <body>
@@ -318,19 +345,24 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
 </header>
 
 <section class="hero">
+  <div class="parede" aria-hidden="true">
+    <div class="coluna" id="col1"></div>
+    <div class="coluna" id="col2"></div>
+    <div class="coluna" id="col3"></div>
+  </div>
   <div class="wrap hero-inner">
     <div class="kicker rev" data-b="0">Portfólio 2026 · Levi Magno</div>
     <h1 id="heroTitulo">LMP<br><em>sites, sistemas e campanhas</em></h1>
-    <p class="sub rev" data-b="2">Doze projetos no ar. Site, aplicativo, atendimento por IA, anúncio e peça de social, tudo construído em código próprio.</p>
+    <p class="sub rev" data-b="2">Doze projetos no ar, em código próprio.</p>
     <div class="acoes rev" data-b="3">
       <a class="btn btn-laranja" href="#trabalhos">Ver os trabalhos</a>
       <a class="btn btn-ghost" href="https://wa.me/5511996112620" target="_blank" rel="noopener">Falar comigo</a>
     </div>
     <div class="tiras rev" data-b="4">
-      <div><b>12</b><span>projetos publicados</span></div>
+      <div><b>12</b><span>projetos nesta seleção</span></div>
       <div><b>9</b><span>sites no ar hoje</span></div>
       <div><b>7</b><span>segmentos atendidos</span></div>
-      <div><b>4</b><span>anos de operação</span></div>
+      <div><b>2023</b><span>operando desde</span></div>
     </div>
   </div>
 </section>
@@ -340,7 +372,7 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
     <div class="wrap">
       <div class="kicker rev">Trabalhos no ar</div>
       <h2 class="rev">Print de tela real, <span class="tint">sem mockup</span></h2>
-      <p class="lede rev" style="margin-top:16px">Anda sozinho. Arraste para o lado quando quiser parar em um. Cada imagem é uma captura de um projeto publicado, do jeito que o visitante vê hoje.</p>
+      <p class="lede rev" style="margin-top:16px">Anda sozinho, e você pode arrastar. Uma seleção: nem tudo que rodou nesses anos ficou guardado.</p>
     </div>
     <div class="pista" id="pistaG">
     <div class="trilho-g" id="trilhoG">
@@ -371,7 +403,7 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
   <div class="wrap">
     <div class="kicker rev">Peças e conteúdo</div>
     <h2 class="rev">Arte que sai <span class="tint">no feed do cliente</span></h2>
-    <p class="lede rev">Peças de social para clientes de auditoria previdenciária, imobiliária, restaurante e infoproduto, mais o conteúdo próprio da casa. Cada uma na identidade do dono, nunca no mesmo molde.</p>
+    <p class="lede rev">Cada peça na identidade do dono, nunca no mesmo molde.</p>
   </div>
   <div class="faixa-carrossel rev">
     <div class="trilha" id="trilhaClientes" style="animation-duration:34s">
@@ -402,7 +434,7 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
   <div class="wrap">
     <div class="kicker rev">Criativos de anúncio</div>
     <h2 class="rev">Anúncio que se mede <span class="tint">pelo que fecha</span></h2>
-    <p class="lede rev">Criativos de campanha em produção na Meta. O primeiro da fila é o anúncio que trouxe o cliente do Case 02.</p>
+    <p class="lede rev">Em produção na Meta. O primeiro trouxe cliente.</p>
   </div>
   <div class="faixa-carrossel rev">
     <div class="trilha" id="trilhaCriativos" style="animation-duration:24s">
@@ -420,20 +452,7 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
 
 
 
-<section id="numeros">
-  <div class="wrap">
-    <div class="kicker rev">Resultados medidos</div>
-    <h2 class="rev">Números com fonte e <span class="tint">data de apuração</span></h2>
-    <div class="stats-grid">
-      <div class="stat rev"><div class="num">R$ <span class="conta-ate" data-alvo="1.02" data-dec="2">0</span></div><div class="oq">custo por lead em campanha de captação, 445 leads</div><div class="fonte">Google Ads, abr a mai/2026</div></div>
-      <div class="stat rev"><div class="num">R$ <span class="conta-ate" data-alvo="459.78" data-dec="2">0</span></div><div class="oq">custo por cliente fechado, contra ticket inicial de R$ 5.000</div><div class="fonte">Meta Ads x CRM, 31/07/2026</div></div>
-      <div class="stat rev"><div class="num"><span class="conta-ate" data-alvo="88">0</span><small>%</small></div><div class="oq">dos 306 leads qualificados automaticamente, sem SDR contratado</div><div class="fonte">CRM em produção, 31/07/2026</div></div>
-      <div class="stat rev"><div class="num"><span class="conta-ate" data-alvo="8">0</span><small>s</small></div><div class="oq">entre o lead preencher o formulário e receber a primeira resposta</div><div class="fonte">Medição em produção, 10/07/2026</div></div>
-      <div class="stat rev"><div class="num"><span class="conta-ate" data-alvo="63">0</span><small>%</small></div><div class="oq">dos leads da base com origem rastreada até o anúncio específico</div><div class="fonte">Consulta ao CRM, 18/08/2026</div></div>
-      <div class="stat rev"><div class="num">R$ <span class="conta-ate" data-alvo="5.83" data-dec="2">0</span></div><div class="oq">melhor custo por lead em formulário no mercado imobiliário</div><div class="fonte">Meta Ads, apuração 10/07/2026</div></div>
-    </div>
-  </div>
-</section>
+
 
 <section style="padding-top:0">
   <div class="wrap">
@@ -444,13 +463,13 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
       <div>
         <div class="num-case">Imob8 · produto próprio</div>
         <h3>Funil rastreado do clique ao contrato</h3>
-        <p>Rastreamento ponta a ponta, com reunião e venda voltando para a Meta com peso por estágio. Trava de orçamento antes do agendamento.</p>
       </div>
       <div class="placar">
         <div class="li"><span>Leads atendidos</span><b>306</b></div>
         <div class="li"><span>Qualificados sem humano</span><b>271 (88%)</b></div>
         <div class="li"><span>Reuniões</span><b>8</b></div>
         <div class="li"><span>Custo por cliente</span><b class="qdoi">R$ 459,78</b></div>
+        <div class="li" style="border-top:1px solid var(--linha)"><span style="font-size:12px">Meta Ads x CRM · 31/07/2026</span><b style="font-size:11px;color:var(--ink-soft)">fonte</b></div>
       </div>
     </div>
 
@@ -458,13 +477,13 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
       <div>
         <div class="num-case">Babolin Imóveis · operação completa</div>
         <h3>Atendimento, funil e anúncios rodando sozinhos</h3>
-        <p>Bot no WhatsApp que qualifica e faz follow-up, CRM próprio e motor de anúncios no painel. Custo de IA da operação caiu de R$ 159 para R$ 21 por mês.</p>
       </div>
       <div class="placar">
         <div class="li"><span>Leads no CRM</span><b>210</b></div>
         <div class="li"><span>Qualificados</span><b>56</b></div>
         <div class="li"><span>Primeira resposta</span><b>8 segundos</b></div>
         <div class="li"><span>Melhor custo por lead</span><b class="qdoi">R$ 5,83</b></div>
+        <div class="li" style="border-top:1px solid var(--linha)"><span style="font-size:12px">CRM x Meta API · 10/07/2026</span><b style="font-size:11px;color:var(--ink-soft)">fonte</b></div>
       </div>
     </div>
 
@@ -472,13 +491,13 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
       <div>
         <div class="num-case">Terapia e infoproduto · captação</div>
         <h3>445 leads para um workshop pago</h3>
-        <p>Remarketing e Customer Match sobre a base própria do cliente, com 3.156 contatos saneados antes de subir campanha.</p>
       </div>
       <div class="placar">
         <div class="li"><span>Leads captados</span><b>445</b></div>
         <div class="li"><span>Custo por lead</span><b class="qdoi">R$ 1,02</b></div>
         <div class="li"><span>Investimento</span><b>R$ 456,46</b></div>
         <div class="li"><span>Base saneada</span><b>3.156</b></div>
+        <div class="li" style="border-top:1px solid var(--linha)"><span style="font-size:12px">Google Ads · abr a mai/2026</span><b style="font-size:11px;color:var(--ink-soft)">fonte</b></div>
       </div>
     </div>
   </div>
@@ -486,56 +505,21 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
 
 <section class="sist">
   <div class="wrap">
-    <div class="kicker rev">Sistemas e automações</div>
-    <h2 class="rev">O que eu construo quando a repetição custa caro</h2>
-    <p class="lede rev">Tudo abaixo está em produção hoje, com usuários reais. Não é roadmap.</p>
-    <div class="mods">
-      <div class="mod destaque-mod rev">
-        <div class="n">PRODUTO PRÓPRIO</div>
-        <h4>Imob8: a IA que assume o atendimento da imobiliária</h4>
-        <p>Atende e capta no WhatsApp 24 horas, qualifica com score, agenda reunião, faz follow-up e devolve cada conversão para a plataforma de anúncio aprender. Com site, painel, aplicativo instalável no celular e videochamada nativa com lousa inteligente. <b>Em 30 dias de operação medida: 157 leads atendidos, 93% com interação, 45% qualificados sem intervenção humana.</b></p>
-      </div>
-      <div class="mod rev">
-        <div class="n">ATENDIMENTO</div>
-        <h4>Agente de WhatsApp com voz</h4>
-        <p>Responde texto e áudio com voz clonada do dono, entende áudio do cliente, envia imóvel, foto e localização no momento certo da conversa.</p>
-      </div>
-      <div class="mod rev">
-        <div class="n">RASTREAMENTO</div>
-        <h4>Do clique ao contrato</h4>
-        <p>Cada clique carrega um identificador que segue com a pessoa até o CRM. Reunião e venda voltam para a Meta via Conversions API com peso por estágio.</p>
-      </div>
-      <div class="mod rev">
-        <div class="n">CRIATIVOS</div>
-        <h4>Motor de anúncios do painel</h4>
-        <p>O dono escolhe o imóvel e o sistema gera o anúncio em 4 formatos e publica na conta, com catálogo sincronizado automaticamente a cada 4 horas.</p>
-      </div>
-      <div class="mod rev">
-        <div class="n">AUDITORIA</div>
-        <h4>Analista de conversas</h4>
-        <p>Um agente lê as conversas do próprio bot todos os dias, detecta 8 tipos de erro de atendimento e reporta antes que vire cliente perdido.</p>
-      </div>
+    <div class="kicker rev">O que eu construo</div>
+    <h2 class="rev">Do site à IA que <span class="tint">atende sozinha</span></h2>
+    <div class="chips">
+      <div class="chip rev">Sites e landing pages</div>
+      <div class="chip rev">Atendimento por IA no WhatsApp</div>
+      <div class="chip rev">CRM e funil próprios</div>
+      <div class="chip rev">Aplicativo instalável</div>
+      <div class="chip rev">Campanhas Meta e Google</div>
+      <div class="chip rev">Rastreamento do clique ao contrato</div>
+      <div class="chip rev">Motor de anúncios no painel</div>
+      <div class="chip rev">Videochamada com lousa</div>
+      <div class="chip rev">Peças de social e criativos</div>
+      <div class="chip rev">Vídeo e apresentação animada</div>
     </div>
-
-    <div class="pipe-box" id="pipeBox">
-      <svg class="pipe-svg" viewBox="0 0 1120 150" xmlns="http://www.w3.org/2000/svg" aria-label="Fluxo: anúncio, conversa, qualificação, reunião, contrato">
-        <path class="trilho" d="M40 75 H1080"/>
-        <path class="fluxo" d="M40 75 H1080"/>
-        <circle class="no" cx="60"  cy="75" r="9" style="animation-delay:.20s"/>
-        <circle class="no" cx="315" cy="75" r="9" style="animation-delay:.82s"/>
-        <circle class="no" cx="570" cy="75" r="9" style="animation-delay:1.44s"/>
-        <circle class="no" cx="825" cy="75" r="9" style="animation-delay:2.06s"/>
-        <circle class="no" cx="1060" cy="75" r="9" style="animation-delay:2.68s"/>
-        <text class="rotulo" x="60"  y="34" text-anchor="middle" style="animation-delay:.30s">Anúncio</text>
-        <text class="rotulo" x="315" y="34" text-anchor="middle" style="animation-delay:.92s">Conversa em 8s</text>
-        <text class="rotulo" x="570" y="34" text-anchor="middle" style="animation-delay:1.54s">Qualificação</text>
-        <text class="rotulo" x="825" y="34" text-anchor="middle" style="animation-delay:2.16s">Reunião</text>
-        <text class="rotulo" x="1060" y="34" text-anchor="middle" style="animation-delay:2.78s">Contrato</text>
-        <text class="rotulo" x="60"  y="122" text-anchor="middle" fill="#2FD4C4" style="animation-delay:.30s">rastreado</text>
-        <text class="rotulo" x="570" y="122" text-anchor="middle" fill="#2FD4C4" style="animation-delay:1.54s">sem humano</text>
-        <text class="rotulo" x="1060" y="122" text-anchor="middle" fill="#2FD4C4" style="animation-delay:2.78s">volta pra Meta</text>
-      </svg>
-    </div>
+    <p class="lede rev" style="margin-top:48px"><b style="color:#fff">Em 30 dias de operação medida:</b> 157 leads atendidos, 93% com interação, 45% qualificados sem ninguém tocar.</p>
   </div>
 </section>
 
@@ -551,7 +535,7 @@ footer b{color:rgba(255,255,255,.75);font-weight:600}
   <div class="wrap">
     <div class="kicker rev">Contato</div>
     <h2 class="rev">Tem um projeto? Me chama.</h2>
-    <p class="lede rev">Site, sistema, automação de atendimento, campanha ou peça de social. Respondo no WhatsApp.</p>
+    <p class="lede rev">Respondo no WhatsApp.</p>
     <div class="acoes rev">
       <a class="btn btn-laranja" href="https://wa.me/5511996112620" target="_blank" rel="noopener">Chamar no WhatsApp</a>
       <a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.4)" href="https://levimp.com.br" target="_blank" rel="noopener">levimp.com.br</a>
@@ -728,10 +712,26 @@ else { window.addEventListener('load', bootHero); }
 /* Pipeline: desenha quando entra na tela */
 (function(){
   var box = document.getElementById('pipeBox');
+  if (!box) return;
   var io = new IntersectionObserver(function(ents){
     ents.forEach(function(e){ if(e.isIntersecting){ box.classList.add('on'); io.unobserve(box); } });
   },{threshold:.4});
   io.observe(box);
+})();
+
+/* v2: a parede do hero é montada com os próprios prints dos trabalhos */
+(function(){
+  var fotos = ['imob8','babolin','charles','jks','rssoma','lindabella','luxuria','mamalivre','levimp','laudoprev'];
+  var cols = [document.getElementById('col1'),document.getElementById('col2'),document.getElementById('col3')];
+  if(!cols[0]) return;
+  fotos.forEach(function(f,i){
+    var img=document.createElement('img');
+    img.src='portfolio-shots/'+f+'.jpg'; img.alt=''; img.loading='lazy';
+    cols[i%3].appendChild(img);
+  });
+  /* duplica cada coluna para o laço não ter emenda */
+  cols.forEach(function(c){ c.innerHTML += c.innerHTML; });
+  window.__paredeOk = cols.map(function(c){return c.children.length});
 })();
 </script>
 </body>
