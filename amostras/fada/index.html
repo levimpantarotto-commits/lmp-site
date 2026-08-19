@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAMALIVRE by fada espacial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================
+   IDENTIDADE MEDIDA NO SITE NO AR (style-retro.css)
+   bg #10002b | ink #050010 | bg2 #1b0033
+   texto #f8f9fa | mudo #c8b6ff
+   roxo #9d4edd | rosa #d904a8 | ouro magico #ff9e00
+   Shrikhand (display) + Nunito 300/400/600/700 (corpo)
+   ========================================================== */
+:root{
+  --ink:#050010;
+  --bg:#10002b;
+  --bg2:#1b0033;
+  --paper:#f8f9fa;
+  --mudo:#c8b6ff;
+  --roxo:#9d4edd;
+  --rosa:#d904a8;
+  --ouro:#ff9e00;
+  --vidro:rgba(29,0,51,.72);
+
+  /* raios generosos e variados, na proporcao da referencia */
+  --r-xl:44px; --r-lg:40px; --r-md:25px; --r-sm:20px; --r-pill:100px;
+
+  /* escala de 8 */
+  --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:64px;
+  --s7:96px; --s8:128px; --s9:160px;
+
+  --wrap:1180px;
+
+  /* sombras tintadas, multicamada, alpha baixo */
+  --sh1:0 1px 2px rgba(5,0,16,.20), 0 3px 8px rgba(157,78,221,.10);
+  --sh2:0 2px 4px rgba(5,0,16,.22), 0 10px 24px rgba(157,78,221,.14), 0 22px 48px rgba(5,0,16,.20);
+  --sh3:0 4px 10px rgba(5,0,16,.24), 0 20px 48px rgba(217,4,168,.18), 0 44px 96px rgba(5,0,16,.24);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Nunito',sans-serif;
+  font-weight:400;
+  font-size:16px;
+  line-height:1.62;
+  letter-spacing:-.005em;
+  color:var(--paper);
+  background:var(--ink);
+  overflow-x:hidden;
+  /* cursor de varinha, o gesto que a marca já usa no site no ar */
+  cursor:url("img-fada/varinha-cursor.png") 6 6, auto;
+}
+a,button,.chip,.card,.cores i,input,label{cursor:url("img-fada/varinha-cursor.png") 6 6, pointer}
+
+/* ---------- varinha: a ponta que segue o mouse ---------- */
+.varinhaMouse{
+  position:fixed;left:0;top:0;width:62px;height:62px;z-index:100000;
+  pointer-events:none;opacity:0;
+  background:url("img-fada/varinha.png") no-repeat center/contain;
+  filter:drop-shadow(0 0 12px rgba(217,4,168,.75)) drop-shadow(0 0 26px rgba(157,78,221,.5));
+  transition:opacity .35s ease;
+  will-change:transform}
+.varinhaMouse.viva{opacity:1}
+.rastro{position:fixed;left:0;top:0;z-index:99998;pointer-events:none;max-width:none}
+.faisca{
+  position:fixed;z-index:99999;pointer-events:none;
+  font-size:15px;line-height:1;user-select:none;
+  filter:drop-shadow(0 0 12px currentColor) drop-shadow(0 0 22px rgba(157,78,221,.8));
+  animation:faiscaSome 1.15s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes faiscaSome{
+  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:1}
+  55%{opacity:.85}
+  100%{transform:translate3d(var(--dx),var(--dy),0) scale(.12) rotate(var(--rot));opacity:0}
+}
+.estouro{
+  position:fixed;z-index:99997;pointer-events:none;
+  width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:var(--r-pill);
+  border:2px solid rgba(255,158,0,.9);
+  box-shadow:0 0 24px rgba(217,4,168,.8), inset 0 0 18px rgba(217,4,168,.55);
+  animation:estoura .78s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes estoura{
+  0%{transform:scale(.3);opacity:1}
+  100%{transform:scale(11);opacity:0;border-color:rgba(200,182,255,0)}
+}
+img,svg,canvas{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--rosa);color:#fff}
+
+/* ---------- campo de estrelas (do site no ar) ---------- */
+.ceu{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 12%, #2a0552 0%, #1b0033 42%, #050010 100%)}
+.estrelas{position:fixed;inset:-50%;z-index:-1;pointer-events:none;
+  background-image:
+   radial-gradient(1.6px 1.6px at 20px 30px,#fff,rgba(0,0,0,0)),
+   radial-gradient(1.4px 1.4px at 140px 90px,#e9d8ff,rgba(0,0,0,0)),
+   radial-gradient(2px 2px at 250px 180px,#fff,rgba(0,0,0,0)),
+   radial-gradient(1.2px 1.2px at 60px 220px,#ffd7f4,rgba(0,0,0,0));
+  background-repeat:repeat;background-size:320px 320px;opacity:.42;
+  animation:deriva 90s linear infinite}
+.estrelas.b{background-size:520px 520px;opacity:.24;animation:deriva 150s linear infinite reverse}
+@keyframes deriva{from{transform:translate3d(0,0,0)}to{transform:translate3d(-320px,-320px,0)}}
+
+/* ---------- tipografia ---------- */
+.rot{
+  font-family:'Nunito',sans-serif;font-weight:700;
+  font-size:11px;line-height:1;text-transform:uppercase;
+  letter-spacing:.2em;color:var(--mudo);
+}
+h1,h2,h3,.disp{font-family:'Shrikhand',cursive;font-weight:400}
+h1{font-size:clamp(58px,9.2vw,136px);line-height:.9;letter-spacing:-.022em}
+h2{font-size:clamp(34px,4.6vw,64px);line-height:1.02;letter-spacing:-.018em}
+h3{font-size:clamp(20px,1.9vw,26px);line-height:1.1;letter-spacing:-.01em}
+p{max-width:58ch}
+
+.wrap{width:min(100% - 40px,var(--wrap));margin-inline:auto}
+section{padding-block:var(--s8)}
+
+/* ---------- faixa correndo ---------- */
+.faixa{
+  position:relative;z-index:6;overflow:hidden;
+  background:linear-gradient(90deg,var(--rosa),var(--roxo) 55%,var(--ouro));
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.faixa .trilho{display:flex;width:max-content;animation:corre 26s linear infinite}
+.faixa span{
+  padding:9px 0;font-weight:700;font-size:11.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:#1a0030;white-space:nowrap;
+}
+.faixa span i{font-style:normal;opacity:.55;padding:0 26px}
+@keyframes corre{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+
+/* ---------- cabecalho ---------- */
+header{
+  position:sticky;top:0;z-index:40;
+  background:var(--vidro);backdrop-filter:blur(18px) saturate(150%);
+  border-bottom:1px solid rgba(200,182,255,.16);
+  transition:padding .4s cubic-bezier(.16,1,.3,1);
+}
+.barra{display:flex;align-items:center;gap:var(--s4);padding-block:14px}
+.marca{font-family:'Shrikhand',cursive;font-size:23px;letter-spacing:-.01em;
+  background:linear-gradient(92deg,#fff 8%,var(--mudo) 40%,var(--rosa) 78%,var(--ouro));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:220% 100%;animation:brilho 7s ease-in-out infinite}
+@keyframes brilho{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+/* marca real do site (logo-ufo.png / logo-texto.png baixados do ar) */
+.marcaBox{display:flex;align-items:center;gap:11px}
+.marcaBox img{width:34px;height:34px;object-fit:contain;flex:none;
+  transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.marcaBox:hover img{transform:translateY(-3px) rotate(-8deg) scale(1.08)}
+@keyframes flutua{0%,100%{transform:translate3d(0,0,0) rotate(-3deg)}
+ 50%{transform:translate3d(0,-13px,0) rotate(3deg)}}
+.pe .marcaBox img{width:28px;height:28px}
+nav{display:flex;gap:var(--s3);margin-left:var(--s2)}
+nav a{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--mudo);padding:6px 0;position:relative}
+nav a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;
+  background:var(--ouro);transition:width .45s cubic-bezier(.16,1,.3,1)}
+nav a:hover{color:#fff}
+nav a:hover::after{width:100%}
+.dir{margin-left:auto;display:flex;align-items:center;gap:12px}
+.busca{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(200,182,255,.22);border-radius:var(--r-pill);padding:9px 18px;
+  transition:border-color .35s,background .35s,box-shadow .35s}
+.busca:focus-within{border-color:var(--rosa);background:rgba(255,255,255,.10);
+  box-shadow:0 0 0 4px rgba(217,4,168,.16)}
+.busca input{background:none;border:0;outline:0;color:#fff;width:190px;font-size:13.5px}
+.busca input::placeholder{color:rgba(200,182,255,.6)}
+.sacola{display:flex;align-items:center;gap:9px;border:1px solid rgba(200,182,255,.22);
+  border-radius:var(--r-pill);padding:9px 16px;font-size:11px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;transition:transform .3s,border-color .3s}
+.sacola:hover{transform:translateY(-2px);border-color:var(--ouro)}
+.sacola b{background:var(--ouro);color:#26003f;border-radius:var(--r-pill);
+  min-width:21px;height:21px;display:grid;place-items:center;font-size:11px}
+.sacola.pulsa{animation:pulso .5s cubic-bezier(.16,1,.3,1)}
+@keyframes pulso{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding-block:var(--s7) var(--s6);min-height:88vh;display:flex;align-items:center}
+.heroGrid{display:grid;grid-template-columns:1.02fr .98fr;gap:var(--s6);align-items:center}
+.heroTxt{max-width:620px}
+.heroTxt .rot{margin-bottom:var(--s3)}
+.heroTxt h1{font-size:clamp(44px,6.2vw,92px);letter-spacing:-.028em}
+h1 .marca-sub{display:block;padding-left:.2em;margin-top:.1em;
+  font-family:var(--corpo,inherit);font-size:.2em;font-weight:400;letter-spacing:.26em;
+  text-transform:lowercase;
+  background:linear-gradient(96deg,var(--rosa) 0%,var(--roxo) 45%,var(--ouro) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.heroTxt p.frase{font-family:'Shrikhand',cursive;font-size:clamp(26px,3.1vw,40px);line-height:1.16;color:#fff;font-weight:400;max-width:14ch;margin-top:var(--s3)}
+.heroTxt p{margin-top:var(--s3);color:var(--mudo);font-size:17.5px;font-weight:300;max-width:46ch}
+.acoes{display:flex;gap:14px;margin-top:var(--s5);flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:12px;border-radius:var(--r-pill);
+  padding:16px 30px;font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s,background .35s}
+.btn.p{background:var(--ouro);color:#28003f;box-shadow:var(--sh2)}
+.btn.p:hover{transform:translateY(-4px) scale(1.03);box-shadow:var(--sh3)}
+.btn.s{border:1px solid rgba(200,182,255,.32);color:#fff}
+.btn.s:hover{transform:translateY(-4px);border-color:var(--rosa);background:rgba(217,4,168,.12)}
+.btn .seta{transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.btn:hover .seta{transform:translateX(6px)}
+
+.palco{position:relative;aspect-ratio:1/1.06;border-radius:var(--r-xl);
+  background:
+    radial-gradient(70% 55% at 50% 30%,rgba(157,78,221,.34),transparent 70%),
+    linear-gradient(168deg,rgba(255,255,255,.07),rgba(255,255,255,.015));
+  border:1px solid rgba(200,182,255,.18);box-shadow:var(--sh3);overflow:hidden}
+.palco canvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* a logo da marca e a peca central do palco, com movimento por cima */
+.logoPalco{position:absolute;inset:0;display:grid;place-items:center;
+  perspective:900px;transform-style:preserve-3d;will-change:transform}
+.barra .marca em{display:block;font-style:normal;font-family:inherit;
+  font-size:9px;letter-spacing:.2em;text-transform:lowercase;opacity:.72;margin-top:1px}
+.marcaViva{display:grid;justify-items:center;gap:6px;text-align:center;width:min(86%,430px);
+  filter:drop-shadow(0 2px 3px rgba(5,0,16,.9)) drop-shadow(0 0 22px rgba(255,158,0,.35))
+         drop-shadow(0 0 46px rgba(217,4,168,.5)) drop-shadow(0 0 78px rgba(157,78,221,.4));
+  animation:respira 6s ease-in-out infinite;will-change:transform,filter}
+.marcaViva .mm{width:min(36%,132px);display:block}
+.marcaViva .nome{font-family:'Shrikhand',cursive;font-size:clamp(30px,4.6vw,62px);
+  line-height:.92;letter-spacing:.01em;margin:0;color:#fff;text-transform:uppercase}
+.marcaViva .porFada{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:2px}
+.marcaViva .porFada span{font-size:13px;font-weight:400;letter-spacing:.24em;text-transform:lowercase;
+  background:linear-gradient(96deg,var(--rosa) 0%,var(--roxo) 45%,var(--ouro) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.marcaViva .naveAssina{width:34px;animation:naveGira 7s ease-in-out infinite}
+@keyframes naveGira{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-5px) rotate(8deg)}}
+@keyframes respira{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(0,-14px,0) scale(1.035)}
+}
+.logoUfo{position:absolute;width:min(26%,118px);
+  filter:drop-shadow(0 0 20px rgba(157,78,221,.7));
+  will-change:transform}
+.palco .brilhoLogo{position:absolute;width:74%;aspect-ratio:1;border-radius:var(--r-pill);
+  pointer-events:none;filter:blur(58px);
+  background:radial-gradient(circle,rgba(217,4,168,.55),rgba(157,78,221,.26) 52%,transparent 74%);
+  animation:pulsaBrilho 5.2s ease-in-out infinite}
+@keyframes pulsaBrilho{0%,100%{transform:scale(.9);opacity:.30}50%{transform:scale(1.12);opacity:.52}}
+.palco .selo{position:absolute;left:22px;bottom:22px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{border-radius:var(--r-pill);padding:8px 15px;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;background:rgba(5,0,16,.55);
+  border:1px solid rgba(200,182,255,.28);backdrop-filter:blur(8px)}
+.tag.ouro{background:var(--ouro);color:#28003f;border-color:transparent}
+.dica{position:absolute;right:22px;top:22px;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--mudo);opacity:.8}
+
+/* orbita decorativa */
+.orbita{position:absolute;inset:-14%;border-radius:var(--r-pill);pointer-events:none;
+  border:1px dashed rgba(200,182,255,.22);animation:gira 44s linear infinite}
+.orbita.b{inset:-30%;border-color:rgba(255,158,0,.16);animation-duration:70s;animation-direction:reverse}
+@keyframes gira{to{transform:rotate(360deg)}}
+
+/* ---------- transicao em bolhas ---------- */
+.bolhas{position:relative;height:150px;margin-top:-60px;pointer-events:none;z-index:3}
+.bolhas svg{width:100%;height:100%}
+.bolhas circle,.bolhas rect{transform-box:fill-box;transform-origin:center}
+
+/* ---------- vitrine ---------- */
+.vitrine{background:linear-gradient(180deg,rgba(27,0,51,.92),rgba(10,0,32,.92));
+  border-block:1px solid rgba(200,182,255,.14)}
+.cabec{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s4);flex-wrap:wrap}
+.cabec p{color:var(--mudo);font-weight:300;margin-top:12px}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--s5)}
+.chip{border-radius:var(--r-pill);padding:11px 20px;font-size:11px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(200,182,255,.24);
+  color:var(--mudo);transition:all .35s cubic-bezier(.16,1,.3,1)}
+.chip:hover{transform:translateY(-3px);color:#fff;border-color:var(--rosa)}
+.chip[aria-pressed="true"]{background:var(--paper);color:#28003f;border-color:transparent;box-shadow:var(--sh2)}
+
+.grade{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-top:var(--s5)}
+.card{position:relative;border-radius:var(--r-md);overflow:hidden;background:rgba(255,255,255,.045);
+  border:1px solid rgba(200,182,255,.16);box-shadow:var(--sh1);
+  display:flex;flex-direction:column;height:100%;
+  transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s,border-color .5s}
+.card:hover{transform:translateY(-8px);box-shadow:var(--sh3);border-color:rgba(255,158,0,.4)}
+/* quebra proposital da grade */
+.card.grande{grid-column:span 2;grid-row:span 2}
+/* a arte ocupa toda a sobra do card, inclusive no card grande */
+.arte{position:relative;overflow:hidden;background:#150033;flex:1 1 auto;aspect-ratio:4/5;min-height:230px}
+.arte svg{position:absolute;inset:0;width:100%;height:100%;
+  transition:transform 1.1s cubic-bezier(.16,1,.3,1)}
+.card:hover .arte svg{transform:scale(1.07) rotate(-1.1deg)}
+
+.etiq{position:absolute;left:12px;top:12px;z-index:2;border-radius:var(--r-pill);
+  padding:6px 13px;font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  background:rgba(5,0,16,.6);border:1px solid rgba(200,182,255,.28);backdrop-filter:blur(6px)}
+.etiq.unica{background:var(--rosa);border-color:transparent;color:#fff;left:auto;right:12px}
+.rapido{position:absolute;left:12px;right:12px;bottom:12px;z-index:2;border-radius:var(--r-sm);
+  padding:14px;text-align:center;font-size:10.5px;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;background:var(--paper);color:#28003f;
+  transform:translateY(130%);opacity:0;transition:all .5s cubic-bezier(.16,1,.3,1)}
+.card:hover .rapido{transform:translateY(0);opacity:1}
+.info{padding:16px 16px 18px}
+.info .nome{font-family:'Shrikhand',cursive;font-size:17px;letter-spacing:-.01em}
+.info .cat{font-size:13.5px;font-weight:300;line-height:1.5;
+  color:var(--mudo);margin-top:8px}
+.linha{display:flex;align-items:center;justify-content:space-between;margin-top:13px;gap:10px}
+.preco{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ouro)}
+.cores{display:flex;gap:6px}
+.cores i{width:15px;height:15px;border-radius:var(--r-pill);display:block;
+  border:1px solid rgba(255,255,255,.35);cursor:pointer;transition:transform .3s}
+.cores i:hover{transform:scale(1.28)}
+.card.grande .info{padding:22px}
+.card.grande .info .nome{font-size:26px}
+
+.vazio{grid-column:1/-1;padding:var(--s6);text-align:center;color:var(--mudo);
+  border:1px dashed rgba(200,182,255,.26);border-radius:var(--r-lg)}
+.maisLoja{margin-top:var(--s5);display:flex;justify-content:center}
+
+/* ---------- retrato da marca (foto real do site no ar) ---------- */
+.sobre{border-block:1px solid rgba(200,182,255,.14);
+  background:linear-gradient(180deg,rgba(10,0,32,.92),rgba(27,0,51,.92))}
+.sobreGrid{display:grid;grid-template-columns:.86fr 1.14fr;gap:var(--s6);align-items:center}
+.retrato{position:relative;aspect-ratio:1/1.32;border-radius:var(--r-xl);overflow:hidden;
+  border:1px solid rgba(200,182,255,.18);box-shadow:var(--sh3);
+  background:
+    radial-gradient(58% 46% at 50% 22%,rgba(157,78,221,.48),transparent 72%),
+    radial-gradient(88% 56% at 50% 108%,rgba(217,4,168,.32),transparent 70%),
+    linear-gradient(168deg,#1e0140,#0b0024)}
+.retrato img{position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;object-position:center bottom;
+  filter:drop-shadow(0 30px 52px rgba(5,0,16,.6));
+  transform:scale(1.02);transition:transform 1.4s cubic-bezier(.16,1,.3,1)}
+.retrato:hover img{transform:scale(1.06) translateY(-8px)}
+.retrato .anel{position:absolute;left:-16%;right:-16%;top:-18%;height:76%;pointer-events:none;
+  border-radius:var(--r-pill);border:1px dashed rgba(200,182,255,.24);
+  animation:gira 58s linear infinite}
+.retrato .anel.b{left:-30%;right:-30%;top:-32%;height:96%;
+  border-color:rgba(255,158,0,.18);animation-duration:88s;animation-direction:reverse}
+.retrato .assinatura{position:absolute;left:20px;bottom:20px;z-index:2;
+  border-radius:var(--r-pill);padding:9px 17px;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;background:rgba(5,0,16,.58);
+  border:1px solid rgba(200,182,255,.28);backdrop-filter:blur(8px)}
+.sobreTxt p{color:var(--mudo);font-weight:300;font-size:17px;margin-top:var(--s3);max-width:52ch}
+.selo-ufo{width:78px;margin-bottom:var(--s3);animation:flutua 8s ease-in-out infinite}
+.caixa .assina{width:200px;margin:0 auto var(--s2);display:block;
+  animation:flutua 10s ease-in-out infinite}
+
+/* ---------- confianca ---------- */
+.confia{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s2);margin-top:var(--s6)}
+.pastilha{border-radius:var(--r-sm);padding:22px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(200,182,255,.16);box-shadow:var(--sh1);
+  transition:transform .5s cubic-bezier(.16,1,.3,1),border-color .5s}
+.pastilha:hover{transform:translateY(-6px);border-color:var(--roxo)}
+.pastilha .rot{margin-bottom:10px}
+.pastilha b{font-family:'Shrikhand',cursive;font-weight:400;font-size:19px;display:block;line-height:1.14}
+.pastilha small{display:block;margin-top:8px;color:var(--mudo);font-size:13px;font-weight:300;line-height:1.5}
+
+/* ---------- perguntas ---------- */
+.faq{margin-top:var(--s6);border-top:1px solid rgba(200,182,255,.16)}
+.item{border-bottom:1px solid rgba(200,182,255,.16)}
+.item button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:26px 0;text-align:left;font-family:'Shrikhand',cursive;font-size:clamp(18px,2vw,25px);
+  letter-spacing:-.01em;transition:color .35s,padding-left .45s cubic-bezier(.16,1,.3,1)}
+.item button:hover{color:var(--ouro);padding-left:12px}
+.item .mais{flex:none;width:34px;height:34px;border-radius:var(--r-pill);display:grid;place-items:center;
+  border:1px solid rgba(200,182,255,.3);transition:transform .5s cubic-bezier(.16,1,.3,1),background .35s}
+.item[data-open="1"] .mais{transform:rotate(135deg);background:var(--ouro);color:#28003f;border-color:transparent}
+.item .resp{max-height:0;overflow:hidden;transition:max-height .6s cubic-bezier(.16,1,.3,1)}
+.item .resp p{color:var(--mudo);font-weight:300;padding-bottom:26px;max-width:70ch}
+
+/* ---------- fecho ---------- */
+.fecho{position:relative;overflow:hidden}
+.caixa{position:relative;border-radius:var(--r-xl);padding:clamp(40px,6vw,88px);
+  background:linear-gradient(140deg,rgba(217,4,168,.24),rgba(157,78,221,.16) 48%,rgba(255,158,0,.16));
+  border:1px solid rgba(200,182,255,.24);box-shadow:var(--sh3);text-align:center}
+.caixa .rot{color:#fff;opacity:.85}
+.caixa h2{margin-top:18px}
+.caixa p{margin:18px auto 0;color:#f0e6ff;font-weight:300}
+.caixa .acoes{justify-content:center}
+.cometa{position:absolute;width:220px;height:2px;border-radius:var(--r-pill);
+  background:linear-gradient(90deg,transparent,#fff,transparent);opacity:.75;
+  filter:blur(.4px);animation:cometa 5.5s linear infinite}
+@keyframes cometa{0%{transform:translate3d(-260px,-40px,0) rotate(18deg);opacity:0}
+ 12%{opacity:.85}100%{transform:translate3d(120vw,320px,0) rotate(18deg);opacity:0}}
+
+footer{border-top:1px solid rgba(200,182,255,.16);padding-block:var(--s5)}
+.pe{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);flex-wrap:wrap}
+.pe .links{display:flex;gap:var(--s3)}
+.pe a{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mudo)}
+.pe a:hover{color:var(--ouro)}
+.pe small{color:rgba(200,182,255,.55);font-size:12px}
+
+/* ---------- entrada animada (sem gate de reduce motion) ---------- */
+.rev{opacity:0;transform:translate3d(0,42px,0) scale(.94);filter:blur(18px)}
+.rev.on{opacity:1;transform:none;filter:blur(0);
+  transition:opacity 1.1s cubic-bezier(.16,1,.3,1),transform 1.4s cubic-bezier(.16,1,.3,1),filter 1.1s cubic-bezier(.16,1,.3,1)}
+.heroTxt .rev.on{transition-duration:1.2s,1.6s,1.2s}
+
+@media(max-width:1080px){
+  .heroGrid{grid-template-columns:1fr;gap:var(--s5)}
+  .palco{max-width:520px}
+  .grade{grid-template-columns:repeat(2,1fr)}
+  .confia{grid-template-columns:repeat(2,1fr)}
+  .sobreGrid{grid-template-columns:1fr;gap:var(--s5)}
+  .retrato{max-width:460px}
+  nav,.busca{display:none}
+}
+@media(max-width:560px){
+  section{padding-block:var(--s6)}
+  .grade{grid-template-columns:1fr}
+  .card.grande{grid-column:span 1;grid-row:span 1}
+  .confia{grid-template-columns:1fr}
+}
+</style>
+<meta property="og:title" content="MAMALIVRE by fada espacial">
+<meta property="og:description" content="Proposta de site: vitrine astral com peca unica, upcycling e sob medida.">
+<meta property="og:type" content="website">
+<meta name="robots" content="noindex">
+</head>
+<body>
+
+<div class="ceu"></div>
+<div class="estrelas"></div>
+<div class="estrelas b"></div>
+
+<div class="faixa">
+  <div class="trilho" id="trilho"></div>
+</div>
+
+<header>
+  <div class="wrap barra">
+    <a href="#" class="marcaBox">
+      <img src="img-fada/mamalivre-mm.png" alt="Monograma MamaLivre">
+      <span class="marca">MamaLivre<em>by fada espacial</em></span>
+    </a>
+    <nav>
+      <a href="#vitrine">Loja</a>
+      <a href="#sobre">Sobre a Fada</a>
+      <a href="#confianca">Guia da Fada</a>
+      <a href="https://fadaespacial.tumblr.com" target="_blank" rel="noopener">Blog do Tumblr</a>
+    </nav>
+    <div class="dir">
+      <label class="busca">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c8b6ff" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <input id="busca" type="search" placeholder="Buscar na vitrine astral" aria-label="Buscar">
+      </label>
+      <a class="sacola" href="http://ig.me/m/looksfadaespacial" target="_blank" rel="noopener">Contato <b>♡</b></a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap heroGrid">
+    <div class="heroTxt">
+      <div class="rot rev">Goiânia ⋆ upcycling ⋆ peça única</div>
+      <p class="frase rev">Entre fadas, bruxas e sereias, universos se entrelaçam para dar vida a infinitas expressões de ser.</p>
+      <div class="acoes rev">
+        <a class="btn p" href="#vitrine">Ver a vitrine <span class="seta">⇾</span></a>
+        <a class="btn s" href="http://ig.me/m/looksfadaespacial" target="_blank" rel="noopener">Falar com a fada</a>
+      </div>
+    </div>
+    <div class="rev">
+      <div class="palco" id="palco">
+        <div class="orbita"></div><div class="orbita b"></div>
+        <canvas id="poeira"></canvas>
+        <div class="brilhoLogo"></div>
+        <div class="logoPalco" id="logoPalco">
+          <div class="marcaViva" id="logoTexto">
+            <img class="mm" src="img-fada/mamalivre-mm.png" alt="Monograma MamaLivre">
+            <h1 class="nome">MAMALIVRE</h1>
+            <div class="porFada">
+              <img class="naveAssina" src="img-fada/logo-ufo.png" alt="Disco voador da Fada Espacial">
+              <span>by fada espacial</span>
+            </div>
+          </div>
+        </div>
+        <div class="dica">Mova o mouse ⋆ role a página</div>
+        <div class="selo">
+          <span class="tag ouro">Sob medida</span>
+          <span class="tag">Sem molde</span>
+          <span class="tag">Feito à mão</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- transicao em bolhas -->
+<div class="bolhas" id="bolhas" aria-hidden="true"></div>
+
+<!-- ================= VITRINE ================= -->
+<section class="vitrine" id="vitrine">
+  <div class="wrap">
+    <div class="cabec">
+      <div>
+        <div class="rot rev">⋆ Vitrine Astral ⋆</div>
+        <h2 class="rev" style="margin-top:14px">Cada retalho<br>tem voz</h2>
+      </div>
+      <p class="rev">Quatro caminhos dentro do universo da fada. Nenhuma peça sai igual à outra.</p>
+    </div>
+
+    <div class="chips" id="chips">
+      <button class="chip" data-cat="todas" aria-pressed="true">Todas</button>
+      <button class="chip" data-cat="Drops" aria-pressed="false">Drops</button>
+      <button class="chip" data-cat="Acessórios" aria-pressed="false">Acessórios</button>
+      <button class="chip" data-cat="Coleções" aria-pressed="false">Coleções</button>
+      <button class="chip" data-cat="Sob Medida" aria-pressed="false">Sob Medida</button>
+    </div>
+
+    <div class="grade" id="grade"></div>
+
+    <div class="maisLoja">
+      <a class="btn s" href="http://ig.me/m/looksfadaespacial" target="_blank" rel="noopener">Ver loja completa <span class="seta">⇾</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RETRATO DA MARCA ================= -->
+<section class="sobre" id="sobre">
+  <div class="wrap sobreGrid">
+    <div class="rev">
+      <div class="retrato">
+        <div class="anel"></div><div class="anel b"></div>
+        <img src="img-fada/isadora-fada.png" alt="Isadora Schwartz, criadora da Fada Espacial" loading="lazy" decoding="async">
+        <span class="assinatura">Isadora Schwartz</span>
+      </div>
+    </div>
+    <div class="sobreTxt">
+      <img class="selo-ufo rev" src="img-fada/logo-ufo.png" alt="Disco voador da Fada Espacial">
+      <div class="rot rev">⋆ Sobre a Fada ⋆</div>
+      <h2 class="rev" style="margin-top:14px;max-width:14ch">Quem costura o universo</h2>
+      <p class="rev">A Fada Espacial, criada por Isadora Schwartz, é mais do que uma marca, é um universo onde imaginação, identidade e liberdade se encontram. A marca nasce dando vida a looks únicos, feitos sob medida, que vão além de raves e festivais.</p>
+      <p class="rev">Aqui, cada retalho tem voz e cada costura carrega uma intenção. Acreditamos no poder da transformação através do upcycling e na magia da criação freestyle, onde nenhuma peça é igual à outra e cada criação carrega sua própria história astral.</p>
+      <div class="acoes rev">
+        <a class="btn s" href="https://instagram.com/looksfadaespacial" target="_blank" rel="noopener">Ver o Instagram <span class="seta">⇾</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONFIANCA ================= -->
+<section id="confianca">
+  <div class="wrap">
+    <div class="rot rev">⋆ Guia da Fada ⋆</div>
+    <h2 class="rev" style="margin-top:14px;max-width:16ch">O processo, sem letra miúda</h2>
+
+    <div class="confia">
+      <div class="pastilha rev"><div class="rot">Pagamento</div><b>Pix ou link</b><small>No link dá para parcelar. As taxas ficam por conta da cliente.</small></div>
+      <div class="pastilha rev"><div class="rot">Entrega</div><b>Goiânia no dia seguinte</b><small>Envio via ônibus com entregadora. Demais regiões pelos Correios.</small></div>
+      <div class="pastilha rev"><div class="rot">Prazo</div><b>30 dias de antecedência</b><small>Encomenda sob medida pede agenda. Complexidade do look altera o prazo.</small></div>
+      <div class="pastilha rev"><div class="rot">Ajuste</div><b>7 dias para enviar</b><small>Retorno analisado, ajuste feito em até 10 dias além do envio.</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PERGUNTAS ================= -->
+<section id="perguntas" style="padding-top:0">
+  <div class="wrap">
+    <div class="faq" id="faq"></div>
+  </div>
+</section>
+
+<!-- ================= FECHO ================= -->
+<section class="fecho">
+  <div class="cometa" style="top:8%;animation-delay:.4s"></div>
+  <div class="cometa" style="top:52%;animation-delay:2.6s"></div>
+  <div class="wrap">
+    <div class="caixa rev">
+      <img class="assina" src="img-fada/logo-texto.png" alt="Logotipo Fada Espacial">
+      <div class="rot">⋆ Encomenda aberta ⋆</div>
+      <h2>Sua peça<br>ainda não existe</h2>
+      <p>Escolha um look, adapte cor e tecido ou mande suas inspirações. O resto nasce em freestyle.</p>
+      <div class="acoes">
+        <a class="btn p" href="http://ig.me/m/looksfadaespacial" target="_blank" rel="noopener">Falar com a fada <span class="seta">⇾</span></a>
+        <a class="btn s" href="https://instagram.com/looksfadaespacial" target="_blank" rel="noopener">@looksfadaespacial</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap pe">
+    <span class="marcaBox"><img src="img-fada/logo-ufo.png" alt=""><span class="marca" style="font-size:19px">Fada Espacial</span></span>
+    <div class="links">
+      <a href="https://instagram.com/looksfadaespacial" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://fadaespacial.tumblr.com" target="_blank" rel="noopener">Tumblr</a>
+      <a href="http://ig.me/m/looksfadaespacial" target="_blank" rel="noopener">Contato DM</a>
+    </div>
+    <small>© 2023 Fada Espacial. Criando com amor. Amostra de direção visual.</small>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   1. FAIXA CORRENDO
+   ========================================================= */
+(function(){
+  const itens = ['Peça única, sem molde','Upcycling autoral','Sob medida em Goiânia','Pix ou link parcelado','Encomenda com 30 dias'];
+  const bloco = itens.map(t=>`${t}<i>⋆</i>`).join('');
+  document.getElementById('trilho').innerHTML = `<span>${bloco}</span><span>${bloco}</span>`;
+})();
+
+/* observador das entradas, declarado cedo porque a vitrine
+   chama observa() assim que pinta os cards */
+var io = null;
+
+/* =========================================================
+   2. GERADOR DE ARTE (SVG desenhado, zero banco de imagem)
+   ========================================================= */
+const PAL = {roxo:'#9d4edd', rosa:'#d904a8', ouro:'#ff9e00', lilas:'#c8b6ff', noite:'#2a0552', creme:'#f8f9fa'};
+const TECIDOS = [PAL.roxo, PAL.rosa, PAL.ouro, PAL.lilas, PAL.noite, PAL.roxo, PAL.rosa];
+
+function rng(seed){let s = seed*9301 + 49297;return function(){s=(s*9301+49297)%233280;return s/233280;}}
+
+/* caminhos desenhados a mao, viewBox 0 0 400 500 */
+function silhueta(tipo){
+  if(tipo==='Drops') return 'M96 128 L142 96 L200 118 L258 96 L304 128 L294 190 L286 296 L114 296 L106 190 Z';
+  // colar de gargantilha com tres pingentes, nao disco
+  if(tipo==='Acessórios') return 'M78 152 C132 96, 268 96, 322 152 L322 182 C268 128, 132 128, 78 182 Z '
+    + 'M148 170 L159 200 L148 230 L137 200 Z M200 180 L214 218 L200 258 L186 218 Z M252 170 L263 200 L252 230 L241 200 Z';
+  if(tipo==='Coleções') return 'M118 112 L160 88 L200 106 L240 88 L282 112 L268 186 L288 306 L322 430 L78 430 L112 306 L132 186 Z';
+  return 'M110 110 L156 86 L200 106 L244 86 L290 110 L278 180 L272 244 L128 244 L122 180 Z M124 268 L276 268 L306 414 L94 414 Z';
+}
+/* cada tipo tem barra, franja e ilhos proprios */
+const FORMA = {
+  'Drops':      {baseY:296, franja:true,  ilhosY:132, x0:104, passo:24, n:9},
+  'Acessórios': {baseY:0,   franja:false, ilhosY:148, x0:100, passo:25, n:9},
+  'Coleções':   {baseY:430, franja:true,  ilhosY:110, x0:126, passo:19, n:8},
+  'Sob Medida': {baseY:414, franja:true,  ilhosY:108, x0:120, passo:20, n:8}
+};
+
+function arte(tipo, seed){
+  const r = rng(seed);
+  const id = 'c'+seed;
+  const F = FORMA[tipo];
+  let retalhos='';
+  const n = 16;
+  for(let i=0;i<n;i++){
+    const x = r()*420-20, y = r()*520-20;
+    const w = 60+r()*150, h = 40+r()*130;
+    const c = TECIDOS[(seed+i)%TECIDOS.length];
+    const rot = (r()*40-20).toFixed(1);
+    const rad = [4,10,18,26][Math.floor(r()*4)];
+    retalhos += `<rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" rx="${rad}" fill="${c}" opacity="${(.82+r()*.18).toFixed(2)}" transform="rotate(${rot} ${(x+w/2).toFixed(0)} ${(y+h/2).toFixed(0)})"/>`;
+  }
+  // costura visivel
+  let costura='';
+  for(let i=0;i<5;i++){
+    const y = 120 + i*66 + r()*22;
+    costura += `<path d="M70 ${y.toFixed(0)} Q 200 ${(y-26-r()*22).toFixed(0)} 336 ${y.toFixed(0)}" fill="none" stroke="${PAL.creme}" stroke-opacity=".62" stroke-width="1.6" stroke-dasharray="5 7"/>`;
+  }
+  // ilhos dourados na borda de cima
+  let ilhos='';
+  for(let i=0;i<F.n;i++){
+    const x = F.x0 + i*F.passo, y = F.ilhosY + Math.sin(i*.8)*8;
+    ilhos += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="5.4" fill="none" stroke="${PAL.ouro}" stroke-width="2.4"/>`;
+  }
+  // franja no barrado
+  let franja='';
+  if(F.franja){
+    for(let i=0;i<26;i++){
+      const x = 92 + i*(216/26) + (tipo==='Coleções'?-14:0);
+      const len = 26 + r()*54;
+      franja += `<path d="M${x.toFixed(0)} ${F.baseY} q ${(r()*14-7).toFixed(1)} ${(len/2).toFixed(0)} ${(r()*18-9).toFixed(1)} ${len.toFixed(0)}" stroke="${TECIDOS[(i+seed)%TECIDOS.length]}" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".85"/>`;
+    }
+  }
+  // estrelinhas do fundo
+  let poeira='';
+  for(let i=0;i<22;i++){
+    poeira += `<circle cx="${(r()*400).toFixed(0)}" cy="${(r()*500).toFixed(0)}" r="${(r()*1.7+.5).toFixed(1)}" fill="${PAL.lilas}" opacity="${(.25+r()*.5).toFixed(2)}"/>`;
+  }
+
+  return `<svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustração de peça ${tipo}">
+  <defs>
+    <clipPath id="${id}"><path d="${silhueta(tipo)}"/></clipPath>
+    <radialGradient id="g${id}" cx="50%" cy="26%" r="78%">
+      <stop offset="0%" stop-color="#3a0a68"/><stop offset="100%" stop-color="#12002f"/>
+    </radialGradient>
+    <linearGradient id="v${id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".16"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity=".32"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#g${id})"/>
+  ${poeira}
+  <g opacity=".9">${franja}</g>
+  <g clip-path="url(#${id})">
+    <rect width="400" height="500" fill="${PAL.noite}"/>
+    ${retalhos}
+    ${costura}
+    <rect width="400" height="500" fill="url(#v${id})"/>
+  </g>
+  <path d="${silhueta(tipo)}" fill="none" stroke="${PAL.creme}" stroke-opacity=".75" stroke-width="2"/>
+  ${ilhos}
+</svg>`;
+}
+
+/* =========================================================
+   3. CATALOGO (categorias, textos e preco vindos da API real
+      do site no ar: /api/fada?type=products. Preço literal
+      "Consulte". Peças sem nome próprio usam rótulo neutro.)
+   ========================================================= */
+/* os 4 produtos reais publicados em /api/fada?type=products,
+   com nome, categoria, descricao e preco literais do site no ar */
+const CATALOGO = [
+  {id:'drops-1', cat:'Drops', nome:'Drops', preco:'Consulte', seed:48, destaque:false,
+   sub:'Peças únicas em upcycling, onde o que já existia e fragmentos se transformam e renascem com magia e identidade.'},
+  {id:'acessorios-1', cat:'Acessórios', nome:'Acessórios Únicos', preco:'Consulte', seed:122, destaque:false,
+   sub:'Brilhos mágicos que transformam o simples em encanto e elevam sua essência astral em cada detalhe.'},
+  {id:'colecoes-1', cat:'Coleções', nome:'Coleções', preco:'Consulte', seed:196, destaque:false,
+   sub:'Entre fadas, bruxas e sereias, universos se entrelaçam para dar vida a infinitas expressões de ser.'},
+  {id:'sob-medida-1', cat:'Sob Medida', nome:'Looks Sob Medida', preco:'Consulte', seed:270, destaque:false,
+   sub:'Peças únicas com intenção, magia e personalidade, pensadas para refletir movimento, luz e sua energia própria.'}
+];
+
+const grade = document.getElementById('grade');
+function pinta(lista){
+  if(!lista.length){grade.innerHTML = '<div class="vazio">Nada encontrado nessa busca. Tente Drops, Acessórios, Coleções ou Sob Medida.</div>';return;}
+  grade.innerHTML = lista.map(p=>`
+    <article class="card${p.destaque?' grande':''} rev" data-cat="${p.cat}">
+      <div class="arte">
+        <span class="etiq">${p.cat}</span>
+        <span class="etiq unica">Única</span>
+        ${arte(p.cat,p.seed)}
+        <a class="rapido" href="http://ig.me/m/looksfadaespacial" target="_blank" rel="noopener">Falar com a fada</a>
+      </div>
+      <div class="info">
+        <div class="nome">${p.nome}</div>
+        <p class="cat">${p.sub}</p>
+        <div class="linha">
+          <span class="preco">${p.preco}</span>
+          <span class="cores">
+            <i style="background:${PAL.roxo}" title="Roxo"></i>
+            <i style="background:${PAL.rosa}" title="Rosa"></i>
+            <i style="background:${PAL.ouro}" title="Ouro"></i>
+            <i style="background:${PAL.lilas}" title="Lilás"></i>
+          </span>
+        </div>
+      </div>
+    </article>`).join('');
+  observa();
+}
+pinta(CATALOGO);
+
+/* filtro por chip + busca */
+let catAtiva='todas', termo='';
+function filtra(){
+  const t = termo.trim().toLowerCase();
+  pinta(CATALOGO.filter(p=>{
+    const okCat = catAtiva==='todas' || p.cat===catAtiva;
+    const okT = !t || (p.cat+' '+p.sub+' '+p.nome+' '+p.id).toLowerCase().includes(t);
+    return okCat && okT;
+  }));
+}
+document.getElementById('chips').addEventListener('click',e=>{
+  const b = e.target.closest('.chip'); if(!b) return;
+  document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');
+  catAtiva = b.dataset.cat; filtra();
+});
+document.getElementById('busca').addEventListener('input',e=>{termo=e.target.value;filtra();});
+
+/* =========================================================
+   4. PERGUNTAS (conteúdo do Guia da Fada do site no ar)
+   ========================================================= */
+const PERG = [
+  ['Sobre as criações','Cada peça nasce de um processo autoral, guiado pela imaginação, pesquisa, tempo e sensibilidade de uma fada. Algumas peças carregam o encanto do upcycling, transformando materiais em criações únicas e cheias de história. Se você se encantar por alguma peça, entre em contato diretamente com a fada pela DM do Instagram.'],
+  ['Como funciona','Peças à pronta entrega: pagamento integral para confirmação da compra. Sob encomenda: 50% para iniciar a produção e 50% após finalização e aprovação. Os pedidos sob encomenda, por serem peças personalizadas e feitas sob medida, não são reembolsáveis após o pagamento, pois envolvem materiais, tempo e criação artesanal.'],
+  ['Sobre as encomendas','Você pode escolher um look já existente, adaptar detalhes de cor, tecido e tamanho ou enviar inspirações. Cada criação é feita em freestyle, sem moldes, ou seja, nenhuma peça será idêntica à outra. Seu look pode ser personalizado em tecidos, cores, ilhós, argolas, correntes, pingentes, babados, fitas e outros adornos. Alterações podem impactar o valor final, e tudo é previamente alinhado.'],
+  ['Exclusividade','Cada peça é única. Podem existir semelhantes, mas nunca iguais. Toda criação carrega o toque autoral da fada. As criações são autorais e protegidas: não é permitido copiar, reproduzir ou utilizar como base, sem autorização prévia, nenhum look, imagem ou conteúdo presente no site, catálogo ou redes.'],
+  ['Pagamento','Via Pix ou link de pagamento. No link, é possível parcelar, e as taxas são de responsabilidade da cliente.'],
+  ['Entrega','Goiânia e regiões próximas: envio via ônibus com entrega no dia seguinte, mais entregadora. Demais localidades: envio via Correios, com frete e tempo calculados pelo CEP. O valor do frete é pago no dia do envio.'],
+  ['Prazos','Encomendas devem ser feitas com, no mínimo, 30 dias de antecedência. O prazo pode variar conforme a complexidade do look e a agenda, além do tempo de entrega.'],
+  ['Tamanhos e ajustes','Todas as peças são feitas sob medida, pensadas para vestir seu corpo com perfeição. Caso precise de ajuste, o envio deve ser feito em até 7 dias úteis após o recebimento. O prazo para ajuste é de até 10 dias, além do tempo de envio. As peças são delicadas e devem ser lavadas à mão.'],
+  ['Atendimento','O atendimento é humanizado, leve e feito com troca verdadeira. Aqui, cada criação nasce também da conexão e da energia entre fada e cliente. A experiência vai além da peça: é sobre se sentir vista, acolhida e parte do processo criativo.']
+];
+document.getElementById('faq').innerHTML = PERG.map((p,i)=>`
+  <div class="item rev" data-open="0">
+    <button type="button">${p[0]}<span class="mais">+</span></button>
+    <div class="resp"><p>${p[1]}</p></div>
+  </div>`).join('');
+document.getElementById('faq').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const it=b.parentElement, r=it.querySelector('.resp');
+  const aberto = it.dataset.open==='1';
+  document.querySelectorAll('.item').forEach(o=>{o.dataset.open='0';o.querySelector('.resp').style.maxHeight='0px';});
+  if(!aberto){it.dataset.open='1'; r.style.maxHeight = r.scrollHeight+'px';}
+});
+
+/* =========================================================
+   5. TRANSICAO EM BOLHAS (assinatura roubada da referência)
+   ========================================================= */
+const bolhasEl = document.getElementById('bolhas');
+(function(){
+  const N = 22; let c='';
+  for(let i=0;i<N;i++){
+    const cx = (i+.5)*(1200/N);
+    const r = 34 + Math.abs(Math.sin(i*1.7))*30;
+    c += `<circle cx="${cx.toFixed(1)}" cy="96" r="${r.toFixed(1)}" fill="#150031" data-b="${i}" style="transform:scale(0)"/>`;
+  }
+  bolhasEl.innerHTML = `<svg viewBox="0 0 1200 150" preserveAspectRatio="none">${c}
+    <rect x="0" y="96" width="1200" height="60" fill="#150031" data-band style="transform:scaleY(0);transform-origin:bottom"/></svg>`;
+})();
+const bolhaNodes = [...bolhasEl.querySelectorAll('circle')];
+const banda = bolhasEl.querySelector('[data-band]');
+
+/* =========================================================
+   6. A LOGO NO PALCO: flutua, reage ao mouse e ao scroll,
+      com po de estrela desenhado em canvas atras dela
+   ========================================================= */
+const palco    = document.getElementById('palco');
+const logoBox  = document.getElementById('logoPalco');
+const logoUfo  = document.getElementById('logoUfo');
+const cv = document.getElementById('poeira'), ctx = cv.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){
+  const r = palco.getBoundingClientRect();
+  DPR = Math.min(window.devicePixelRatio||1,2);
+  W=r.width; H=r.height;
+  cv.width=W*DPR; cv.height=H*DPR;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize',resize); resize();
+
+/* po de estrela em orbita dentro do palco */
+const POEIRA = [];
+(function(){
+  const rp = rng(77);
+  for(let i=0;i<58;i++){
+    POEIRA.push({
+      a: rp()*Math.PI*2,
+      raio: .30 + rp()*.72,
+      vel: (.10 + rp()*.34) * (rp()<.5?-1:1),
+      tam: .7 + rp()*2.2,
+      achata: .42 + rp()*.42,
+      fase: rp()*Math.PI*2,
+      cor: [PAL.lilas,PAL.rosa,PAL.ouro,PAL.creme][Math.floor(rp()*4)]
+    });
+  }
+})();
+
+/* alvo do mouse e do scroll, sempre suavizados */
+let mx=0,my=0, mxs=0,mys=0, progS=0, progSs=0;
+palco.addEventListener('pointermove',e=>{
+  const r = palco.getBoundingClientRect();
+  mx = (e.clientX - r.left)/r.width  * 2 - 1;
+  my = (e.clientY - r.top )/r.height * 2 - 1;
+});
+palco.addEventListener('pointerleave',()=>{mx=0;my=0;});
+function progressoScroll(){
+  const p = palco.getBoundingClientRect();
+  const vh = window.innerHeight;
+  return Math.max(0, Math.min(1, (vh - p.top) / (vh + p.height)));
+}
+
+const t0 = performance.now();
+function desenha(now){
+  const tempo = (now - t0)/1000;
+
+  mxs   += (mx - mxs)*0.075;
+  mys   += (my - mys)*0.075;
+  progS  = progressoScroll();
+  progSs += (progS - progSs)*0.085;
+
+  /* a logo gira com o scroll e se inclina com o mouse */
+  const giro  = progSs*360;
+  const incX  = -mys*13;
+  const incY  =  mxs*17;
+  logoBox.style.transform =
+    `rotateX(${incX.toFixed(2)}deg) rotateY(${incY.toFixed(2)}deg) rotate(${(Math.sin(tempo*.5)*2.4).toFixed(2)}deg)`;
+
+  /* o disco voador orbita a logo, mais rapido conforme desce a pagina */
+  const ang = tempo*0.55 + progSs*Math.PI*2.6;
+  const rx = W*0.33, ry = H*0.27;
+  const ux = Math.cos(ang)*rx + mxs*22;
+  const uy = Math.sin(ang)*ry*0.9 + mys*16;
+  const esc = 0.82 + 0.24*((Math.sin(ang)+1)/2);
+  logoUfo.style.transform =
+    `translate3d(${ux.toFixed(1)}px,${uy.toFixed(1)}px,0) rotate(${(giro*0.35 + Math.sin(tempo*1.2)*7).toFixed(1)}deg) scale(${esc.toFixed(3)})`;
+  logoUfo.style.opacity = (0.55 + 0.45*((Math.sin(ang)+1)/2)).toFixed(2);
+
+  /* po de estrela */
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2, cy=H/2, base=Math.min(W,H)*0.42;
+  for(const s of POEIRA){
+    const a = s.a + tempo*s.vel + progSs*1.5;
+    const rr = base*s.raio*(1 + 0.09*Math.sin(tempo*0.9 + s.fase));
+    const x = cx + Math.cos(a)*rr + mxs*18*s.raio;
+    const y = cy + Math.sin(a)*rr*s.achata + mys*14*s.raio;
+    const cintila = 0.30 + 0.55*Math.abs(Math.sin(tempo*1.6 + s.fase));
+    ctx.beginPath();
+    ctx.arc(x, y, s.tam*(0.75+0.45*cintila), 0, Math.PI*2);
+    ctx.fillStyle = s.cor;
+    ctx.globalAlpha = cintila;
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  /* bolhas da transicao acompanham o scroll */
+  const bb = bolhasEl.getBoundingClientRect();
+  const pb = Math.max(0,Math.min(1,(window.innerHeight - bb.top)/(window.innerHeight*0.85)));
+  bolhaNodes.forEach((n,i)=>{
+    const atraso = (i%7)*0.06;
+    const v = Math.max(0,Math.min(1,(pb-atraso)/(1-atraso)));
+    const e = 1-Math.pow(1-v,3.2);
+    n.style.transform = `scale(${e.toFixed(3)})`;
+  });
+  banda.style.transform = `scaleY(${(1-Math.pow(1-pb,2.4)).toFixed(3)})`;
+
+  requestAnimationFrame(desenha);
+}
+requestAnimationFrame(desenha);
+
+/* =========================================================
+   7. ENTRADA DOS BLOCOS (sem gate de reduce motion,
+      escala 0.94 + blur 18px, sequência de 150ms)
+   ========================================================= */
+function observa(){
+  if(!io){
+    io = new IntersectionObserver((ents)=>{
+      let n=0;
+      ents.forEach(en=>{
+        if(en.isIntersecting){
+          const el=en.target;
+          setTimeout(()=>el.classList.add('on'), n*150);
+          n++; io.unobserve(el);
+        }
+      });
+    },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  }
+  document.querySelectorAll('.rev:not(.on)').forEach(el=>io.observe(el));
+}
+observa();
+
+/* =========================================================
+   8. EFEITO DA VARINHA
+      ponta que segue o mouse, rastro de brilho desenhado em
+      canvas, poeira de estrela caindo e estouro no clique
+   ========================================================= */
+(function(){
+  const ponta = document.createElement('div');
+  ponta.className = 'varinhaMouse';
+  document.body.appendChild(ponta);
+
+  const rc = document.createElement('canvas');
+  rc.className = 'rastro';
+  document.body.appendChild(rc);
+  const rctx = rc.getContext('2d');
+  function medeRastro(){
+    const d = Math.min(window.devicePixelRatio||1,2);
+    rc.width = innerWidth*d; rc.height = innerHeight*d;
+    rc.style.width = innerWidth+'px'; rc.style.height = innerHeight+'px';
+    rctx.setTransform(d,0,0,d,0,0);
+  }
+  window.addEventListener('resize',medeRastro); medeRastro();
+
+  const FORMAS = ['✦','⋆','✧','·','✶'];
+  const CORES  = [PAL.rosa, PAL.roxo, PAL.ouro, PAL.creme, PAL.lilas];
+
+  let px=innerWidth/2, py=innerHeight/2;   // posicao do mouse
+  let vx=px, vy=py;                        // ponta perseguindo, com atraso
+  let ultimaFaisca = 0, movendo = 0;
+  const trilha = [];                       // pontos do rastro
+
+  document.addEventListener('pointermove',e=>{
+    px=e.clientX; py=e.clientY;
+    ponta.classList.add('viva');
+    movendo = performance.now();
+
+    trilha.push({x:px,y:py,t:performance.now()});
+    if(trilha.length>26) trilha.shift();
+
+    // poeira de estrela caindo da ponta, com folga pra nao pesar
+    const agora = Date.now();
+    if(agora - ultimaFaisca > 34){
+      ultimaFaisca = agora;
+      solta(px, py, 1);
+    }
+  },{passive:true});
+
+  document.addEventListener('pointerleave',()=>ponta.classList.remove('viva'));
+
+  /* estouro de brilho no clique */
+  document.addEventListener('pointerdown',e=>{
+    const anel = document.createElement('div');
+    anel.className = 'estouro';
+    anel.style.left = e.clientX+'px';
+    anel.style.top  = e.clientY+'px';
+    document.body.appendChild(anel);
+    setTimeout(()=>anel.remove(), 800);
+    solta(e.clientX, e.clientY, 16, true);
+  },{passive:true});
+
+  function solta(x,y,n,estourando){
+    for(let i=0;i<n;i++){
+      const f = document.createElement('span');
+      f.className = 'faisca';
+      f.textContent = FORMAS[Math.floor(Math.random()*FORMAS.length)];
+      f.style.color = CORES[Math.floor(Math.random()*CORES.length)];
+      f.style.fontSize = (10 + Math.random()*(estourando?16:9)).toFixed(1)+'px';
+      const esp = estourando ? 130 : 26;
+      const ang = Math.random()*Math.PI*2;
+      const raio = estourando ? (40 + Math.random()*esp) : (Math.random()*esp);
+      f.style.left = (x + Math.cos(ang)*(estourando?8:raio*.4) - 6)+'px';
+      f.style.top  = (y + Math.sin(ang)*(estourando?8:raio*.4) - 6)+'px';
+      f.style.setProperty('--dx', (Math.cos(ang)*raio).toFixed(1)+'px');
+      f.style.setProperty('--dy', (Math.sin(ang)*raio + (estourando?0:44)).toFixed(1)+'px');
+      f.style.setProperty('--rot', (Math.random()*220-110).toFixed(0)+'deg');
+      document.body.appendChild(f);
+      setTimeout(()=>f.remove(), 1200);
+    }
+  }
+
+  /* laco: ponta com atraso elastico e rastro de brilho */
+  (function laco(){
+    vx += (px - vx)*0.24;
+    vy += (py - vy)*0.24;
+    const dx = px - vx, dy = py - vy;
+    const inclina = Math.max(-22, Math.min(22, dx*0.55));
+    ponta.style.transform =
+      'translate3d('+(vx-14).toFixed(1)+'px,'+(vy-44).toFixed(1)+'px,0) rotate('+inclina.toFixed(1)+'deg)';
+
+    const agora = performance.now();
+    while(trilha.length && agora - trilha[0].t > 420) trilha.shift();
+
+    rctx.clearRect(0,0,innerWidth,innerHeight);
+    if(trilha.length>1){
+      rctx.lineCap='round'; rctx.lineJoin='round';
+      for(let cam=0; cam<2; cam++){
+        rctx.beginPath();
+        rctx.moveTo(trilha[0].x, trilha[0].y);
+        for(let i=1;i<trilha.length;i++){
+          const a=trilha[i-1], b=trilha[i];
+          rctx.quadraticCurveTo(a.x,a.y,(a.x+b.x)/2,(a.y+b.y)/2);
+        }
+        const g = rctx.createLinearGradient(trilha[0].x,trilha[0].y,px,py);
+        g.addColorStop(0,'rgba(157,78,221,0)');
+        g.addColorStop(.55,'rgba(217,4,168,'+(cam?0.30:0.14)+')');
+        g.addColorStop(1,'rgba(255,158,0,'+(cam?0.85:0.34)+')');
+        rctx.strokeStyle = g;
+        rctx.lineWidth = cam ? 2.4 : 11;
+        rctx.stroke();
+      }
+    }
+    // some sozinho quando o mouse fica parado
+    if(agora - movendo > 900) ponta.classList.remove('viva');
+    requestAnimationFrame(laco);
+  })();
+})();
+
+/* hero entra na carga, escalonado */
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.hero .rev').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('on'), 180 + i*180);
+  });
+});
+</script>
+</body>
+</html>
