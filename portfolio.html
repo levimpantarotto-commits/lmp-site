@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LMP · Portfólio</title>
+<meta name="description" content="Portfólio da LMP: sites, sistemas de atendimento por IA, campanhas e peças de social. Doze projetos publicados.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F5F1;
+  --branco:#FFFFFF;
+  --ink:#141C26;
+  --ink-soft:#59636F;
+  --navy:#102C4A;
+  --escuro:#0B1B2E;
+  --laranja:#E4641C;
+  --ciano:#2FD4C4;
+  --teal:#0E9AA6;
+  --linha:rgba(20,28,38,.11);
+  --linha-clara:rgba(255,255,255,.12);
+  --display:'Anton',system-ui,sans-serif;
+  --serifa:'Instrument Serif',Georgia,serif;
+  --body:'DM Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sombra-1:0 1px 2px rgba(16,44,74,.05),0 2px 6px rgba(16,44,74,.04);
+  --sombra-2:0 2px 4px rgba(16,44,74,.05),0 6px 14px rgba(16,44,74,.07),0 12px 28px rgba(16,44,74,.06);
+  --sombra-3:0 4px 8px rgba(16,44,74,.06),0 12px 24px rgba(16,44,74,.08),0 28px 56px rgba(16,44,74,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body);
+  background:var(--paper);
+  color:var(--ink);
+  font-size:17px;
+  line-height:1.6;
+  letter-spacing:-0.01em;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--ciano);color:var(--escuro)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+section{padding:128px 0}
+h1,h2{font-family:var(--display);font-weight:400;line-height:1.04;letter-spacing:.006em;text-transform:uppercase}
+h3{font-family:var(--body);line-height:1.15;letter-spacing:-0.015em}
+h2{font-size:clamp(34px,4.6vw,58px);max-width:18ch}
+h2 .tint{font-family:var(--serifa);font-style:italic;font-weight:400;color:var(--teal);letter-spacing:-0.01em;text-transform:none}
+.kicker{
+  font-family:var(--mono);font-size:13px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);
+  display:flex;align-items:center;gap:12px;margin-bottom:24px;
+}
+.kicker::before{content:"";width:28px;height:2px;background:var(--teal)}
+.lede{font-size:19px;color:var(--ink-soft);max-width:62ch;margin-top:24px}
+p{max-width:66ch}
+
+/* ---------- entrada base (animação por passo) ---------- */
+.rev{opacity:0;transform:translateY(34px) scale(.94);filter:blur(14px);
+  transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1)}
+.rev.on{opacity:1;transform:none;filter:blur(0)}
+
+/* ---------- topo ---------- */
+header{
+  position:fixed;inset:0 0 auto 0;z-index:50;
+  background:rgba(247,245,241,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--linha);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo i{width:9px;height:9px;border-radius:50%;background:var(--ciano);display:inline-block}
+.nav a.cta-mini{
+  font-family:var(--mono);font-size:13px;font-weight:700;text-decoration:none;
+  color:var(--branco);background:var(--laranja);padding:10px 20px;border-radius:999px;
+  transition:transform .18s ease, box-shadow .18s ease;box-shadow:var(--sombra-1);
+}
+.nav a.cta-mini:hover{transform:translateY(-1px);box-shadow:var(--sombra-2)}
+.nav a.cta-mini:active{transform:translateY(1px) scale(.97)}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;align-items:center;padding:150px 0 96px;position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 78% 18%, rgba(14,154,166,.07), transparent 65%),
+    radial-gradient(ellipse 50% 45% at 12% 85%, rgba(228,100,28,.05), transparent 60%),
+    var(--paper);
+}
+.hero-inner{position:relative;z-index:1}
+.hero h1{
+  font-size:clamp(42px,6.6vw,88px);max-width:15ch;
+  opacity:0;transform:scale(1.22);filter:blur(20px);
+}
+.hero h1.play{
+  opacity:1;transform:scale(1);filter:blur(0);
+  transition:opacity 1.6s cubic-bezier(.16,1,.3,1),transform 1.6s cubic-bezier(.16,1,.3,1),filter 1.6s cubic-bezier(.16,1,.3,1);
+}
+.hero h1 em{font-family:var(--serifa);font-style:italic;font-weight:400;color:var(--laranja);text-transform:none}
+.hero .sub{font-size:20px;color:var(--ink-soft);max-width:56ch;margin-top:32px}
+.hero .acoes{display:flex;gap:16px;margin-top:48px;flex-wrap:wrap}
+.btn{
+  font-family:var(--mono);font-weight:700;font-size:15px;text-decoration:none;
+  padding:18px 34px;border-radius:999px;display:inline-flex;align-items:center;gap:10px;
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.btn:active{transform:translateY(1px) scale(.97)}
+.btn-laranja{background:var(--laranja);color:var(--branco);box-shadow:var(--sombra-2)}
+.btn-laranja:hover{transform:translateY(-2px);box-shadow:var(--sombra-3)}
+.btn-ghost{color:var(--navy);border:1.5px solid var(--navy)}
+.btn-ghost:hover{background:var(--navy);color:var(--branco)}
+.tiras{margin-top:72px;display:flex;gap:56px;flex-wrap:wrap}
+.tiras b{font-family:var(--display);font-size:44px;font-weight:400;line-height:1;display:block;letter-spacing:.01em}
+.tiras span{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-top:8px}
+
+/* ---------- seção escura: a conta ---------- */
+.conta{background:var(--escuro);color:var(--branco)}
+.conta .kicker{color:rgba(255,255,255,.55)}
+.conta h2{color:var(--branco)}
+.conta .lede{color:rgba(255,255,255,.62)}
+.duelo{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:64px;align-items:stretch}
+.card-video{
+  border-radius:16px;padding:40px 36px;position:relative;overflow:hidden;
+  background:rgba(255,255,255,.04);border:1px solid var(--linha-clara);
+}
+.card-video.vence{border-color:rgba(47,212,196,.5);background:rgba(47,212,196,.06)}
+.card-video .tag{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.card-video.vence .tag{color:var(--ciano)}
+.card-video .preco{font-family:var(--mono);font-weight:700;font-size:clamp(38px,4.4vw,58px);margin:16px 0 6px;letter-spacing:-0.02em}
+.card-video .porconversa{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:28px}
+.linha-dado{display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid var(--linha-clara);font-size:15px}
+.linha-dado b{font-family:var(--mono)}
+.zero{color:var(--laranja)}
+.um{color:var(--ciano)}
+.moral{
+  margin-top:56px;font-family:var(--display);font-weight:400;font-size:clamp(24px,2.8vw,34px);
+  line-height:1.18;max-width:32ch;letter-spacing:.006em;text-transform:uppercase;
+}
+.moral em{font-family:var(--serifa);font-style:italic;color:var(--laranja);text-transform:none}
+
+/* ---------- números ---------- */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px}
+.stat{
+  background:var(--branco);border:1px solid var(--linha);border-radius:16px;
+  padding:36px 32px;box-shadow:var(--sombra-1);
+  transition:transform .3s ease,box-shadow .3s ease;
+}
+.stat:hover{transform:translateY(-4px);box-shadow:var(--sombra-2)}
+.stat .num{font-family:var(--mono);font-weight:700;font-size:clamp(34px,3.4vw,46px);color:var(--ink);letter-spacing:-0.02em;line-height:1}
+.stat .num small{font-size:.5em;font-weight:500;color:var(--ink-soft)}
+.stat .oq{font-weight:600;margin-top:14px;font-size:16px}
+.stat .fonte{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:10px;letter-spacing:.02em}
+
+/* ---------- cases ---------- */
+.case{
+  background:var(--branco);border:1px solid var(--linha);border-radius:16px;
+  box-shadow:var(--sombra-2);padding:56px;margin-top:48px;
+  display:grid;grid-template-columns:1.15fr .85fr;gap:56px;
+}
+.case .num-case{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--teal);text-transform:uppercase}
+.case h3{font-size:clamp(24px,2.8vw,34px);font-weight:700;margin:14px 0 20px;max-width:20ch}
+.case p{font-size:16px;color:var(--ink-soft);margin-bottom:14px}
+.case p b{color:var(--ink)}
+.case .placar{align-self:center;background:var(--paper);border:1px solid var(--linha);border-radius:12px;padding:8px 28px}
+.placar .li{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:15px 0;border-bottom:1px solid var(--linha)}
+.placar .li:last-child{border-bottom:none}
+.placar .li span{font-size:14.5px;color:var(--ink-soft)}
+.placar .li b{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--ink);white-space:nowrap}
+.placar .li b.qdoi{color:var(--laranja)}
+.honesto{
+  grid-column:1/-1;border-top:1px solid var(--linha);padding-top:24px;
+  font-size:14.5px;color:var(--ink-soft);
+}
+.honesto b{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--navy)}
+
+/* ---------- pipeline desenhado ---------- */
+.pipe-box{margin-top:72px;position:relative}
+.pipe-svg{width:100%;height:auto;display:block}
+.pipe-svg .trilho{stroke:var(--linha);stroke-width:2;fill:none}
+.pipe-svg .fluxo{stroke:var(--ciano);stroke-width:2.5;fill:none;stroke-dasharray:1200;stroke-dashoffset:1200}
+.pipe-box.on .fluxo{animation:desenha 2.4s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes desenha{to{stroke-dashoffset:0}}
+.pipe-svg .no{fill:var(--paper);stroke:var(--navy);stroke-width:2;opacity:0;transform-origin:center;transform:scale(.4)}
+.pipe-box.on .no{animation:acende .5s ease forwards}
+.pipe-svg .rotulo{font-family:var(--mono);font-size:13px;fill:var(--ink);font-weight:500;opacity:0}
+.pipe-box.on .rotulo{animation:surge .6s ease forwards}
+@keyframes acende{to{opacity:1;transform:scale(1)}}
+@keyframes surge{to{opacity:1}}
+
+/* ---------- sistemas ---------- */
+.sist{background:var(--navy);color:var(--branco)}
+.sist .kicker{color:rgba(255,255,255,.55)}
+.sist h2{color:var(--branco)}
+.sist .lede{color:rgba(255,255,255,.62)}
+.mods{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:64px}
+.mod{
+  background:rgba(255,255,255,.05);border:1px solid var(--linha-clara);
+  border-radius:12px;padding:32px;
+}
+.mod .n{font-family:var(--mono);font-size:12px;color:var(--ciano);letter-spacing:.12em}
+.mod h4{font-family:var(--body);font-size:20px;font-weight:700;margin:10px 0 10px;letter-spacing:-0.015em}
+.mod p{font-size:15px;color:rgba(255,255,255,.62)}
+.mod p b{color:var(--branco)}
+.destaque-mod{grid-column:1/-1;background:rgba(47,212,196,.07);border-color:rgba(47,212,196,.35)}
+
+/* ---------- galeria de trabalhos: anda sozinha e aceita arrastar ---------- */
+.galeria .palco{padding:0}
+.pista{
+  margin-top:56px;overflow-x:auto;overflow-y:hidden;cursor:grab;
+  scrollbar-width:none;-ms-overflow-style:none;
+  mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);
+}
+.pista::-webkit-scrollbar{display:none}
+.pista.arrastando{cursor:grabbing}
+.pista.arrastando .obra{transform:none !important}
+.trilho-g{display:flex;gap:44px;width:max-content;padding:0 8vw 8px}
+.obra{
+  width:min(62vw,880px);flex:none;background:var(--branco);border:1px solid var(--linha);
+  border-radius:16px;overflow:hidden;box-shadow:var(--sombra-2);
+  transition:transform .35s ease,box-shadow .35s ease;
+}
+.obra:hover{transform:translateY(-10px);box-shadow:var(--sombra-3)}
+.obra .tela{display:block;width:100%;height:min(50vh,520px);object-fit:cover;object-position:top;border-bottom:1px solid var(--linha);user-select:none;-webkit-user-drag:none}
+.obra .leg{padding:24px 30px 26px;display:flex;align-items:baseline;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.obra .leg .seg{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:6px}
+.obra .leg h4{font-family:var(--body);font-size:24px;font-weight:700;letter-spacing:-0.018em}
+.obra .leg .medida{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft)}
+.progresso-g{height:2px;background:var(--linha);margin:36px 8vw 0;position:relative}
+.progresso-g i{position:absolute;inset:0 auto 0 0;width:0;background:var(--teal);display:block}
+.linha-controle{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:14px 8vw 0;flex-wrap:wrap}
+.contador-g{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink-soft);letter-spacing:.08em}
+.contador-g b{color:var(--ink)}
+.setas{display:flex;gap:10px}
+.seta{
+  width:44px;height:44px;border-radius:50%;border:1.5px solid var(--linha);
+  background:var(--branco);color:var(--ink);cursor:pointer;font-size:17px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+.seta:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
+.seta:active{transform:translateY(1px) scale(.94)}
+.dica-hover{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-top:20px;letter-spacing:.04em}
+
+/* ---------- faixa de posts (marquee) ---------- */
+.faixa-carrossel{margin-top:64px;overflow:hidden;position:relative;
+  mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.trilha{display:flex;gap:28px;width:max-content;animation:rola 26s linear infinite;align-items:flex-start}
+.faixa-carrossel:hover .trilha{animation-play-state:paused}
+@keyframes rola{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes rolaVolta{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.trilha.volta{animation-name:rolaVolta}
+.faixa-carrossel + .faixa-carrossel{margin-top:28px}
+.post-card{
+  width:330px;flex:none;background:var(--branco);border:1px solid var(--linha);
+  border-radius:12px;overflow:hidden;box-shadow:var(--sombra-1);
+  transition:transform .35s ease,box-shadow .35s ease;
+}
+.post-card:hover{transform:translateY(-8px) scale(1.03);box-shadow:var(--sombra-3)}
+.post-card img{display:block;width:100%;height:220px;object-fit:cover;object-position:top}
+.post-card .rot{padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--ink-soft);border-top:1px solid var(--linha);line-height:1.5}
+.post-card .rot b{color:var(--teal);display:block;letter-spacing:.1em;text-transform:uppercase;font-size:10px}
+.cria-card{
+  width:250px;flex:none;background:var(--branco);border:1px solid var(--linha);
+  border-radius:12px;overflow:hidden;box-shadow:var(--sombra-1);
+  transition:transform .35s ease,box-shadow .35s ease;
+}
+.cria-card:hover{transform:translateY(-8px) scale(1.03);box-shadow:var(--sombra-3)}
+.cria-card img{display:block;width:100%;height:auto}
+.cria-card .rot{padding:12px 14px;font-family:var(--mono);font-size:11px;color:var(--ink-soft);border-top:1px solid var(--linha);line-height:1.5}
+.cria-card .rot b{color:var(--teal);display:block;letter-spacing:.1em;text-transform:uppercase;font-size:10px}
+
+/* ---------- método ---------- */
+.metodo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:64px}
+.passo .ordem{
+  font-family:var(--mono);font-weight:700;font-size:52px;color:transparent;
+  -webkit-text-stroke:1.5px var(--teal);line-height:1;
+}
+.passo h4{font-family:var(--body);font-size:21px;font-weight:700;margin:18px 0 12px;letter-spacing:-0.015em}
+.passo p{font-size:15.5px;color:var(--ink-soft)}
+.passo p b{color:var(--ink)}
+
+/* ---------- CTA final ---------- */
+.fim{background:var(--escuro);color:var(--branco);text-align:left}
+.fim h2{color:var(--branco);max-width:20ch}
+.fim .lede{color:rgba(255,255,255,.62)}
+.fim .acoes{display:flex;gap:16px;margin-top:48px;flex-wrap:wrap}
+footer{background:var(--escuro);border-top:1px solid var(--linha-clara);padding:36px 0;color:rgba(255,255,255,.45)}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:13.5px}
+footer b{color:rgba(255,255,255,.75);font-weight:600}
+
+/* ---------- responsivo ---------- */
+@media(max-width:980px){
+  section{padding:96px 0}
+  .duelo,.mods,.metodo-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .case{grid-template-columns:1fr;padding:40px 32px;gap:32px}
+}
+@media(max-width:640px){
+  .wrap{padding:0 20px}
+  .stats-grid{grid-template-columns:1fr}
+  .trilho-g{gap:20px;padding:0 20px 8px}
+  .obra{width:84vw}
+  .obra .tela{height:210px}
+  .obra .leg{padding:18px 20px 20px}
+  .obra .leg h4{font-size:20px}
+  .progresso-g,.linha-controle{margin-left:20px;margin-right:20px}
+  .post-card{width:260px}
+  .cria-card{width:190px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#"><i></i>LMP</a>
+    <a class="cta-mini" href="https://wa.me/5511996112620" target="_blank" rel="noopener">Me chamar</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="kicker rev" data-b="0">Portfólio 2026 · Levi Magno</div>
+    <h1 id="heroTitulo">LMP<br><em>sites, sistemas e campanhas</em></h1>
+    <p class="sub rev" data-b="2">Doze projetos no ar. Site, aplicativo, atendimento por IA, anúncio e peça de social, tudo construído em código próprio.</p>
+    <div class="acoes rev" data-b="3">
+      <a class="btn btn-laranja" href="#trabalhos">Ver os trabalhos</a>
+      <a class="btn btn-ghost" href="https://wa.me/5511996112620" target="_blank" rel="noopener">Falar comigo</a>
+    </div>
+    <div class="tiras rev" data-b="4">
+      <div><b>12</b><span>projetos publicados</span></div>
+      <div><b>9</b><span>sites no ar hoje</span></div>
+      <div><b>7</b><span>segmentos atendidos</span></div>
+      <div><b>4</b><span>anos de operação</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="trabalhos" class="galeria">
+  <div class="palco">
+    <div class="wrap">
+      <div class="kicker rev">Trabalhos no ar</div>
+      <h2 class="rev">Print de tela real, <span class="tint">sem mockup</span></h2>
+      <p class="lede rev" style="margin-top:16px">Anda sozinho. Arraste para o lado quando quiser parar em um. Cada imagem é uma captura de um projeto publicado, do jeito que o visitante vê hoje.</p>
+    </div>
+    <div class="pista" id="pistaG">
+    <div class="trilho-g" id="trilhoG">
+      <div class="obra"><img class="tela" src="portfolio-shots/imob8.jpg" alt="Site do Imob8"><div class="leg"><div><span class="seg">SaaS próprio · imob8.com</span><h4>Imob8</h4></div><div class="medida">site + app + painel + bot no ar</div></div></div>
+      <div class="obra"><img class="tela" src="portfolio-shots/babolin.jpg" alt="Site da imobiliária do Igor"><div class="leg"><div><span class="seg">Imobiliário · sistema completo</span><h4>Babolin Imóveis</h4></div><div class="medida">bot + CRM + anúncios do painel</div></div></div>
+      <div class="obra"><img class="tela" src="portfolio-shots/levimp.jpg" alt="Site da LMP"><div class="leg"><div><span class="seg">Marca própria · levimp.com.br</span><h4>LMP</h4></div><div class="medida">diagnóstico de vazamento no hero</div></div></div>
+      <div class="obra"><img class="tela" src="portfolio-shots/charles.jpg" alt="Portal Charles Nobre"><div class="leg"><div><span class="seg">Imobiliário de alto padrão</span><h4>Charles R. Nobre</h4></div><div class="medida">portal com painel administrativo</div></div></div>
+      <div class="obra"><img class="tela" src="portfolio-shots/laudoprev.jpg" alt="Laudo Prev"><div class="leg"><div><span class="seg">Auditoria previdenciária</span><h4>Laudo Prev</h4></div><div class="medida">campanha Meta + criativos no ar</div></div></div>
+      <div class="obra"><img class="tela" src="portfolio-shots/jks.jpg" alt="Site da JKS Corporation"><div class="leg"><div><span class="seg">Consultoria empresarial</span><h4>JKS Corporation</h4></div><div class="medida">15/15 páginas verificadas no ar</div></div></div>
+      <div class="obra"><img class="tela" src="portfolio-shots/rssoma.jpg" alt="Site da RS SOMA"><div class="leg"><div><span class="seg">Saúde e bem-estar corporativo</span><h4>RS SOMA</h4></div><div class="medida">17 páginas · 742 links conferidos</div></div></div>
+      <div class="obra"><img class="tela" src="portfolio-shots/lindabella.jpg" alt="Site Linda Bella"><div class="leg"><div><span class="seg">Moda feminina</span><h4>Linda Bella</h4></div><div class="medida">fio dourado desenhado por scroll</div></div></div>
+      <div class="obra"><img class="tela" src="portfolio-shots/luxuria.jpg" alt="Site Luxúria Imports"><div class="leg"><div><span class="seg">Moda masculina importada</span><h4>Luxúria Imports</h4></div><div class="medida">identidade extraída da logo</div></div></div>
+      <div class="obra"><img class="tela" src="portfolio-shots/mamalivre.jpg" alt="Site Mama Livre"><div class="leg"><div><span class="seg">E-commerce de moda</span><h4>Mama Livre</h4></div><div class="medida">motor de partículas da própria logo</div></div></div>
+    </div>
+    </div>
+    <div class="progresso-g"><i id="barraG"></i></div>
+    <div class="linha-controle">
+      <div class="contador-g"><b id="atualG">01</b> / <span id="totalG">10</span></div>
+      <div class="setas">
+        <button class="seta" id="setaEsq" aria-label="Trabalho anterior">&#8592;</button>
+        <button class="seta" id="setaDir" aria-label="Próximo trabalho">&#8594;</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="posts" style="padding-top:0">
+  <div class="wrap">
+    <div class="kicker rev">Peças e conteúdo</div>
+    <h2 class="rev">Arte que sai <span class="tint">no feed do cliente</span></h2>
+    <p class="lede rev">Peças de social para clientes de auditoria previdenciária, imobiliária, restaurante e infoproduto, mais o conteúdo próprio da casa. Cada uma na identidade do dono, nunca no mesmo molde.</p>
+  </div>
+  <div class="faixa-carrossel rev">
+    <div class="trilha" id="trilhaClientes" style="animation-duration:34s">
+      <div class="post-card"><img src="portfolio-shots/cl-imovel-feed.jpg" alt="Peça de imóvel na Praia do Rosa"><div class="rot"><b>Imobiliária Praia do Rosa</b>anúncio de imóvel gerado pelo painel</div></div>
+      <div class="post-card"><img src="portfolio-shots/cl-laudo-inss.jpg" alt="Story Laudo Prev: INSS negado"><div class="rot"><b>Laudo Prev</b>story: os 3 erros que derrubam o pedido</div></div>
+      <div class="post-card"><img src="portfolio-shots/cl-dripd.jpg" alt="Peça DRIPD restaurante"><div class="rot"><b>DRIPD Restaurante</b>agenda da semana</div></div>
+      <div class="post-card"><img src="portfolio-shots/cl-laudo-guia.jpg" alt="Post Laudo Prev: guia de aposentadoria"><div class="rot"><b>Laudo Prev</b>post de autoridade para advogado</div></div>
+      <div class="post-card"><img src="portfolio-shots/cl-olympo.jpg" alt="Peça Olympo Boliche Bar"><div class="rot"><b>Olympo Boliche Bar</b>peça de dia de chuva</div></div>
+      <div class="post-card"><img src="portfolio-shots/cl-ebook.jpg" alt="Capa de ebook devocional"><div class="rot"><b>Infoproduto</b>capa de ebook devocional</div></div>
+      <div class="post-card"><img src="portfolio-shots/cl-laudo-bpc.jpg" alt="Story Laudo Prev: BPC LOAS"><div class="rot"><b>Laudo Prev</b>story: requisitos do BPC e LOAS</div></div>
+      <div class="post-card"><img src="portfolio-shots/cl-imovel-horizontal.jpg" alt="Peça horizontal de imóvel"><div class="rot"><b>Imobiliária Praia do Rosa</b>mesmo imóvel em formato horizontal</div></div>
+    </div>
+  </div>
+  <div class="faixa-carrossel rev">
+    <div class="trilha volta" id="trilhaPosts" style="animation-duration:30s">
+      <div class="post-card"><img src="portfolio-shots/post-campanha390.jpg" alt="Post: tudo subiu, menos o que importava"><div class="rot"><b>LMP · conteúdo próprio</b>cartão de dado da campanha</div></div>
+      <div class="post-card"><img src="portfolio-shots/post-dicionario.jpg" alt="Post: dicionário de automação"><div class="rot"><b>LMP · conteúdo próprio</b>dicionário de automação</div></div>
+      <div class="post-card"><img src="portfolio-shots/post-demonstracao.jpg" alt="Post: demonstração no lugar de slides"><div class="rot"><b>LMP · conteúdo próprio</b>demonstração no lugar de slides</div></div>
+      <div class="post-card"><img src="portfolio-shots/post-4niveis.jpg" alt="Post: 4 níveis de automação"><div class="rot"><b>LMP · conteúdo próprio</b>os 4 níveis de automação</div></div>
+      <div class="post-card"><img src="portfolio-shots/post-troca-publico.jpg" alt="Post: troca o público, não o vídeo"><div class="rot"><b>LMP · conteúdo próprio</b>troca o público, não o vídeo</div></div>
+      <div class="post-card"><img src="portfolio-shots/post-33leads.jpg" alt="Post: o filtro que arquivou 33 leads"><div class="rot"><b>LMP · conteúdo próprio</b>o erro que arquivou 33 leads</div></div>
+    </div>
+  </div>
+  <div class="wrap"><div class="dica-hover rev">Passe o mouse para pausar e ver de perto.</div></div>
+</section>
+
+<section id="criativos" style="padding-top:0">
+  <div class="wrap">
+    <div class="kicker rev">Criativos de anúncio</div>
+    <h2 class="rev">Anúncio que se mede <span class="tint">pelo que fecha</span></h2>
+    <p class="lede rev">Criativos de campanha em produção na Meta. O primeiro da fila é o anúncio que trouxe o cliente do Case 02.</p>
+  </div>
+  <div class="faixa-carrossel rev">
+    <div class="trilha" id="trilhaCriativos" style="animation-duration:24s">
+      <div class="cria-card"><img src="portfolio-shots/cr-video3.jpg" alt="Criativo: vídeo do case do Igor"><div class="rot"><b>Vídeo do case · Imob8</b>o anúncio do cliente fechado: R$ 153,26 por reunião</div></div>
+      <div class="cria-card"><img src="portfolio-shots/cr-madrugada.jpg" alt="Criativo: a hora que ninguém atende"><div class="rot"><b>Imob8 · campanha Meta</b>a hora que ninguém atende</div></div>
+      <div class="cria-card"><img src="portfolio-shots/cr-jksflyer.jpg" alt="Flyer comercial JKS"><div class="rot"><b>JKS · peça comercial</b>flyer premium para prospecção</div></div>
+      <div class="cria-card"><img src="portfolio-shots/cr-voz.jpg" alt="Criativo: ele responde falando"><div class="rot"><b>Imob8 · campanha Meta</b>ele responde falando, com voz clonada</div></div>
+      <div class="cria-card"><img src="portfolio-shots/cr-score.jpg" alt="Criativo: qualificação com score"><div class="rot"><b>Imob8 · campanha Meta</b>qualificação com score, sem humano</div></div>
+      <div class="cria-card"><img src="portfolio-shots/cr-cafe.jpg" alt="Criativo: custo de um café por dia"><div class="rot"><b>Imob8 · campanha Meta</b>custo de um café por dia</div></div>
+      <div class="cria-card"><img src="portfolio-shots/cl-imovel-horizontal.jpg" alt="Criativo horizontal de imóvel"><div class="rot"><b>Imobiliária · anúncio</b>imóvel em formato horizontal</div></div>
+    </div>
+  </div>
+  <div class="wrap"><div class="dica-hover rev">Frames dos vídeos rodando em campanha na Meta.</div></div>
+</section>
+
+
+
+<section id="numeros">
+  <div class="wrap">
+    <div class="kicker rev">Resultados medidos</div>
+    <h2 class="rev">Números com fonte e <span class="tint">data de apuração</span></h2>
+    <div class="stats-grid">
+      <div class="stat rev"><div class="num">R$ <span class="conta-ate" data-alvo="1.02" data-dec="2">0</span></div><div class="oq">custo por lead em campanha de captação, 445 leads</div><div class="fonte">Google Ads, abr a mai/2026</div></div>
+      <div class="stat rev"><div class="num">R$ <span class="conta-ate" data-alvo="459.78" data-dec="2">0</span></div><div class="oq">custo por cliente fechado, contra ticket inicial de R$ 5.000</div><div class="fonte">Meta Ads x CRM, 31/07/2026</div></div>
+      <div class="stat rev"><div class="num"><span class="conta-ate" data-alvo="88">0</span><small>%</small></div><div class="oq">dos 306 leads qualificados automaticamente, sem SDR contratado</div><div class="fonte">CRM em produção, 31/07/2026</div></div>
+      <div class="stat rev"><div class="num"><span class="conta-ate" data-alvo="8">0</span><small>s</small></div><div class="oq">entre o lead preencher o formulário e receber a primeira resposta</div><div class="fonte">Medição em produção, 10/07/2026</div></div>
+      <div class="stat rev"><div class="num"><span class="conta-ate" data-alvo="63">0</span><small>%</small></div><div class="oq">dos leads da base com origem rastreada até o anúncio específico</div><div class="fonte">Consulta ao CRM, 18/08/2026</div></div>
+      <div class="stat rev"><div class="num">R$ <span class="conta-ate" data-alvo="5.83" data-dec="2">0</span></div><div class="oq">melhor custo por lead em formulário no mercado imobiliário</div><div class="fonte">Meta Ads, apuração 10/07/2026</div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="kicker rev">Ficha dos projetos</div>
+    <h2 class="rev">O que cada um <span class="tint">entregou</span></h2>
+
+    <div class="case rev">
+      <div>
+        <div class="num-case">Imob8 · produto próprio</div>
+        <h3>Funil rastreado do clique ao contrato</h3>
+        <p>Rastreamento ponta a ponta, com reunião e venda voltando para a Meta com peso por estágio. Trava de orçamento antes do agendamento.</p>
+      </div>
+      <div class="placar">
+        <div class="li"><span>Leads atendidos</span><b>306</b></div>
+        <div class="li"><span>Qualificados sem humano</span><b>271 (88%)</b></div>
+        <div class="li"><span>Reuniões</span><b>8</b></div>
+        <div class="li"><span>Custo por cliente</span><b class="qdoi">R$ 459,78</b></div>
+      </div>
+    </div>
+
+    <div class="case rev">
+      <div>
+        <div class="num-case">Babolin Imóveis · operação completa</div>
+        <h3>Atendimento, funil e anúncios rodando sozinhos</h3>
+        <p>Bot no WhatsApp que qualifica e faz follow-up, CRM próprio e motor de anúncios no painel. Custo de IA da operação caiu de R$ 159 para R$ 21 por mês.</p>
+      </div>
+      <div class="placar">
+        <div class="li"><span>Leads no CRM</span><b>210</b></div>
+        <div class="li"><span>Qualificados</span><b>56</b></div>
+        <div class="li"><span>Primeira resposta</span><b>8 segundos</b></div>
+        <div class="li"><span>Melhor custo por lead</span><b class="qdoi">R$ 5,83</b></div>
+      </div>
+    </div>
+
+    <div class="case rev">
+      <div>
+        <div class="num-case">Terapia e infoproduto · captação</div>
+        <h3>445 leads para um workshop pago</h3>
+        <p>Remarketing e Customer Match sobre a base própria do cliente, com 3.156 contatos saneados antes de subir campanha.</p>
+      </div>
+      <div class="placar">
+        <div class="li"><span>Leads captados</span><b>445</b></div>
+        <div class="li"><span>Custo por lead</span><b class="qdoi">R$ 1,02</b></div>
+        <div class="li"><span>Investimento</span><b>R$ 456,46</b></div>
+        <div class="li"><span>Base saneada</span><b>3.156</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sist">
+  <div class="wrap">
+    <div class="kicker rev">Sistemas e automações</div>
+    <h2 class="rev">O que eu construo quando a repetição custa caro</h2>
+    <p class="lede rev">Tudo abaixo está em produção hoje, com usuários reais. Não é roadmap.</p>
+    <div class="mods">
+      <div class="mod destaque-mod rev">
+        <div class="n">PRODUTO PRÓPRIO</div>
+        <h4>Imob8: a IA que assume o atendimento da imobiliária</h4>
+        <p>Atende e capta no WhatsApp 24 horas, qualifica com score, agenda reunião, faz follow-up e devolve cada conversão para a plataforma de anúncio aprender. Com site, painel, aplicativo instalável no celular e videochamada nativa com lousa inteligente. <b>Em 30 dias de operação medida: 157 leads atendidos, 93% com interação, 45% qualificados sem intervenção humana.</b></p>
+      </div>
+      <div class="mod rev">
+        <div class="n">ATENDIMENTO</div>
+        <h4>Agente de WhatsApp com voz</h4>
+        <p>Responde texto e áudio com voz clonada do dono, entende áudio do cliente, envia imóvel, foto e localização no momento certo da conversa.</p>
+      </div>
+      <div class="mod rev">
+        <div class="n">RASTREAMENTO</div>
+        <h4>Do clique ao contrato</h4>
+        <p>Cada clique carrega um identificador que segue com a pessoa até o CRM. Reunião e venda voltam para a Meta via Conversions API com peso por estágio.</p>
+      </div>
+      <div class="mod rev">
+        <div class="n">CRIATIVOS</div>
+        <h4>Motor de anúncios do painel</h4>
+        <p>O dono escolhe o imóvel e o sistema gera o anúncio em 4 formatos e publica na conta, com catálogo sincronizado automaticamente a cada 4 horas.</p>
+      </div>
+      <div class="mod rev">
+        <div class="n">AUDITORIA</div>
+        <h4>Analista de conversas</h4>
+        <p>Um agente lê as conversas do próprio bot todos os dias, detecta 8 tipos de erro de atendimento e reporta antes que vire cliente perdido.</p>
+      </div>
+    </div>
+
+    <div class="pipe-box" id="pipeBox">
+      <svg class="pipe-svg" viewBox="0 0 1120 150" xmlns="http://www.w3.org/2000/svg" aria-label="Fluxo: anúncio, conversa, qualificação, reunião, contrato">
+        <path class="trilho" d="M40 75 H1080"/>
+        <path class="fluxo" d="M40 75 H1080"/>
+        <circle class="no" cx="60"  cy="75" r="9" style="animation-delay:.20s"/>
+        <circle class="no" cx="315" cy="75" r="9" style="animation-delay:.82s"/>
+        <circle class="no" cx="570" cy="75" r="9" style="animation-delay:1.44s"/>
+        <circle class="no" cx="825" cy="75" r="9" style="animation-delay:2.06s"/>
+        <circle class="no" cx="1060" cy="75" r="9" style="animation-delay:2.68s"/>
+        <text class="rotulo" x="60"  y="34" text-anchor="middle" style="animation-delay:.30s">Anúncio</text>
+        <text class="rotulo" x="315" y="34" text-anchor="middle" style="animation-delay:.92s">Conversa em 8s</text>
+        <text class="rotulo" x="570" y="34" text-anchor="middle" style="animation-delay:1.54s">Qualificação</text>
+        <text class="rotulo" x="825" y="34" text-anchor="middle" style="animation-delay:2.16s">Reunião</text>
+        <text class="rotulo" x="1060" y="34" text-anchor="middle" style="animation-delay:2.78s">Contrato</text>
+        <text class="rotulo" x="60"  y="122" text-anchor="middle" fill="#2FD4C4" style="animation-delay:.30s">rastreado</text>
+        <text class="rotulo" x="570" y="122" text-anchor="middle" fill="#2FD4C4" style="animation-delay:1.54s">sem humano</text>
+        <text class="rotulo" x="1060" y="122" text-anchor="middle" fill="#2FD4C4" style="animation-delay:2.78s">volta pra Meta</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+<section class="fim">
+  <div class="wrap">
+    <div class="kicker rev">Contato</div>
+    <h2 class="rev">Tem um projeto? Me chama.</h2>
+    <p class="lede rev">Site, sistema, automação de atendimento, campanha ou peça de social. Respondo no WhatsApp.</p>
+    <div class="acoes rev">
+      <a class="btn btn-laranja" href="https://wa.me/5511996112620" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+      <a class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.4)" href="https://levimp.com.br" target="_blank" rel="noopener">levimp.com.br</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><b>LEVI MAGNO MARKETING LTDA</b> · CNPJ 51.288.794/0001-71</div>
+    <div>Números com fonte e data de apuração · Prints de projetos publicados, capturados em 19/08/2026</div>
+  </div>
+</footer>
+
+<script>
+/* Animação sempre ligada. Nada aqui respeita prefers-reduced-motion, de propósito. */
+var reduced = false;
+
+/* Hero: câmera avançando (escala 1.22 -> 1, blur 20 -> 0) */
+function bootHero(){
+  var t = document.getElementById('heroTitulo');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ t.classList.add('play'); }); });
+  /* passos do hero entram em sequência com respiro real */
+  document.querySelectorAll('.hero .rev').forEach(function(el){
+    var b = parseInt(el.getAttribute('data-b')||'0',10);
+    setTimeout(function(){ el.classList.add('on'); }, 450 + b*260);
+  });
+}
+if (document.readyState === 'complete') { bootHero(); }
+else { window.addEventListener('load', bootHero); }
+
+/* Revelação por seção: boot sequencial de 150ms por elemento */
+(function(){
+  var pend = {};
+  var io = new IntersectionObserver(function(ents){
+    ents.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el = e.target;
+      if(el.closest('.hero')) { io.unobserve(el); return; }
+      var sec = el.closest('section') || document.body;
+      var key = sec.id || sec.className || 'x';
+      pend[key] = (pend[key]||0);
+      setTimeout(function(){ el.classList.add('on'); }, pend[key]*150);
+      pend[key]++;
+      setTimeout(function(){ pend[key] = Math.max(0,pend[key]-1); }, 900);
+      io.unobserve(el);
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.rev').forEach(function(el){ io.observe(el); });
+})();
+
+/* Contadores: sobem quando entram na tela */
+(function(){
+  function anima(el){
+    var alvo = parseFloat(el.getAttribute('data-alvo'));
+    var dec = parseInt(el.getAttribute('data-dec')||'0',10);
+    var ini = null, dur = 1800;
+    function passo(ts){
+      if(!ini) ini = ts;
+      var p = Math.min((ts-ini)/dur,1);
+      var e = 1 - Math.pow(1-p,4);
+      var v = alvo*e;
+      el.textContent = dec>0 ? v.toFixed(dec).replace('.',',') : Math.round(v).toString();
+      if(p<1) requestAnimationFrame(passo);
+    }
+    requestAnimationFrame(passo);
+  }
+  var io = new IntersectionObserver(function(ents){
+    ents.forEach(function(e){
+      if(e.isIntersecting){ anima(e.target); io.unobserve(e.target); }
+    });
+  },{threshold:.6});
+  document.querySelectorAll('.conta-ate').forEach(function(el){ io.observe(el); });
+})();
+
+/* Galeria: anda sozinha em loop, pausa no hover, e aceita arrastar com o mouse ou o dedo */
+(function(){
+  var pista = document.getElementById('pistaG');
+  var trilho = document.getElementById('trilhoG');
+  var barra = document.getElementById('barraG');
+  var atual = document.getElementById('atualG');
+  var total = document.getElementById('totalG');
+  var n = trilho.children.length;
+  if (total) total.textContent = ('0' + n).slice(-2);
+
+  /* duplica para o loop nunca ter fim visível */
+  trilho.innerHTML += trilho.innerHTML;
+  var meio = 0;
+  function mede(){ meio = trilho.scrollWidth / 2; }
+  mede();
+  window.addEventListener('resize', mede);
+  window.addEventListener('load', mede);
+
+  var pausado = false, arrastando = false, xInicio = 0, scrollInicio = 0, ultimoX = 0, inercia = 0;
+  var VEL = 58;      /* pixels por segundo, ritmo de vitrine */
+  var anterior = 0;
+  /* a posição vive aqui, em ponto flutuante. scrollLeft arredonda, e somar direto nele
+     faz o avanço de menos de 1px por quadro virar zero: o carrossel fica parado. */
+  var pos = 0;
+
+  function passo(ts){
+    var dt = anterior ? Math.max(0, Math.min((ts - anterior) / 1000, 0.1)) : 0;
+    anterior = ts;
+    if (!pausado && !arrastando){
+      if (Math.abs(inercia) > 0.4){ pos += inercia; inercia *= 0.94; }
+      else { pos += VEL * dt; }
+      aplica();
+    }
+    requestAnimationFrame(passo);
+  }
+  function aplica(){
+    if (meio > 0){
+      if (pos >= meio) pos -= meio;
+      else if (pos < 0) pos += meio;
+    }
+    pista.scrollLeft = pos;
+    pinta();
+  }
+  function pinta(){
+    var p = meio ? (pos % meio) / meio : 0;
+    if (barra) barra.style.width = (p * 100) + '%';
+    if (atual && n) atual.textContent = ('0' + Math.min(n, 1 + Math.floor(p * n))).slice(-2);
+  }
+  requestAnimationFrame(passo);
+  window.__galeriaPasso = passo; /* usado na verificação */
+
+  pista.addEventListener('mouseenter', function(){ pausado = true; });
+  pista.addEventListener('mouseleave', function(){ pausado = false; });
+
+  pista.addEventListener('pointerdown', function(e){
+    arrastando = true; inercia = 0;
+    xInicio = ultimoX = e.clientX;
+    scrollInicio = pos;
+    pista.classList.add('arrastando');
+    pista.setPointerCapture(e.pointerId);
+  });
+  pista.addEventListener('pointermove', function(e){
+    if (!arrastando) return;
+    e.preventDefault();
+    pos = scrollInicio - (e.clientX - xInicio);
+    inercia = (ultimoX - e.clientX) * 0.9;
+    ultimoX = e.clientX;
+    aplica();
+  });
+  function solta(e){
+    if (!arrastando) return;
+    arrastando = false;
+    pista.classList.remove('arrastando');
+    try { pista.releasePointerCapture(e.pointerId); } catch(err){}
+  }
+  pista.addEventListener('pointerup', solta);
+  pista.addEventListener('pointercancel', solta);
+  pista.addEventListener('dragstart', function(e){ e.preventDefault(); });
+
+  function anda(dir){
+    var card = trilho.querySelector('.obra');
+    var salto = card ? card.getBoundingClientRect().width + 44 : 600;
+    inercia = dir * 18; /* empurrão com desaceleração, no mesmo motor */
+    pos += dir * salto * 0.15;
+    aplica();
+  }
+  document.getElementById('setaDir').addEventListener('click', function(){ anda(1); });
+  document.getElementById('setaEsq').addEventListener('click', function(){ anda(-1); });
+})();
+
+/* Faixas em marquee: duplica cada trilha para o loop ser contínuo */
+(function(){
+  ['trilhaClientes','trilhaPosts','trilhaCriativos'].forEach(function(id){
+    var tr = document.getElementById(id);
+    if (tr) tr.innerHTML += tr.innerHTML;
+  });
+})();
+
+/* Pipeline: desenha quando entra na tela */
+(function(){
+  var box = document.getElementById('pipeBox');
+  var io = new IntersectionObserver(function(ents){
+    ents.forEach(function(e){ if(e.isIntersecting){ box.classList.add('on'); io.unobserve(box); } });
+  },{threshold:.4});
+  io.observe(box);
+})();
+</script>
+</body>
+</html>
