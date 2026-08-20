@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LMP · Tabela de valores · parceria JKS</title>
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="LMP · Tabela de valores para a parceria JKS">
+<meta property="og:description" content="Automação com IA, tráfego pago, sites e design. Valor por serviço e o repasse da LMP.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF8; --branco:#fff; --navy:#102C4A; --texto:#4B5C70;
+  --laranja:#DC6A24; --ciano:#0E9AA6;
+  --linha:rgba(16,44,74,.12);
+  --r3:22px; --pill:100px;
+  --sh1:0 1px 2px rgba(16,44,74,.05);
+  --sh2:0 1px 2px rgba(16,44,74,.05), 0 10px 26px -16px rgba(16,44,74,.2);
+  --wrap:1080px;
+  --disp:'Bricolage Grotesque',system-ui,sans-serif;
+  --corpo:'DM Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+/* as pecas entram deslocadas de fora da tela: sem isto aparece barra horizontal
+   enquanto elas caminham para o lugar */
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--corpo);background:var(--paper);color:var(--navy);
+  font-size:17px;line-height:1.6;letter-spacing:-.01em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(18px,4vw,36px)}
+section{padding:clamp(52px,7vh,88px) 0}
+h1,h2{font-family:var(--disp);font-weight:800;letter-spacing:-.03em;line-height:1.03}
+h1{font-size:clamp(34px,5.4vw,62px)}
+h2{font-size:clamp(25px,3.3vw,40px)}
+p{color:var(--texto)}
+/* o rotulo e flex: sem quebra permitida ele empurra a pagina para fora da tela no celular */
+.rotulo{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ciano);display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.rotulo::before{content:"";flex:0 0 24px;height:2px;background:var(--laranja)}
+/* nenhum bloco pode ficar mais largo que o pai, e palavra longa quebra em vez de estourar */
+h1,h2,p,b,.serv,.regra,.lin,.chip{overflow-wrap:break-word;min-width:0}
+
+#progresso{position:fixed;left:0;top:0;height:3px;width:100%;z-index:99;pointer-events:none}
+#progresso i{display:block;height:100%;background:var(--laranja);transform:scaleX(0);transform-origin:left center}
+
+header{position:sticky;top:0;z-index:60;background:rgba(251,250,248,.88);
+  backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .35s}
+header.fixo{border-bottom-color:var(--linha)}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.marca{font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:-.03em;
+  text-decoration:none;color:var(--navy);display:flex;align-items:center;gap:8px}
+.marca i{width:8px;height:8px;border-radius:50%;background:var(--ciano)}
+.topo nav{display:flex;gap:22px}
+.topo nav a{font-size:14px;color:var(--texto);text-decoration:none;transition:color .25s}
+.topo nav a:hover{color:var(--laranja)}
+
+.capa{padding-top:clamp(40px,6vh,72px);position:relative;overflow:hidden}
+.capa h1{max-width:15ch;margin-top:20px}
+.capa .sub{margin-top:22px;max-width:56ch;font-size:18px}
+.avisos{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;background:var(--branco);
+  border:1px solid var(--linha);border-radius:var(--pill);padding:8px 15px;box-shadow:var(--sh1)}
+.chip b{color:var(--laranja);font-weight:500}
+.risco{position:absolute;right:-5vw;top:5vh;width:min(42vw,470px);opacity:.42;pointer-events:none}
+.risco path{fill:none;stroke:#DC6A24;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+
+.grupo h2{margin-top:14px;max-width:20ch}
+.grupo > p{margin-top:14px;max-width:62ch}
+
+.tab{margin-top:clamp(24px,3vh,36px);border:1px solid var(--linha);border-radius:var(--r3);
+  overflow:hidden;background:var(--branco);box-shadow:var(--sh2)}
+.lin{display:grid;grid-template-columns:1.55fr .78fr .78fr;gap:14px;
+  padding:clamp(15px,1.7vw,21px) clamp(16px,2.2vw,28px);border-top:1px solid var(--linha);align-items:center}
+.lin:first-child{border-top:0;background:rgba(16,44,74,.04)}
+.lin.cab span{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--texto)}
+.lin.cab span.dir{text-align:right}
+.serv{font-weight:500;font-size:16px}
+.serv em{display:block;font-style:normal;font-size:13.5px;color:var(--texto);margin-top:2px}
+.val{font-family:var(--disp);font-weight:800;font-size:clamp(17px,1.7vw,22px);letter-spacing:-.03em;text-align:right}
+.val.rep{color:var(--laranja)}
+.sob{font-size:14px;color:var(--texto);text-align:right}
+
+.parceria{background:var(--navy);color:#fff}
+.parceria h2{color:#fff}
+.parceria p{color:rgba(255,255,255,.76)}
+.parceria .rotulo{color:var(--laranja)}
+.parceria .rotulo::before{background:var(--ciano)}
+.regras{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(18px,2.4vw,34px);margin-top:clamp(30px,4vh,46px)}
+.regra{border-top:2px solid rgba(255,255,255,.18);padding-top:18px}
+.regra b{display:block;font-family:var(--disp);font-weight:600;font-size:18px;letter-spacing:-.02em}
+.regra p{margin-top:8px;font-size:15px}
+
+footer{border-top:1px solid var(--linha);padding:30px 0 46px}
+.rodape{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--texto)}
+
+[data-ent]{opacity:0}
+[data-ent="porbaixo"]{transform:translate3d(0,100px,0) scale(.97);filter:blur(10px)}
+[data-ent="delado"]{transform:translate3d(-110px,58px,0) rotate(-3deg);filter:blur(8px)}
+[data-ent="deladodir"]{transform:translate3d(110px,58px,0) rotate(3deg);filter:blur(8px)}
+[data-ent="letras"]{opacity:0}
+[data-ent].feito{opacity:1;transform:none;filter:none}
+
+@media(max-width:860px){
+  .topo nav{display:none}
+  .risco{display:none}
+  /* no celular a linha vira bloco: nome em cima, os dois valores lado a lado
+     com rotulo proprio, porque o cabecalho da tabela some nessa largura */
+  .lin{display:block;padding:16px clamp(16px,4vw,22px)}
+  .lin.cab{display:none}
+  .serv{font-size:16px}
+  .val{display:inline-block;text-align:left;font-size:21px;margin:10px 26px 0 0}
+  .val::before{content:"Valor base";display:block;font-family:var(--mono);font-weight:400;
+    font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--texto);margin-bottom:1px}
+  .val.rep::before{content:"LMP recebe"}
+  .sob{display:inline-block;text-align:left;margin-top:10px;margin-right:26px}
+  .regras{grid-template-columns:1fr}
+  .capa .sub,.grupo > p{max-width:none}
+}
+</style>
+</head>
+<body>
+
+<div id="progresso"><i></i></div>
+
+<header id="topo">
+  <div class="wrap topo">
+    <a class="marca" href="#"><i></i>LMP</a>
+    <nav>
+      <a href="#automacao">Automação</a>
+      <a href="#trafego">Tráfego</a>
+      <a href="#sites">Sites</a>
+      <a href="#design">Design</a>
+      <a href="#regras">Regras</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="capa" data-bloco>
+    <svg class="risco" viewBox="0 0 420 300" aria-hidden="true">
+      <path d="M12 268 L118 178 L186 232 L292 96 L392 44 M340 40 L400 38 L402 100"/>
+    </svg>
+    <div class="wrap">
+      <div class="rotulo" data-ent="delado">LMP · Levi Magno Marketing</div>
+      <h1 data-ent="letras">Tabela de valores da parceria com a JKS.</h1>
+      <p class="sub" data-ent="porbaixo">Cada linha traz o valor base do serviço e quanto a LMP recebe depois dos 15% da JKS. Sobre o valor base ainda incidem representante, impostos e custo operacional, então o preço final ao cliente é definido pela JKS.</p>
+      <div class="avisos" data-ent="deladodir">
+        <span class="chip">Vigência <b>20/08/2026</b></span>
+        <span class="chip">Comissão JKS <b>15%</b></span>
+        <span class="chip">Mídia paga <b>direto pelo cliente</b></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="automacao" data-bloco>
+    <div class="wrap grupo">
+      <div class="rotulo" data-ent="delado">01 · Automação com IA</div>
+      <h2 data-ent="letras">Tudo que se repete na operação, a IA assume.</h2>
+      <p data-ent="porbaixo">Implantação única mais mensalidade de operação assistida. O consumo de inteligência artificial fica em chave própria do cliente, então a mensalidade não oscila com o volume de uso dele.</p>
+
+      <div class="tab" data-ent="porbaixo">
+        <div class="lin cab"><span>Serviço</span><span class="dir">Valor base</span><span class="dir">LMP recebe</span></div>
+        <div class="lin"><div class="serv">Implantação · plano Essencial<em>atendimento no automático</em></div><div class="val base">R$ 5.000</div><div class="val rep">R$ 4.250</div></div>
+        <div class="lin"><div class="serv">Implantação · Operação Completa<em>o mais escolhido</em></div><div class="val base">R$ 20.000</div><div class="val rep">R$ 17.000</div></div>
+        <div class="lin"><div class="serv">Implantação · Máquina Completa<em>operação inteira sob IA</em></div><div class="val base">R$ 35.000</div><div class="val rep">R$ 29.750</div></div>
+        <div class="lin"><div class="serv">Mensal · plano Essencial</div><div class="val base">R$ 2.100</div><div class="val rep">R$ 1.785</div></div>
+        <div class="lin"><div class="serv">Mensal · Operação Completa</div><div class="val base">R$ 3.100</div><div class="val rep">R$ 2.635</div></div>
+        <div class="lin"><div class="serv">Mensal · Máquina Completa</div><div class="val base">R$ 3.700</div><div class="val rep">R$ 3.145</div></div>
+        <div class="lin"><div class="serv">Diagnóstico de repetição avulso<em>abatido na implantação se o cliente seguir</em></div><div class="val base">R$ 3.500</div><div class="val rep">R$ 2.975</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trafego" data-bloco>
+    <div class="wrap grupo">
+      <div class="rotulo" data-ent="deladodir">02 · Tráfego pago</div>
+      <h2 data-ent="letras">Gestão medida por reunião, não por clique.</h2>
+      <p data-ent="porbaixo">A verba de mídia é paga pelo cliente direto na plataforma e nunca passa pela LMP. O plano trimestral existe porque a plataforma precisa desse tempo para sair do aprendizado.</p>
+
+      <div class="tab" data-ent="porbaixo">
+        <div class="lin cab"><span>Serviço</span><span class="dir">Valor base</span><span class="dir">LMP recebe</span></div>
+        <div class="lin"><div class="serv">Gestão mensal<em>sem prazo mínimo</em></div><div class="val base">R$ 1.200</div><div class="val rep">R$ 1.020</div></div>
+        <div class="lin"><div class="serv">Plano trimestral<em>equivale a R$ 1.000 por mês</em></div><div class="val base">R$ 3.000</div><div class="val rep">R$ 2.550</div></div>
+        <div class="lin"><div class="serv">Estruturação inicial<em>pixel, CAPI, rastreamento até o CRM e três criativos</em></div><div class="val base">R$ 2.400</div><div class="val rep">R$ 2.040</div></div>
+        <div class="lin"><div class="serv">Verba de mídia acima de R$ 10.000 por mês<em>operação dedicada</em></div><div class="sob">sob proposta</div><div class="sob">sob proposta</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sites" data-bloco>
+    <div class="wrap grupo">
+      <div class="rotulo" data-ent="delado">03 · Sites e landing pages</div>
+      <h2 data-ent="letras">Construído em código próprio, sem tema pronto.</h2>
+      <p data-ent="porbaixo">Todo site sai responsivo, com rastreamento instalado e com o texto escrito, não apenas o layout. Duas rodadas de revisão inclusas.</p>
+
+      <div class="tab" data-ent="porbaixo">
+        <div class="lin cab"><span>Serviço</span><span class="dir">Valor base</span><span class="dir">LMP recebe</span></div>
+        <div class="lin"><div class="serv">Landing page única<em>formulário, rastreamento e texto</em></div><div class="val base">R$ 500</div><div class="val rep">R$ 425</div></div>
+        <div class="lin"><div class="serv">Site institucional<em>até 6 seções, animado</em></div><div class="val base">R$ 840</div><div class="val rep">R$ 714</div></div>
+        <div class="lin"><div class="serv">Site e-commerce<em>catálogo, carrinho, pagamento e frete</em></div><div class="val base">R$ 2.200</div><div class="val rep">R$ 1.870</div></div>
+        <div class="lin"><div class="serv">Manutenção mensal<em>ajuste, página nova, correção</em></div><div class="val base">R$ 260</div><div class="val rep">R$ 221</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="design" data-bloco>
+    <div class="wrap grupo">
+      <div class="rotulo" data-ent="deladodir">04 · Identidade e design</div>
+      <h2 data-ent="letras">Marca com manual, não logo solto.</h2>
+      <p data-ent="porbaixo">O que separa identidade de logo é o manual: paleta, tipografia, aplicação e o que não pode. É ele que impede a marca de se desfazer no primeiro post feito por outra pessoa.</p>
+
+      <div class="tab" data-ent="porbaixo">
+        <div class="lin cab"><span>Serviço</span><span class="dir">Valor base</span><span class="dir">LMP recebe</span></div>
+        <div class="lin"><div class="serv">Logo com aplicações<em>sem manual</em></div><div class="val base">R$ 650</div><div class="val rep">R$ 552,50</div></div>
+        <div class="lin"><div class="serv">Identidade visual completa<em>com manual de marca</em></div><div class="val base">R$ 2.000</div><div class="val rep">R$ 1.700</div></div>
+        <div class="lin"><div class="serv">Peças para redes<em>12 por mês, formato 4:5</em></div><div class="val base">R$ 600</div><div class="val rep">R$ 510</div></div>
+        <div class="lin"><div class="serv">Apresentação comercial animada<em>link privado, o mesmo formato desta página</em></div><div class="val base">R$ 840</div><div class="val rep">R$ 714</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="regras" class="parceria" data-bloco>
+    <div class="wrap">
+      <div class="rotulo" data-ent="delado">05 · Como funciona</div>
+      <h2 data-ent="letras" style="margin-top:18px;max-width:19ch">A JKS vende e acompanha. A LMP entrega e opera.</h2>
+
+      <div class="regras">
+        <div class="regra" data-ent="delado">
+          <b>Comissão de 15%</b>
+          <p>Incide sobre implantação, mensalidade e projetos fechados, enquanto o contrato estiver ativo. A coluna que mostra o repasse já traz o valor líquido da LMP.</p>
+        </div>
+        <div class="regra" data-ent="porbaixo">
+          <b>O que o valor base não inclui</b>
+          <p>Representante, impostos, custo operacional e a margem comercial da JKS entram por cima. O preço de venda ao cliente final é definido pela JKS.</p>
+        </div>
+        <div class="regra" data-ent="deladodir">
+          <b>Consumo de inteligência artificial</b>
+          <p>Fica em chave própria do cliente, prevista em contrato. É o único item que varia com o volume de uso, e por isso não entra na mensalidade.</p>
+        </div>
+        <div class="regra" data-ent="porbaixo">
+          <b>Sempre na proposta</b>
+          <p>Escopo por escrito com o que não inclui, duas rodadas de revisão, sinal de 30% a 50% para começar, e o prazo do cliente separado do prazo da LMP.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap rodape">
+    <span>LEVI MAGNO MARKETING LTDA · CNPJ 51.288.794/0001-71</span>
+    <span>Tabela vigente a partir de 20/08/2026 · documento da parceria</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var MOLA = 'cubic-bezier(.16,1,.3,1)';
+  var GESTOS = {
+    porbaixo:  {d:1150, de:{transform:'translate3d(0,100px,0) scale(.97)', filter:'blur(10px)'}, para:{transform:'translate3d(0,0,0) scale(1)', filter:'blur(0px)'}},
+    delado:    {d:1250, de:{transform:'translate3d(-110px,58px,0) rotate(-3deg)', filter:'blur(8px)'}, para:{transform:'translate3d(0,0,0) rotate(0deg)', filter:'blur(0px)'}},
+    deladodir: {d:1250, de:{transform:'translate3d(110px,58px,0) rotate(3deg)', filter:'blur(8px)'}, para:{transform:'translate3d(0,0,0) rotate(0deg)', filter:'blur(0px)'}}
+  };
+
+  /* titulo se monta letra a letra, sem quebrar palavra no meio */
+  function porLetra(el, atraso){
+    if (el.dataset.dividido) return;
+    el.dataset.dividido = '1';
+    var pecas = [];
+    [].slice.call(el.childNodes).forEach(function(no){
+      if (no.nodeType !== 3) return;
+      var frag = document.createDocumentFragment();
+      no.nodeValue.split(/(\s+)/).forEach(function(p){
+        if (p === '') return;
+        if (/^\s+$/.test(p)){ frag.appendChild(document.createTextNode(' ')); return; }
+        var palavra = document.createElement('span');
+        palavra.style.display = 'inline-block';
+        palavra.style.whiteSpace = 'nowrap';
+        p.split('').forEach(function(c){
+          var s = document.createElement('span');
+          s.textContent = c; s.style.display = 'inline-block'; s.style.opacity = '0';
+          palavra.appendChild(s); pecas.push(s);
+        });
+        frag.appendChild(palavra);
+      });
+      el.replaceChild(frag, no);
+    });
+    el.style.opacity = '1'; el.classList.add('feito');
+    el.style.filter = 'none'; el.style.transform = 'none';
+    pecas.forEach(function(s, i){
+      setTimeout(function(){
+        var a = s.animate([{opacity:0, transform:'translate3d(0,62%,0) rotate(6deg)'},{opacity:1, transform:'none'}],
+                          {duration:680, easing:MOLA, fill:'forwards'});
+        setTimeout(function(){ s.style.opacity='1'; s.style.transform='none'; try{a.cancel();}catch(e){} }, 760);
+      }, atraso + i*20);
+    });
+  }
+
+  function acionar(el, atraso){
+    var nome = el.getAttribute('data-ent');
+    if (nome === 'letras'){ setTimeout(function(){ porLetra(el, 0); }, atraso); return; }
+    var g = GESTOS[nome] || GESTOS.porbaixo;
+    setTimeout(function(){
+      var a = el.animate([Object.assign({opacity:0}, g.de), Object.assign({opacity:1}, g.para)],
+                         {duration:g.d, easing:MOLA, fill:'forwards'});
+      function assentar(){ el.classList.add('feito'); el.style.willChange='auto'; try{a.cancel();}catch(e){} }
+      a.finished.then(assentar).catch(function(){});
+      /* rede de seguranca: aba em segundo plano nao entrega o evento de fim,
+         e tabela de preco invisivel e pior do que tabela sem animacao */
+      setTimeout(assentar, g.d + 260);
+    }, atraso);
+  }
+
+  function coreografar(b){
+    [].slice.call(b.querySelectorAll('[data-ent]')).forEach(function(el, i){ acionar(el, 90 + i*130); });
+  }
+
+  var blocos = [].slice.call(document.querySelectorAll('[data-bloco]'));
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting && !e.target.dataset.feito){ e.target.dataset.feito='1'; coreografar(e.target); }
+    });
+  }, {threshold:.1, rootMargin:'0px 0px -8% 0px'});
+  blocos.forEach(function(b){ io.observe(b); });
+
+  /* segunda rede: se o observador nao disparar, a rolagem resolve */
+  function varrer(){
+    blocos.forEach(function(b){
+      if (b.dataset.feito) return;
+      var r = b.getBoundingClientRect();
+      if (r.top < innerHeight*.94 && r.bottom > 0){ b.dataset.feito='1'; coreografar(b); }
+    });
+  }
+  window.addEventListener('scroll', varrer, {passive:true});
+  setTimeout(varrer, 800);
+  setTimeout(function(){
+    document.querySelectorAll('[data-ent]:not(.feito)').forEach(function(el){
+      if (!el.dataset.dividido) el.classList.add('feito');
+    });
+  }, 9000);
+
+  var barra = document.querySelector('#progresso i');
+  var head  = document.getElementById('topo');
+  function medir(){
+    var h = document.documentElement.scrollHeight - innerHeight;
+    var p = h > 0 ? Math.min(1, Math.max(0, scrollY / h)) : 0;
+    barra.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+    head.classList.toggle('fixo', scrollY > 14);
+  }
+  window.addEventListener('scroll', medir, {passive:true});
+  window.addEventListener('resize', medir);
+  medir();
+
+  window.addEventListener('load', function(){
+    var t = document.querySelector('.risco path');
+    if (!t || !t.getTotalLength) return;
+    var c = t.getTotalLength();
+    t.style.strokeDasharray = c;
+    var a = t.animate([{strokeDashoffset:c},{strokeDashoffset:0}],
+                      {duration:1800, delay:240, easing:'cubic-bezier(.5,.02,.3,1)', fill:'forwards'});
+    setTimeout(function(){ t.style.strokeDashoffset = 0; try{a.cancel();}catch(e){} }, 2200);
+  });
+})();
+</script>
+</body>
+</html>
