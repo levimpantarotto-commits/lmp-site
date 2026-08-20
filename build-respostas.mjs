@@ -82,6 +82,14 @@ function pagina(p) {
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
+<!-- GA4 da LMP (G-LM1VG7G8SJ). Toda pagina-resposta nova ja nasce medida. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LM1VG7G8SJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LM1VG7G8SJ');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>${esc(p.titulo)}</title>
 <meta name="description" content="${esc(p.desc)}"/>
