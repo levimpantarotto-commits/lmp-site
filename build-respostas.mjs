@@ -19,7 +19,7 @@ import fs from 'fs';
 import path from 'path';
 
 const BASE = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
-const SITE = 'https://levimp.com.br';
+const SITE = 'https://www.levimp.com.br';
 const HOJE = new Date().toISOString().slice(0, 10);
 
 // markdown mínimo: ## título, - lista, **negrito**, parágrafo
