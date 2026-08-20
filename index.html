@@ -82,6 +82,48 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://www.levimp.com.br/#faq",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "O que a LMP faz exatamente?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A LMP faz automação e implementação de inteligência artificial dentro da operação de pequenas e médias empresas brasileiras. O trabalho começa por um diagnóstico que mede, em horas e em reais, quanto a empresa gasta hoje com trabalho repetido. Depois a IA assume esse trabalho: atendimento no WhatsApp, qualificação e follow-up de lead, cotação, emissão de relatório e rotina administrativa. Atendimento é um exemplo, não a tese: a regra é que tudo que se repete a IA pode assumir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto custa automatizar um processo com IA numa empresa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Depende do tamanho da operação e de quantos processos entram. O que define a faixa não é a tecnologia, é quanta regra de negócio precisa ser escrita e quantos sistemas precisam conversar entre si. A comparação correta não é com zero: é com o que a operação já paga hoje para fazer o mesmo trabalho na mão, que numa empresa pequena costuma ficar entre R$ 4.200 e R$ 8.000 por mês."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto tempo leva para implantar IA numa empresa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O relógio do projeto não começa na assinatura, começa quando a regra do negócio fica escrita. Metade do prazo depende da empresa cliente, não do fornecedor, porque é ela quem precisa dizer como o processo funciona de verdade. Por isso entregar no prazo e entregar resultado são duas medidas diferentes, e vale acompanhar as duas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "A IA vai substituir meus funcionários?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Na pequena e média empresa o impacto quase nunca é demissão, é a vaga que não abre. O risco real é o inverso do que se teme: é a operação depender de uma pessoa que sabe o processo de cabeça e nunca escreveu a regra em lugar nenhum. Quando essa pessoa sai de férias ou pede demissão, o processo sai junto."
+      }
+    }
+  ]
+}
+</script>
+
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B1B2E'/%3E%3Ctext x='16' y='21' font-family='Arial,sans-serif' font-size='12' font-weight='700' text-anchor='middle' fill='%23F7F5F1'%3ELMP%3C/text%3E%3Ccircle cx='25' cy='8' r='3' fill='%232FD4C4'/%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -391,6 +433,21 @@ footer .marca{color:var(--escuro);font-size:18px}
 footer a:hover{color:var(--laranja)}
 
 .rev{opacity:0;transform:translateY(32px)}
+
+/* ---------- respostas: a ponte da home para as páginas-resposta ---------- */
+.respostas{background:var(--paper);border-top:1px solid var(--linha)}
+.lista-resp{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1px;
+  margin-top:44px;background:var(--linha);border:1px solid var(--linha);border-radius:16px;overflow:hidden}
+.resp{display:flex;flex-direction:column;gap:9px;padding:26px 26px 28px;background:var(--branco);
+  text-decoration:none;color:inherit;transition:background .22s,transform .22s}
+.resp:hover{background:#FFFDF9;transform:translateY(-2px)}
+.resp .q{font-family:var(--display);font-weight:600;font-size:18px;line-height:1.28;color:var(--ink);
+  display:flex;align-items:baseline;gap:10px}
+.resp .q::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--laranja);
+  transform:translateY(-3px);transition:transform .22s}
+.resp:hover .q::before{transform:translateY(-3px) scale(1.5)}
+.resp .a{font-size:14.5px;line-height:1.6;color:var(--ink-soft);padding-left:17px}
+@media(max-width:640px){ .lista-resp{grid-template-columns:1fr} .resp{padding:22px 20px 24px} }
 </style>
 </head>
 <body>
@@ -750,6 +807,45 @@ footer a:hover{color:var(--laranja)}
         </a>
         <span class="obs">Quem responde é o <b>Levi</b>, direto. A IA cuida da rotina. Proposta é conversa.</span>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== RESPOSTAS ==============================
+     As páginas-resposta existiam desde 20/08 mas a home não apontava para
+     nenhuma delas: entravam no site só pelo sitemap. Página órfã demora a
+     indexar e é citada de menos, porque nada no site diz que ela importa. -->
+<section class="secao respostas" id="respostas">
+  <div class="miolo">
+    <p class="rotulo rev">Antes de contratar alguém</p>
+    <h2 class="rev">As perguntas que todo dono faz, respondidas por escrito.</h2>
+    <p class="lede rev">Sem cadastro e sem conversa comercial. Se a resposta resolver e você não precisar de mim, melhor assim: implantação mal indicada vira sistema abandonado.</p>
+
+    <div class="lista-resp rev">
+      <a class="resp" href="/quanto-custa-automatizar-um-processo-com-ia.html">
+        <span class="q">Quanto custa automatizar um processo com IA</span>
+        <span class="a">As faixas reais de investimento, e por que o preço varia tanto entre um projeto e outro.</span>
+      </a>
+      <a class="resp" href="/como-calcular-o-retorno-de-uma-automacao.html">
+        <span class="q">Como calcular o retorno de uma automação</span>
+        <span class="a">Por que hora economizada nem sempre vira dinheiro economizado, e o custo que some da planilha.</span>
+      </a>
+      <a class="resp" href="/quanto-tempo-leva-para-implantar-ia-em-uma-empresa.html">
+        <span class="q">Quanto tempo leva para implantar</span>
+        <span class="a">Os prazos por tipo de projeto, e a metade do cronograma que depende da sua empresa, não de mim.</span>
+      </a>
+      <a class="resp" href="/quais-processos-automatizar-com-ia-na-empresa.html">
+        <span class="q">Quais processos automatizar primeiro</span>
+        <span class="a">O critério para escolher, e as três colunas que separam o que compensa do que não compensa.</span>
+      </a>
+      <a class="resp" href="/ia-vai-substituir-meus-funcionarios.html">
+        <span class="q">A IA vai substituir meus funcionários?</span>
+        <span class="a">A resposta honesta: na PME o impacto quase nunca é demissão, é a vaga que não abre.</span>
+      </a>
+      <a class="resp" href="/automacao-para-imobiliarias-e-construtoras.html">
+        <span class="q">Automação para imobiliárias e construtoras</span>
+        <span class="a">Onde a operação perde dinheiro sem perceber, do primeiro contato ao pós-obra.</span>
+      </a>
     </div>
   </div>
 </section>
