@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LMP · Eu mostro onde sua empresa perde dinheiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@10..48,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   AMOSTRA DE DIREÇÃO VISUAL · LMP
+   Uma família só (Bricolage Grotesque, eixos wght/wdth/opsz).
+   Um acento só (laranja), aplicado apenas no que dói e no que age.
+   Zero imagem: 3 canvas fazem todo o visual da página.
+   Movimento sempre ligado, sem gate de reduce-motion.
+   ============================================================ */
+
+:root{
+  --paper:#FBFAF8;
+  --navy:#102C4A;
+  --texto:#4B5C70;
+  --laranja:#DC6A24;
+  --ciano:#0E9AA6;
+  --linha:rgba(16,44,74,.12);
+  --linha-forte:rgba(16,44,74,.22);
+
+  --r-1:4px;
+  --r-2:12px;
+  --r-3:22px;
+  --r-pill:100px;
+
+  --sombra-repouso:0 1px 2px rgba(16,44,74,.05);
+  --sombra-elevada:0 1px 2px rgba(16,44,74,.05), 0 10px 26px -16px rgba(16,44,74,.20);
+  --sombra-flutuante:0 1px 2px rgba(16,44,74,.06), 0 12px 28px -14px rgba(16,44,74,.18), 0 34px 60px -40px rgba(16,44,74,.24);
+
+  --container:1160px;
+}
+
+/* O Windows do Levi tem "reduzir movimento" ligado.
+   Por isso NÃO existe nesta página nenhum bloco
+   @media (prefers-reduced-motion: reduce) nem checagem equivalente no JS:
+   o movimento roda sempre. */
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--texto);
+  font-family:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  font-size:19px;
+  line-height:1.6;
+  letter-spacing:-.01em;
+  font-variation-settings:'wdth' 100,'opsz' 14;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+.wrap{ width:100%; max-width:var(--container); margin:0 auto; padding:0 32px; }
+
+h1,h2,h3{
+  color:var(--navy);
+  margin:0;
+  font-weight:700;
+  line-height:1.02;
+  letter-spacing:-.028em;
+  font-variation-settings:'wdth' 92,'opsz' 40;
+}
+h1{ font-size:clamp(46px,6.6vw,88px); font-weight:800; }
+h2{ font-size:clamp(34px,4.2vw,56px); }
+h3{ font-size:23px; line-height:1.18; letter-spacing:-.02em; font-variation-settings:'wdth' 96,'opsz' 20; }
+p{ margin:0; max-width:66ch; }
+a{ color:inherit; }
+
+.rotulo{
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--navy);
+  opacity:.55;
+  font-variation-settings:'wdth' 100,'opsz' 10;
+}
+
+/* ---------- topo ---------- */
+header{
+  position:fixed; inset:0 0 auto 0; z-index:50;
+  backdrop-filter:blur(14px);
+  background:rgba(251,250,248,.78);
+  border-bottom:1px solid transparent;
+  transition:border-color .4s ease, background .4s ease;
+}
+header.sticky{ border-bottom-color:var(--linha); }
+.topo{ display:flex; align-items:center; justify-content:space-between; height:76px; }
+.marca{
+  font-size:20px; font-weight:800; color:var(--navy);
+  letter-spacing:-.03em; text-decoration:none;
+  display:flex; align-items:center; gap:8px;
+  font-variation-settings:'wdth' 88,'opsz' 24;
+}
+.marca i{ width:7px; height:7px; border-radius:var(--r-pill); background:var(--ciano); display:block; }
+nav{ display:flex; align-items:center; gap:34px; }
+nav a{
+  font-size:15px; text-decoration:none; color:var(--navy);
+  opacity:.7; transition:opacity .25s ease;
+}
+nav a:hover{ opacity:1; }
+
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  border-radius:var(--r-pill);
+  padding:13px 26px;
+  font-size:15px; font-weight:600; letter-spacing:-.01em;
+  text-decoration:none; border:1px solid transparent;
+  cursor:pointer;
+  transition:transform .22s cubic-bezier(.16,1,.3,1), background .22s ease, box-shadow .22s ease;
+}
+.btn-cheio{ background:var(--laranja); color:#fff; box-shadow:var(--sombra-repouso); }
+.btn-cheio:hover{ transform:translateY(-2px); box-shadow:var(--sombra-elevada); }
+.btn-cheio:active{ transform:translateY(0) scale(.98); background:#C55B1B; }
+.btn-linha{ border-color:var(--linha-forte); color:var(--navy); }
+.btn-linha:hover{ border-color:var(--navy); transform:translateY(-2px); }
+.btn-linha:active{ transform:translateY(0) scale(.98); }
+.btn i{ width:6px; height:6px; border-radius:var(--r-pill); background:currentColor; opacity:.5; }
+
+/* ---------- hero ---------- */
+.hero{ position:relative; padding:168px 0 140px; overflow:hidden; isolation:isolate;
+  background:
+    radial-gradient(120% 90% at 78% 8%, rgba(14,154,166,.20), transparent 62%),
+    radial-gradient(90% 80% at 12% 92%, rgba(220,106,36,.14), transparent 60%),
+    linear-gradient(168deg,#0B1B2E 0%,#0A1524 58%,#102C4A 100%);
+  color:#EDF1F6; }
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:120px;z-index:3;
+  background:linear-gradient(180deg,transparent,var(--paper));pointer-events:none}
+.hero .rotulo{color:rgba(237,241,246,.62)}
+.hero h1{color:#fff}
+.hero .sub{color:rgba(237,241,246,.76)}
+.hero .nota{color:rgba(237,241,246,.5)}
+.hero .btn-linha{color:#fff;border-color:rgba(255,255,255,.42)}
+.hero .btn-linha:hover{background:#fff;color:var(--navy)}
+
+/* a marca em cena: o preto do arquivo some no modo screen, o cromado e o dourado ficam */
+.marcaCena{position:absolute;right:max(3vw,18px);top:clamp(88px,13vh,150px);
+  width:clamp(230px,30vw,430px);aspect-ratio:1;pointer-events:none;
+  display:grid;place-items:center}
+/* o PNG agora tem fundo transparente de verdade, entao nao precisa de mesclagem
+   nem de mascara: o cromado mantem os tons escuros que o modo screen lavava */
+.marcaCena img{width:100%;
+  filter:drop-shadow(0 0 34px rgba(255,196,110,.30)) drop-shadow(0 0 90px rgba(14,154,166,.22));
+  will-change:transform,filter}
+.marcaCena .anel{position:absolute;inset:-9%;border-radius:50%;
+  border:1px solid rgba(255,255,255,.10);will-change:transform}
+.marcaCena .anel.b{inset:-24%;border-color:rgba(220,106,36,.16)}
+/* a seta da marca sobe sozinha: e o gesto que a propria logo carrega */
+.subida{position:absolute;z-index:2;right:max(3vw,18px);top:clamp(88px,13vh,150px);
+  width:clamp(230px,30vw,430px);aspect-ratio:1;pointer-events:none;overflow:hidden}
+.subida i{position:absolute;left:50%;bottom:-14%;width:2px;height:44%;
+  background:linear-gradient(180deg,rgba(255,196,110,0),rgba(255,196,110,.85));
+  filter:blur(.4px);animation:sobeFio 3.4s cubic-bezier(.4,0,.2,1) infinite}
+.subida i:nth-child(2){left:38%;animation-delay:1.1s;opacity:.6}
+.subida i:nth-child(3){left:63%;animation-delay:2.2s;opacity:.45}
+@keyframes sobeFio{0%{transform:translateY(0) scaleY(.4);opacity:0}
+  22%{opacity:1}70%{opacity:.9}100%{transform:translateY(-190%) scaleY(1.15);opacity:0}}
+@media(max-width:900px){
+  /* no celular a marca sai do canto e entra no fluxo, centrada e menor */
+  .marcaCena,.subida{position:relative!important;right:auto!important;top:auto!important;
+    left:auto!important;margin:0 auto 26px!important;width:min(58vw,260px)!important;
+    max-width:calc(100vw - 44px)}
+  .hero{padding-top:120px}
+  .hero .wrap{display:flex;flex-direction:column}
+  .marcaCena{order:-1}
+  .acoes{flex-direction:column;align-items:stretch}
+  .acoes .btn{justify-content:center}
+  header .btn,header .cta,#topo .btn{padding:10px 16px;font-size:13px}
+}
+@media(max-width:420px){
+  .marcaCena,.subida{width:min(66vw,220px)!important}
+}
+#campo{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+.hero .wrap{ position:relative; z-index:2; }
+.hero h1{ margin:22px 0 0; max-width:15ch; }
+.hero .sub{ margin-top:34px; font-size:21px; max-width:56ch; }
+.acoes{ margin-top:48px; display:flex; gap:14px; flex-wrap:wrap; }
+.hero .nota{ margin-top:64px; font-size:15px; color:var(--navy); opacity:.5; }
+
+/* ---------- seções ---------- */
+section{ padding:128px 0; position:relative; }
+.cabeca{ display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:end; margin-bottom:72px; }
+.cabeca h2{ max-width:13ch; }
+.cabeca p{ padding-bottom:8px; }
+
+/* vazamento */
+.vaza{ border-top:1px solid var(--linha); }
+.vaza .lista{ display:grid; grid-template-columns:repeat(2,1fr); gap:0; border-top:1px solid var(--linha); }
+.item{
+  padding:40px 0 40px;
+  border-bottom:1px solid var(--linha);
+  display:grid; grid-template-columns:80px 1fr; gap:24px; align-items:start;
+}
+.item:nth-child(odd){ padding-right:72px; border-right:1px solid var(--linha); }
+.item:nth-child(even){ padding-left:72px; }
+.item .num{
+  font-size:15px; font-weight:600; color:var(--laranja);
+  font-variation-settings:'wdth' 100,'opsz' 12;
+  padding-top:5px;
+}
+.item p{ margin-top:12px; font-size:17px; }
+.vaza .fecho-linha{
+  margin-top:56px; font-size:21px; color:var(--navy); max-width:52ch;
+  font-variation-settings:'wdth' 96,'opsz' 20; letter-spacing:-.02em;
+}
+
+/* diagnóstico */
+.diag{ background:var(--navy); color:rgba(255,255,255,.72); }
+.diag h2,.diag h3{ color:#fff; }
+.diag .rotulo{ color:#fff; opacity:.5; }
+.diag .grade{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.14); border-radius:var(--r-3); overflow:hidden; }
+.cartao{ background:var(--navy); padding:40px 34px 44px; }
+.cartao.duplo{ grid-column:span 2; display:flex; flex-direction:column; justify-content:space-between; }
+.cartao .ord{ font-size:13px; letter-spacing:.14em; text-transform:uppercase; opacity:.45; }
+.cartao h3{ margin-top:26px; }
+.cartao p{ margin-top:14px; font-size:16px; line-height:1.62; color:rgba(255,255,255,.66); }
+.cartao.duplo h3{ font-size:34px; max-width:16ch; letter-spacing:-.026em; font-variation-settings:'wdth' 92,'opsz' 32; }
+.diag .abatido{
+  margin-top:40px; display:inline-flex; align-items:center; gap:14px;
+  border:1px solid rgba(255,255,255,.2); border-radius:var(--r-pill);
+  padding:11px 22px; font-size:15px; color:#fff;
+}
+.diag .abatido b{ color:var(--laranja); font-weight:600; }
+
+/* prova */
+.prova .placar{ display:grid; grid-template-columns:1.1fr 1fr; gap:72px; align-items:center; }
+#pontos{ width:100%; height:420px; display:block; }
+.numeros{ display:flex; flex-direction:column; gap:38px; }
+.numero{ border-top:1px solid var(--linha); padding-top:20px; }
+.numero .v{
+  font-size:74px; font-weight:800; color:var(--navy);
+  line-height:1; letter-spacing:-.05em;
+  font-variation-settings:'wdth' 88,'opsz' 44;
+  display:block;
+}
+.numero .l{ margin-top:12px; font-size:16px; }
+.fonte{
+  margin-top:64px; padding-top:22px; border-top:1px solid var(--linha);
+  font-size:14px; line-height:1.6; color:var(--navy); opacity:.55; max-width:74ch;
+}
+
+/* fecho */
+.fecho{ position:relative; border-top:1px solid var(--linha); overflow:hidden; }
+#selo{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+.fecho .wrap{ position:relative; z-index:2; }
+.fecho h2{ max-width:14ch; }
+.fecho p{ margin-top:28px; font-size:20px; }
+.fecho .acoes{ margin-top:44px; }
+
+footer{ border-top:1px solid var(--linha); padding:38px 0 54px; }
+.rodape{ display:flex; justify-content:space-between; gap:32px; flex-wrap:wrap; font-size:14px; color:var(--navy); opacity:.55; }
+
+
+/* ============================================================
+   COREOGRAFIA DE ENTRADA
+   Vocabulario e numeros medidos no bundle do landonorris.com
+   em 19/08/2026 (funcao de highlight e funcao de reveal oval):
+     varredura .......... clip 0.6s power2.out, barra 0.6s power2.inOut
+                          barra recua na metade da revelacao (0.3s)
+                          escalonamento entre linhas 0.15s
+     oval ............... clip 1.5s power2.inOut, ellipse 20%/0 -> 100%/120%
+                          conteudo desloca 40% e volta, letras a partir do centro
+   power2.out   = cubic-bezier(.215,.61,.355,1)
+   power2.inOut = cubic-bezier(.645,.045,.355,1)
+   ============================================================ */
+
+
+/* ---------- trilho horizontal: o scroll vertical vira andamento lateral ---------- */
+.trilho{ padding:0; }
+.pista{ position:relative; }               /* a altura vira a pista de rolagem, definida no JS */
+.fixo{ position:sticky; top:0; height:100vh; overflow:hidden; display:flex;
+  flex-direction:column; justify-content:center; gap:clamp(24px,4vh,52px); }
+.trilhoCab h2{ margin-top:16px; max-width:18ch; }
+.passoConta{ margin-top:26px; height:2px; width:min(420px,60vw); background:var(--linha-forte); overflow:hidden; }
+.passoConta i{ display:block; height:100%; width:100%; background:var(--laranja);
+  transform:scaleX(0); transform-origin:left center; }
+.esteira{ display:flex; gap:clamp(18px,2.2vw,34px); padding-inline:max(4vw,24px);
+  will-change:transform; }
+.cap{ flex:0 0 clamp(280px,30vw,410px); background:var(--branco,#fff);
+  border:1px solid var(--linha); border-radius:var(--r-3); padding:clamp(26px,2.4vw,38px);
+  box-shadow:var(--sombra-elevada); display:flex; flex-direction:column; gap:12px; }
+.cap .capNum{ font-family:ui-monospace,monospace; font-size:12px; letter-spacing:.16em;
+  color:var(--laranja); }
+.cap h3{ font-size:clamp(21px,1.7vw,26px); line-height:1.14; letter-spacing:-.015em; }
+.cap p{ font-size:15.5px; color:var(--texto); }
+.cap.destaque{ background:var(--navy); border-color:transparent; }
+.cap.destaque h3, .cap.destaque p{ color:#fff; }
+.cap.destaque p{ color:rgba(255,255,255,.74); }
+
+/* ---------- confronto: as colunas se movem em sentidos opostos ---------- */
+.duasColunas{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,2.6vw,40px); margin-top:52px; }
+.col{ border:1px solid var(--linha); border-radius:var(--r-3); padding:clamp(26px,2.6vw,40px);
+  will-change:transform; }
+.col .colTopo{ font-family:ui-monospace,monospace; font-size:12px; letter-spacing:.16em;
+  text-transform:uppercase; padding-bottom:16px; border-bottom:1px solid var(--linha); }
+.col ol{ list-style:none; counter-reset:p; margin-top:20px; display:flex; flex-direction:column; gap:14px; }
+.col li{ counter-increment:p; position:relative; padding-left:34px; font-size:15.5px; color:var(--texto); }
+.col li::before{ content:counter(p,decimal-leading-zero); position:absolute; left:0; top:1px;
+  font-family:ui-monospace,monospace; font-size:12px; opacity:.55; }
+.col.hoje{ background:transparent; }
+.col.hoje .colTopo{ color:var(--texto); }
+.col.lmp{ background:var(--navy); border-color:transparent; }
+.col.lmp .colTopo{ color:var(--laranja); border-bottom-color:rgba(255,255,255,.16); }
+.col.lmp li{ color:rgba(255,255,255,.8); }
+@media (max-width:960px){
+  .duasColunas{ grid-template-columns:1fr; }
+  .col{ transform:none !important; }
+  .fixo{ gap:20px; }
+  .cap{ flex-basis:78vw; }
+}
+
+/* estado inicial de cada gesto; o movimento roda pela API de animacao do navegador */
+/* estado inicial de cada gesto; o movimento roda pela API de animacao do navegador */
+/* estado inicial de cada gesto; o movimento roda pela API de animacao do navegador */
+/* estado inicial de cada gesto; o movimento roda pela API de animacao do navegador.
+   nenhum gesto usa recorte: borda reta de clip-path le como quadrado entrando. */
+/* estado inicial de cada gesto; o movimento roda pela API de animacao do navegador.
+   nenhum gesto usa recorte: borda reta de clip-path le como quadrado entrando. */
+[data-ent]{ opacity:0; }
+/* elemento com gesto proprio nao herda estado inicial de sistema antigo:
+   o .rev da Fada trazia blur(18px) que gesto nenhum desfazia */
+.rev[data-ent], [data-b][data-ent]{ transform:none; filter:none; }
+[data-ent="porbaixo"]{ transform:translate3d(0,120px,0) scale(.96); filter:blur(12px); }
+[data-ent="delado"]{ transform:translate3d(-140px,72px,0) rotate(-4deg); filter:blur(10px); }
+[data-ent="deladodir"]{ transform:translate3d(140px,72px,0) rotate(4deg); filter:blur(10px); }
+[data-ent="flutua"]{ transform:translate3d(0,150px,0) rotate(-2.4deg) scale(.9); filter:blur(16px); }
+[data-ent="gira"]{ transform:rotate(-11deg) scale(.68) translate3d(-60px,80px,0); filter:blur(14px); transform-origin:50% 120%; }
+[data-ent="zoom"]{ transform:scale(1.22); filter:blur(20px); }
+[data-ent="letras"]{ opacity:0; }
+[data-ent].feito{ opacity:1; transform:none; filter:none; }
+
+/* ---------- cena de abertura ---------- */
+#cortina{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;will-change:transform,clip-path}
+#cortina .fundoCort{position:absolute;inset:0}
+.palcoAbre{position:absolute;inset:0;width:100%;height:100%}
+.seloAbre{position:absolute;right:11vw;top:9vh;width:clamp(120px,15vw,210px);opacity:0}
+.rodapeAbre{position:absolute;left:0;right:0;bottom:0;padding:0 clamp(20px,5vw,64px) clamp(22px,4vh,44px);
+  display:flex;align-items:center;gap:clamp(12px,2vw,26px)}
+.contaAbre{font-family:ui-monospace,monospace;font-size:clamp(28px,4.4vw,54px);color:#fff;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.barraAbre{flex:1;height:2px;background:rgba(255,255,255,.16);overflow:hidden}
+.barraAbre i{display:block;height:100%;background:var(--laranja);transform:scaleX(0);transform-origin:left center}
+.legAbre{font-family:ui-monospace,monospace;font-size:clamp(10px,1.1vw,13px);
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+body.travado{overflow:hidden}
+</style>
+</head>
+<body class="travado">
+
+<!-- abertura: a seta atravessa a tela, a barra carrega, a marca aterrissa -->
+<div id="cortina" aria-hidden="true">
+  <div class="fundoCort" style="background:var(--navy)"></div>
+  <svg class="palcoAbre" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
+    <path class="riscoAbre" d="M0 612 L1200 612" stroke="rgba(255,255,255,.14)" stroke-width="2" fill="none"/>
+    <path class="setaAbre" d="M74 588 L330 392 L512 508 L806 214 L1010 118 M930 117 L1010 118 L962 180"
+          stroke="#DC6A24" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <img class="seloAbre" src="img-lmp/logo-lmp-transparente.png" alt="">
+  <div class="rodapeAbre">
+    <span class="contaAbre">000</span>
+    <div class="barraAbre"><i></i></div>
+    <span class="legAbre">Levi Magno · LMP</span>
+  </div>
+</div>
+
+
+<header id="topo">
+  <div class="wrap topo">
+    <a class="marca" href="#"><i></i>LMP</a>
+    <nav>
+      <a href="#vazamento">Onde vaza</a>
+      <a href="#capacidades">O que a IA assume</a>
+      <a href="#diagnostico">Diagnóstico</a>
+      <a href="#prova">Prova</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <a class="btn btn-cheio" href="#contato">Quero o diagnóstico</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio" data-bloco>
+    <canvas id="campo"></canvas>
+    <div class="marcaCena" id="marcaCena">
+      <div class="anel"></div><div class="anel b"></div>
+      <img src="img-lmp/logo-lmp-transparente.png" alt="LMP">
+    </div>
+    <div class="subida" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="wrap">
+      <div class="rotulo" data-b="0" data-ent="delado" data-deriva="15">Levi Magno · Automação com IA</div>
+      <h1 data-b="1" data-ent="letras">Eu mostro onde sua empresa perde dinheiro. Depois a IA tapa.</h1>
+      <p class="sub" data-b="2" data-ent="porbaixo">Antes de instalar qualquer coisa, eu meço a operação e entrego por escrito o que se repete, quanto tempo isso consome por mês e em que ordem vale automatizar. Você decide com o levantamento na mão, não por fé.</p>
+      <div class="acoes" data-b="3" data-ent="flutua" data-deriva="20">
+        <a class="btn btn-cheio" href="#contato"><i></i>Quero o diagnóstico</a>
+        <a class="btn btn-linha" href="#prova">Ver o que já foi medido</a>
+      </div>
+      <p class="nota" data-b="4" data-ent="porbaixo">O laranja nesta página marca duas coisas: o que custa e o que age.</p>
+    </div>
+  </section>
+
+  <!-- ONDE VAZA -->
+  <section class="vaza" id="vazamento" data-bloco>
+    <div class="wrap">
+      <div class="cabeca">
+        <div>
+          <div class="rotulo" data-b="0" data-ent="deladodir" data-deriva="15">01 · O vazamento</div>
+          <h2 data-b="1" data-ent="porbaixo" style="margin-top:20px">Automação não é só atendimento.</h2>
+        </div>
+        <p data-b="2" data-ent="porbaixo">O que drena margem é tudo que se repete todos os dias e nunca foi cronometrado. Atendimento é um exemplo, não o assunto inteiro.</p>
+      </div>
+
+      <div class="lista">
+        <div class="item" data-b="0" data-ent="delado" data-deriva="15">
+          <div class="num">01</div>
+          <div>
+            <h3>Administrativo</h3>
+            <p>Preencher planilha, copiar dado de um sistema para outro, conferir cadastro. Trabalho invisível que só aparece na folha.</p>
+          </div>
+        </div>
+        <div class="item" data-b="1" data-ent="deladodir" data-deriva="15">
+          <div class="num">02</div>
+          <div>
+            <h3>Cotação</h3>
+            <p>O mesmo orçamento montado à mão toda semana, com a mesma tabela e as mesmas regras que ninguém escreveu.</p>
+          </div>
+        </div>
+        <div class="item" data-b="2" data-ent="delado" data-deriva="15">
+          <div class="num">03</div>
+          <div>
+            <h3>Nota fiscal</h3>
+            <p>Emissão, conferência e envio repetidos por pessoa que custa caro e podia estar vendendo.</p>
+          </div>
+        </div>
+        <div class="item" data-b="3" data-ent="deladodir" data-deriva="15">
+          <div class="num">04</div>
+          <div>
+            <h3>Relatório</h3>
+            <p>Fechamento montado no fim do mês, sempre com o mesmo recorte, sempre atrasado em relação à decisão.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="fecho-linha" data-b="4" data-ent="porbaixo">Nenhuma dessas linhas aparece no seu resultado com nome de prejuízo. Elas aparecem como hora de gente.</p>
+    </div>
+  </section>
+
+  <!-- DIAGNÓSTICO -->
+  
+  <!-- CAPACIDADES: o scroll vertical vira andamento horizontal -->
+  <section class="trilho" id="capacidades">
+    <div class="pista">
+      <div class="fixo">
+        <div class="wrap trilhoCab">
+          <div class="rotulo">02 · O que a IA assume</div>
+          <h2>Tudo que se repete na operação.</h2>
+          <div class="passoConta"><i id="trilhoBarra"></i></div>
+        </div>
+        <div class="esteira" id="esteira">
+          <article class="cap"><span class="capNum">01</span><h3>Atendimento 24h que parece gente</h3><p>Responde em segundos, no tom da sua empresa, por texto e por áudio. O cliente não percebe que é IA, e não fica sem resposta nem às 23h de domingo.</p></article>
+          <article class="cap"><span class="capNum">02</span><h3>Follow-up que não esquece</h3><p>Lead parado, proposta sem resposta, cliente que sumiu: o sistema retoma na hora certa e te avisa quando a conversa esquenta.</p></article>
+          <article class="cap"><span class="capNum">03</span><h3>Cotação e orçamento na hora</h3><p>O pedido chega, a IA aplica as suas regras de preço e devolve o orçamento pronto. Em minutos, não em dias, e sem depender de quem está de folga.</p></article>
+          <article class="cap"><span class="capNum">04</span><h3>Relatórios que se montam sozinhos</h3><p>Venda, atendimento, funil, campanha: o número chega pronto no ritmo que você definir. Ninguém abre planilha na sexta-feira.</p></article>
+          <article class="cap"><span class="capNum">05</span><h3>Agenda e confirmação</h3><p>Marca reunião e visita direto na agenda, confirma na véspera e reagenda quem furou, sem vai-e-vem de mensagem.</p></article>
+          <article class="cap"><span class="capNum">06</span><h3>Cobrança e lembretes</h3><p>Boleto vencendo, pagamento atrasado, renovação chegando: a mensagem certa sai na data certa, com o tom certo.</p></article>
+          <article class="cap"><span class="capNum">07</span><h3>Conferência e rotina interna</h3><p>Nota, cadastro, planilha, dado que entra errado: a IA confere, organiza e aponta só o que precisa de um humano.</p></article>
+          <article class="cap destaque"><span class="capNum">08</span><h3>Um cérebro que pensa o negócio junto</h3><p>Além de executar, ele sugere: campanha pro produto parado, alerta de lead esfriando, ideia de oferta. É o que separa automação de piloto automático.</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARACAO: as duas colunas se movem em sentidos opostos conforme a rolagem -->
+  <section class="confronto" id="confronto" data-bloco>
+    <div class="wrap">
+      <div class="rotulo" data-ent="delado">03 · O mesmo pedido, dos dois jeitos</div>
+      <h2 data-ent="letras" style="margin-top:20px">O mesmo pedido de orçamento, dos dois jeitos.</h2>
+      <div class="duasColunas">
+        <div class="col hoje" data-scrub="-46">
+          <div class="colTopo">Como acontece hoje</div>
+          <ol>
+            <li>O pedido chega às 19h40 e ninguém vê.</li>
+            <li>No dia seguinte alguém lembra e pergunta o que era.</li>
+            <li>A tabela de preço está com outra pessoa.</li>
+            <li>O orçamento sai em dois dias.</li>
+            <li>O cliente já pediu para outro.</li>
+          </ol>
+        </div>
+        <div class="col lmp" data-scrub="46">
+          <div class="colTopo">Como acontece com a LMP</div>
+          <ol>
+            <li>O pedido chega às 19h40 e é lido na hora.</li>
+            <li>A IA aplica as suas regras de preço.</li>
+            <li>O orçamento volta em minutos, no seu tom.</li>
+            <li>Você recebe o resumo e só entra se quiser.</li>
+            <li>O cliente responde ainda naquela noite.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section class="diag" id="diagnostico" data-bloco>
+    <div class="wrap">
+      <div class="cabeca">
+        <div>
+          <div class="rotulo" data-b="0" data-ent="delado" data-deriva="15">02 · O entregável</div>
+          <h2 data-b="1" data-ent="letras" style="margin-top:20px">O diagnóstico não é a conversa de venda. É o produto.</h2>
+        </div>
+        <p data-b="2" data-ent="porbaixo">Todo concorrente pede que o dono acredite antes de ver. Aqui a ordem é invertida: primeiro o levantamento, depois a decisão de implantar.</p>
+      </div>
+
+      <div class="grade">
+        <div class="cartao" data-b="0" data-ent="gira" data-deriva="26">
+          <div class="ord">Entrega 01</div>
+          <h3>Mapa do que se repete</h3>
+          <p>Cada tarefa recorrente da operação listada com quem executa, com que frequência e por qual caminho.</p>
+        </div>
+        <div class="cartao" data-b="1" data-ent="gira" data-deriva="26">
+          <div class="ord">Entrega 02</div>
+          <h3>Tempo medido</h3>
+          <p>Quanto tempo cada uma dessas tarefas consome por mês, apurado na sua operação e não em média de mercado.</p>
+        </div>
+        <div class="cartao" data-b="2" data-ent="gira" data-deriva="26">
+          <div class="ord">Entrega 03</div>
+          <h3>O custo desse tempo</h3>
+          <p>O tempo convertido no custo real da sua folha. É o ponto em que a repetição vira número de dono.</p>
+        </div>
+        <div class="cartao duplo" data-b="3" data-ent="gira" data-deriva="26">
+          <div>
+            <div class="ord">O argumento</div>
+            <h3>A ordem invertida é o que separa isso de uma promessa.</h3>
+          </div>
+          <p style="margin-top:28px">Você recebe o documento e fica com ele, decidindo implantar comigo, com outro ou com ninguém. Quem paga o levantamento já sabe o tamanho do problema antes de discutir preço de solução.</p>
+        </div>
+        <div class="cartao" data-b="4" data-ent="gira" data-deriva="26">
+          <div class="ord">Entrega 04</div>
+          <h3>Plano em ordem de retorno</h3>
+          <p>O que automatizar primeiro, segundo e terceiro, ordenado pelo que devolve dinheiro mais rápido.</p>
+        </div>
+      </div>
+
+      <div class="abatido" data-b="5" data-ent="flutua" data-deriva="20">O valor do diagnóstico é <b>abatido</b> na implantação.</div>
+    </div>
+  </section>
+
+  <!-- PROVA -->
+  <section class="prova" id="prova" data-bloco>
+    <div class="wrap">
+      <div class="cabeca">
+        <div>
+          <div class="rotulo" data-b="0" data-ent="deladodir" data-deriva="15">03 · Prova</div>
+          <h2 data-b="1" data-ent="porbaixo" style="margin-top:20px">O que já foi medido rodando em produção.</h2>
+        </div>
+        <p data-b="2" data-ent="porbaixo">Cada ponto ao lado é um lead real que passou pelo sistema. A triagem que antes tomava o dia de uma pessoa passou a chegar pronta.</p>
+      </div>
+
+      <div class="placar">
+        <canvas id="pontos" data-b="0" data-ent="flutua" data-deriva="20"></canvas>
+        <div class="numeros">
+          <div class="numero" data-b="1" data-ent="delado" data-deriva="15">
+            <span class="v" data-conta="157">0</span>
+            <div class="l">leads processados pelo sistema</div>
+          </div>
+          <div class="numero" data-b="2" data-ent="deladodir" data-deriva="15">
+            <span class="v" data-conta="45" data-sufixo="%">0</span>
+            <div class="l">qualificados e entregues prontos para contato</div>
+          </div>
+          <div class="numero" data-b="3" data-ent="delado" data-deriva="15">
+            <span class="v" data-conta="21" data-sufixo="%">0</span>
+            <div class="l">descartados antes de consumir tempo de alguém</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="fonte" data-b="4" data-ent="porbaixo">Fonte: sistema da LMP em operação, medição registrada na apresentação comercial de 01/08/2026. O cliente não é identificado por acordo de confidencialidade. Nenhum outro número desta página é projeção.</p>
+    </div>
+  </section>
+
+  <!-- FECHO -->
+  <section class="fecho" id="contato" data-bloco>
+    <canvas id="selo"></canvas>
+    <div class="wrap">
+      <div class="rotulo" data-b="0" data-ent="deladodir" data-deriva="15">04 · Começar</div>
+      <h2 data-b="1" data-ent="letras" style="margin-top:20px">Comece pelo número, não pela ferramenta.</h2>
+      <p data-b="2" data-ent="porbaixo">Me chame no WhatsApp com o nome da empresa e o setor. Eu respondo com as perguntas do levantamento e o prazo do documento.</p>
+      <div class="acoes" data-b="3" data-ent="flutua" data-deriva="20">
+        <a class="btn btn-cheio" href="https://wa.me/5511996112620"><i></i>Falar com o Levi</a>
+        <a class="btn btn-linha" href="#vazamento">Reler onde costuma vazar</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap rodape">
+    <div>LEVI MAGNO MARKETING LTDA · CNPJ 51.288.794/0001-71</div>
+    <div>levimp.com.br · amostra de direção visual</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = false; // regra da casa: movimento nunca é desligado
+
+
+  /* ============================================================
+     MOTOR DE COREOGRAFIA
+     Gramatica e numeros lidos no bundle do landonorris.com em 19/08/2026:
+       varredura .... clip 600ms power2.out, barra de cor 600ms power2.inOut
+                      recuando na metade da revelacao, 150ms entre irmaos
+       oval ......... clip 1500ms power2.inOut, elipse do topo ou da base
+     power2.out = cubic-bezier(.215,.61,.355,1)
+     power2.inOut = cubic-bezier(.645,.045,.355,1)
+     O movimento roda pela API de animacao do navegador, nao por transicao
+     de CSS: assim cada gesto tem estado consultavel e termina onde deve.
+     ============================================================ */
+  var COR_VARRE = getComputedStyle(document.documentElement).getPropertyValue("--laranja").trim()||"#DC6A24";
+  var PASSO = 150;
+  var SAIDA = 'cubic-bezier(.215,.61,.355,1)';
+  var DENTRO_FORA = 'cubic-bezier(.645,.045,.355,1)';
+  var MOLA = 'cubic-bezier(.16,1,.3,1)';
+
+  var GESTOS = {
+    /* nada aqui usa recorte: borda reta de clip-path le como quadrado entrando.
+       o que da o ar artistico e a peca vir de fora da tela, pelo lado e por baixo,
+       com inclinacao e desfoque que se resolvem no lugar. */
+    porbaixo:  { d:1250, e:MOLA, de:{transform:'translate3d(0,120px,0) scale(.96)',            filter:'blur(12px)'}, para:{transform:'translate3d(0,0,0) scale(1)', filter:'blur(0px)'} },
+    delado:    { d:1350, e:MOLA, de:{transform:'translate3d(-140px,72px,0) rotate(-4deg)',     filter:'blur(10px)'}, para:{transform:'translate3d(0,0,0) rotate(0deg)', filter:'blur(0px)'} },
+    deladodir: { d:1350, e:MOLA, de:{transform:'translate3d(140px,72px,0) rotate(4deg)',       filter:'blur(10px)'}, para:{transform:'translate3d(0,0,0) rotate(0deg)', filter:'blur(0px)'} },
+    flutua:    { d:1450, e:MOLA, de:{transform:'translate3d(0,150px,0) rotate(-2.4deg) scale(.9)', filter:'blur(16px)'}, para:{transform:'translate3d(0,0,0) rotate(0deg) scale(1)', filter:'blur(0px)'} },
+    gira:      { d:1250, e:MOLA, de:{transform:'rotate(-11deg) scale(.68) translate3d(-60px,80px,0)', filter:'blur(14px)'}, para:{transform:'rotate(0deg) scale(1) translate3d(0,0,0)', filter:'blur(0px)'} },
+    zoom:      { d:1600, e:MOLA, de:{transform:'scale(1.22)', filter:'blur(20px)'}, para:{transform:'scale(1)', filter:'blur(0px)'} }
+  };
+
+  /* letra por letra, sem quebrar palavra:
+     cada palavra vira um bloco que nao parte, e as letras vivem dentro dele */
+  function porLetra(el, atraso){
+    if (el.dataset.dividido) return;
+    el.dataset.dividido = '1';
+    var pecas = [];
+    [].slice.call(el.childNodes).forEach(function(no){
+      if (no.nodeType !== 3) return;
+      var frag = document.createDocumentFragment();
+      no.nodeValue.split(/(\s+)/).forEach(function(pedaco){
+        if (pedaco === '') return;
+        if (/^\s+$/.test(pedaco)){ frag.appendChild(document.createTextNode(' ')); return; }
+        var palavra = document.createElement('span');
+        palavra.style.display = 'inline-block';
+        palavra.style.whiteSpace = 'nowrap';
+        pedaco.split('').forEach(function(c){
+          var s = document.createElement('span');
+          s.textContent = c; s.style.display = 'inline-block'; s.style.opacity = '0';
+          palavra.appendChild(s); pecas.push(s);
+        });
+        frag.appendChild(palavra);
+      });
+      el.replaceChild(frag, no);
+    });
+    el.style.opacity = '1';
+    el.classList.add('feito'); el.dataset.entrou = '1';
+    el.style.filter = 'none'; el.style.transform = 'none';
+    pecas.forEach(function(s, i){
+      setTimeout(function(){
+        var a = s.animate([{opacity:0, transform:'translate3d(0,64%,0) rotate(7deg)'},{opacity:1, transform:'none'}],
+                          {duration:720, easing:MOLA, fill:'forwards'});
+        setTimeout(function(){ s.style.opacity='1'; s.style.transform='none'; try{ a.cancel(); }catch(e){} }, 800);
+      }, atraso + i*24);
+    });
+  }
+
+  /* varredura: barra de cor atravessa, o texto aparece atras dela, a barra recua */
+  function varrer(el, dir, atraso){
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    var barra = document.createElement('i');
+    barra.className = 'barraVarre';
+    barra.style.background = COR_VARRE;
+    barra.style.transformOrigin = (dir === 'esq') ? 'left center' : 'right center';
+    el.appendChild(barra);
+    el.style.opacity = '1';
+
+    var fechado = (dir === 'esq') ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)';
+    var aberto  = 'inset(0% 0% 0% 0%)';
+    el.style.clipPath = fechado;
+
+    setTimeout(function(){
+      var a = el.animate([{clipPath:fechado},{clipPath:aberto}], {duration:600, easing:SAIDA, fill:'forwards'});
+      function abrir(){ el.style.clipPath = 'none'; try{ a.cancel(); }catch(e){} }
+      a.finished.then(abrir).catch(function(){});
+      setTimeout(abrir, 860);
+      setTimeout(function(){
+        var b = barra.animate([{transform:'scaleX(1)'},{transform:'scaleX(0)'}], {duration:600, easing:DENTRO_FORA, fill:'forwards'});
+        function tirar(){ if (barra.parentNode) barra.parentNode.removeChild(barra); }
+        b.finished.then(tirar).catch(function(){});
+        setTimeout(tirar, 860);
+      }, 300);
+    }, atraso);
+  }
+
+  function acionar(el, atraso){
+    var nome = el.getAttribute('data-ent') || 'zoom';
+    if (nome === 'letras'){ setTimeout(function(){ porLetra(el, 0); }, atraso); return; }
+    var g = GESTOS[nome] || GESTOS.zoom;
+    setTimeout(function(){
+      var de   = Object.assign({opacity:0}, g.de);
+      var para = Object.assign({opacity:1}, g.para);
+      var a = el.animate([de, para], {duration:g.d, easing:g.e, fill:'forwards'});
+      function assentar(){
+        /* grava o estado final e solta a camada: filtro parado custa pintura a toa */
+        el.classList.add('feito'); el.dataset.entrou = '1'; el.style.willChange = 'auto';
+        try{ a.cancel(); }catch(e){}
+      }
+      a.finished.then(assentar).catch(function(){});
+      /* rede de seguranca: aba em segundo plano nao entrega o evento de fim,
+         e conteudo invisivel e pior que conteudo sem animacao */
+      setTimeout(assentar, g.d + 260);
+    }, atraso);
+  }
+
+  function coreografar(bloco){
+    if (!bloco) return;
+    var itens = [].slice.call(bloco.querySelectorAll('[data-ent]'));
+    itens.forEach(function(el, i){
+      var passo = el.hasAttribute('data-b') ? (+el.getAttribute('data-b') || 0) : i;
+      acionar(el, 110 + passo * PASSO);
+    });
+  }
+
+  var obsCoreo = new IntersectionObserver(function(ents){
+    ents.forEach(function(e){
+      if (e.isIntersecting && !e.target.dataset.coreo){ e.target.dataset.coreo = '1'; coreografar(e.target); }
+    });
+  }, { threshold:.14, rootMargin:'0px 0px -8% 0px' });
+
+  /* deriva no scroll: depois de entrar, a peca acompanha a rolagem em ritmo proprio.
+     E o que separa pagina que "aparece" de pagina que se move. */
+  function ligarDeriva(){
+    var itens = [].slice.call(document.querySelectorAll('[data-deriva]'));
+    if (!itens.length) return;
+    var alvo = [], atual = [];
+    itens.forEach(function(){ alvo.push(0); atual.push(0); });
+    function medir(){
+      var meio = window.innerHeight/2;
+      itens.forEach(function(el,i){
+        var r = el.getBoundingClientRect();
+        var d = ((r.top + r.height/2) - meio) / meio;
+        alvo[i] = Math.max(-1.2, Math.min(1.2, d)) * (+el.getAttribute('data-deriva') || 18);
+      });
+    }
+    function pintar(){
+      for (var i=0;i<itens.length;i++){
+        atual[i] += (alvo[i] - atual[i]) * 0.085;
+        if (itens[i].classList.contains('feito') || itens[i].dataset.entrou === '1'){
+          itens[i].style.transform = 'translate3d(0,' + atual[i].toFixed(2) + 'px,0)';
+        }
+      }
+      requestAnimationFrame(pintar);
+    }
+    window.addEventListener('scroll', medir, {passive:true});
+    window.addEventListener('resize', medir);
+    medir(); pintar();
+  }
+
+  function ligarCoreografia(){
+    var blocos = [].slice.call(document.querySelectorAll('[data-bloco]'));
+    blocos.forEach(function(b){ obsCoreo.observe(b); });
+
+    /* rede de seguranca do conteudo: o observador pode nao disparar (aba em segundo
+       plano, navegador antigo, previsualizacao). Sem isto a secao fica invisivel
+       para sempre, que num site publicado e pior do que nao ter animacao. */
+    function varrer(){
+      blocos.forEach(function(b){
+        if (b.dataset.coreo) return;
+        var r = b.getBoundingClientRect();
+        if (r.top < window.innerHeight * 0.92 && r.bottom > 0){
+          b.dataset.coreo = '1'; coreografar(b);
+        }
+      });
+    }
+    window.addEventListener('scroll', varrer, {passive:true});
+    setTimeout(varrer, 1200);
+    /* ultimo recurso: passados 9 segundos, o que nao entrou aparece de vez */
+    setTimeout(function(){
+      document.querySelectorAll('[data-ent]:not(.feito)').forEach(function(el){
+        if (el.dataset.dividido) return;
+        el.classList.add('feito'); el.dataset.entrou = '1';
+      });
+    }, 9000);
+  }
+
+
+  /* ============================================================
+     SCROLL COMO MOTOR
+     Ate aqui a pagina so disparava entradas: cada bloco aparecia uma vez
+     e parava. Aqui o scroll pilota a cena quadro a quadro, que e o que o
+     landonorris.com faz na faixa horizontal e nas cenas presas.
+     ============================================================ */
+  function ligarTrilho(){
+    var pista   = document.querySelector('.pista');
+    var esteira = document.getElementById('esteira');
+    var barra   = document.getElementById('trilhoBarra');
+    if (!pista || !esteira) return;
+
+    var extra = 0, topo = 0, curso = 0, alvo = 0, atual = 0;
+
+    function medir(){
+      /* a pista precisa ter altura suficiente para percorrer a esteira inteira */
+      extra = Math.max(0, esteira.scrollWidth - window.innerWidth + 48);
+      pista.style.height = (window.innerHeight + extra * 1.15) + 'px';
+      var r = pista.getBoundingClientRect();
+      topo  = r.top + window.scrollY;
+      curso = pista.offsetHeight - window.innerHeight;
+    }
+    function escrever(v){
+      esteira.style.transform = 'translate3d(' + (-v * extra).toFixed(2) + 'px,0,0)';
+      if (barra) barra.style.transform = 'scaleX(' + v.toFixed(4) + ')';
+    }
+    function ler(){
+      if (curso <= 0) return;
+      var p = (window.scrollY - topo) / curso;
+      alvo = Math.max(0, Math.min(1, p));
+      /* escreve na hora tambem: se o quadro-a-quadro estiver estrangulado
+         (aba em segundo plano, maquina fraca), o trilho ainda acompanha a rolagem */
+      if (Math.abs(alvo - atual) > 0.34){ atual = alvo; }
+      escrever(atual);
+    }
+    function pintar(){
+      atual += (alvo - atual) * 0.11;              /* inercia: o trilho nao gruda no dedo */
+      escrever(atual);
+      requestAnimationFrame(pintar);
+    }
+    window.addEventListener('scroll', ler, {passive:true});
+    window.addEventListener('resize', function(){ medir(); ler(); });
+    medir(); ler(); pintar();
+  }
+
+  /* elementos que se deslocam continuamente enquanto atravessam a tela */
+  function ligarScrub(){
+    var itens = [].slice.call(document.querySelectorAll('[data-scrub]'));
+    if (!itens.length) return;
+    var alvo = itens.map(function(){ return 0; });
+    var atual = itens.map(function(){ return 0; });
+    function ler(){
+      var meio = window.innerHeight / 2;
+      itens.forEach(function(el, i){
+        var r = el.getBoundingClientRect();
+        var d = ((r.top + r.height/2) - meio) / (window.innerHeight * 0.9);
+        alvo[i] = Math.max(-1, Math.min(1, d)) * (+el.getAttribute('data-scrub') || 30);
+      });
+    }
+    function pintar(){
+      for (var i=0;i<itens.length;i++){
+        atual[i] += (alvo[i] - atual[i]) * 0.09;
+        itens[i].style.transform = 'translate3d(0,' + atual[i].toFixed(2) + 'px,0)';
+      }
+      requestAnimationFrame(pintar);
+    }
+    window.addEventListener('scroll', ler, {passive:true});
+    window.addEventListener('resize', ler);
+    ler(); pintar();
+  }
+
+  /* ---------- abertura da LMP ----------
+     Fica o que foi aprovado: a seta que sobe e a barra carregando.
+     Sai o quadro: a seta atravessa a tela inteira em vez de caber numa
+     caixinha, o numero conta ate 100 e a marca aterrissa na ponta dela. */
+  function abertura(aoTerminar){
+    var cort = document.getElementById('cortina');
+    if (!cort){ aoTerminar(); return; }
+    var seta   = cort.querySelector('.setaAbre');
+    var barra  = cort.querySelector('.barraAbre i');
+    var conta  = cort.querySelector('.contaAbre');
+    var selo   = cort.querySelector('.seloAbre');
+    var risco  = cort.querySelector('.riscoAbre');
+
+    function fixa(el, quadros, opcoes){
+      if (!el) return;
+      var a = el.animate(quadros, Object.assign({fill:'forwards'}, opcoes));
+      setTimeout(function(){
+        var f = quadros[quadros.length-1];
+        for (var k in f){ el.style[k] = f[k]; }
+        try{ a.cancel(); }catch(e){}
+      }, (opcoes.duration||0) + (opcoes.delay||0) + 90);
+      return a;
+    }
+
+    /* 1. a seta se desenha subindo, de ponta a ponta da tela */
+    if (seta){
+      var c = seta.getTotalLength ? seta.getTotalLength() : 2200;
+      seta.style.strokeDasharray = c;
+      fixa(seta, [{strokeDashoffset:c},{strokeDashoffset:0}],
+                 {duration:1900, delay:200, easing:'cubic-bezier(.5,.02,.3,1)'});
+    }
+    if (risco){
+      var c2 = risco.getTotalLength ? risco.getTotalLength() : 1400;
+      risco.style.strokeDasharray = c2;
+      fixa(risco, [{strokeDashoffset:c2},{strokeDashoffset:0}],
+                  {duration:1500, delay:340, easing:'cubic-bezier(.5,.02,.3,1)'});
+    }
+
+    /* 2. a barra carrega junto com o traco, e o numero acompanha */
+    fixa(barra, [{transform:'scaleX(0)'},{transform:'scaleX(1)'}],
+                {duration:2200, delay:200, easing:'cubic-bezier(.5,.02,.3,1)'});
+    if (conta){
+      var t0 = performance.now(), dur = 2200, atraso = 200;
+      (function passo(t){
+        var p = Math.max(0, Math.min(1, (t - t0 - atraso)/dur));
+        conta.textContent = Math.round(p*100).toString().padStart(3,'0');
+        if (p < 1) requestAnimationFrame(passo); else conta.textContent = '100';
+      })(t0);
+      setTimeout(function(){ conta.textContent = '100'; }, atraso + dur + 120);
+    }
+
+    /* 3. a marca aterrissa na ponta da seta */
+    fixa(selo, [{opacity:0, transform:'translate3d(-26px,32px,0) scale(.72)'},
+                {opacity:1, transform:'translate3d(0,0,0) scale(1)'}],
+               {duration:900, delay:2150, easing:'cubic-bezier(.16,1,.3,1)'});
+
+    /* 4. tudo sobe e entrega a pagina */
+    setTimeout(function(){
+      fixa(cort, [{transform:'translate3d(0,0,0)'},{transform:'translate3d(0,-112vh,0)'}],
+                 {duration:1000, easing:'cubic-bezier(.7,0,.25,1)'});
+      document.body.classList.remove('travado');
+      aoTerminar();
+      setTimeout(function(){ if (cort.parentNode) cort.parentNode.removeChild(cort); }, 1150);
+    }, 3250);
+  }
+
+  window.addEventListener('load', function(){
+    /* o trilho define a altura da pista: tem que existir antes de qualquer rolagem,
+       nao depois da cortina sair */
+    ligarTrilho(); ligarScrub();
+    abertura(function(){
+      coreografar(document.getElementById('inicio'));
+      document.getElementById('inicio').dataset.coreo='1';
+      ligarCoreografia(); ligarDeriva();
+    });
+    var pr=document.getElementById('prova');
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting && !pr.dataset.contou){ pr.dataset.contou='1'; contar(); } });
+    },{threshold:.2}).observe(pr);
+  });
+
+  /* topo com linha ao rolar */
+  var head = document.getElementById('topo');
+  window.addEventListener('scroll', function(){
+    head.classList.toggle('sticky', window.scrollY > 24);
+  },{passive:true});
+
+  /* ---------------- contadores ---------------- */
+  var contou = false;
+  function contar(){
+    if(contou) return; contou = true;
+    [].forEach.call(document.querySelectorAll('[data-conta]'), function(el,i){
+      var alvo = +el.dataset.conta, suf = el.dataset.sufixo || '';
+      var t0 = 0, dur = 1500 + i*260;
+      setTimeout(function(){
+        function passo(t){
+          if(!t0) t0 = t;
+          var k = Math.min(1,(t-t0)/dur);
+          var e = 1 - Math.pow(1-k, 4);
+          el.textContent = Math.round(alvo*e) + suf;
+          if(k < 1) requestAnimationFrame(passo);
+        }
+        requestAnimationFrame(passo);
+      }, 420 + i*230);
+    });
+  }
+
+  /* ---------------- motor de campo (canvas 1 e 3) ----------------
+     Uma faixa de partículas atravessa a tela da esquerda para a direita:
+     é a operação rodando. Uma fração escapa para baixo em laranja: é o
+     que vaza. No fecho a mesma faixa roda com o vazamento zerado e uma
+     comporta que devolve a partícula para o fluxo.
+  ------------------------------------------------------------------ */
+  function campo(cv, opt){
+    var ctx = cv.getContext('2d');
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0, ps = [], leitura = null, t = 0, ultimo = 0, pulso = 0;
+
+    function medir(){
+      var r = cv.getBoundingClientRect();
+      W = r.width; H = r.height;
+      cv.width = Math.max(1, W*DPR); cv.height = Math.max(1, H*DPR);
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      var alvo = cv.parentNode.querySelector('.wrap');
+      if(alvo){
+        var a = alvo.getBoundingClientRect();
+        /* a área de leitura é só a coluna de texto, não a largura inteira:
+           fora dela o campo aparece com força */
+        leitura = { x:a.left-r.left-24, y:a.top-r.top-20, w:Math.min(a.width, 700)+48, h:a.height+40 };
+      }
+      var n = Math.round(Math.min(300, Math.max(70, (W*H)/7000)));
+      ps = [];
+      for(var i=0;i<n;i++) ps.push(nova(true));
+    }
+
+    function nova(espalha){
+      var z = 0.28 + Math.random()*0.72;
+      var faixa = H*opt.centro + (Math.random()+Math.random()+Math.random()-1.5)*H*0.11;
+      return {
+        x: espalha ? Math.random()*W : -30 - Math.random()*120,
+        y: faixa,
+        z: z,
+        vx: (46 + Math.random()*86) * z,
+        vy: 0,
+        vaza: Math.random() < opt.vazamento,
+        gatilho: W*(0.16 + Math.random()*0.68),
+        brilho: 0,
+        px: 0, py: 0
+      };
+    }
+
+    function dentro(p){
+      if(!leitura) return false;
+      return p.x > leitura.x && p.x < leitura.x+leitura.w && p.y > leitura.y && p.y < leitura.y+leitura.h;
+    }
+
+    function quadro(agora){
+      var dt = Math.min(0.05, (agora - (ultimo||agora))/1000);
+      ultimo = agora; t += dt;
+      ctx.clearRect(0,0,W,H);
+
+      /* duto: a linha da operação */
+      var cy = H*opt.centro;
+      ctx.strokeStyle = 'rgba(16,44,74,.12)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, cy - H*0.085); ctx.lineTo(W, cy - H*0.085); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, cy + H*0.085); ctx.lineTo(W, cy + H*0.085); ctx.stroke();
+
+      /* comporta (só no fecho) */
+      if(opt.comporta){
+        var gx = W*0.74;
+        var acende = 0.34 + 0.24*Math.sin(t*1.9);
+        ctx.strokeStyle = 'rgba(220,106,36,'+acende.toFixed(3)+')';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(gx, cy - H*0.095); ctx.lineTo(gx, cy + H*0.095); ctx.stroke();
+      }
+
+      /* pulso: a cada 3,4s um lote passa mais forte */
+      pulso -= dt;
+      if(pulso <= 0){
+        pulso = 3.4;
+        for(var k=0;k<14;k++){
+          var p = ps[(Math.random()*ps.length)|0];
+          p.brilho = 1;
+        }
+      }
+
+      for(var i=0;i<ps.length;i++){
+        var p = ps[i];
+        p.px = p.x; p.py = p.y;
+        p.x += p.vx*dt;
+        if(p.vaza && p.x > p.gatilho){ p.vy += 210*dt*p.z; p.y += p.vy*dt; }
+        else { p.y += Math.sin((p.x*0.006) + p.z*7 + t*0.7) * 8 * dt * 60 * 0.02; }
+        p.brilho *= (1 - dt*1.5);
+
+        var a = (p.vaza && p.x > p.gatilho ? 0.72 : 0.30) * (0.35 + p.z*0.65);
+        a += p.brilho*0.40;
+        if(dentro(p)) a *= 0.09;
+
+        var cor = (p.vaza && p.x > p.gatilho) ? '220,106,36' : '16,44,74';
+        ctx.strokeStyle = 'rgba('+cor+','+Math.max(0,a).toFixed(3)+')';
+        ctx.lineWidth = Math.max(0.6, 2.1*p.z);
+        ctx.lineCap = 'round';
+        /* rastro de 0,32s de percurso: streak, não pontinho */
+        ctx.beginPath();
+        ctx.moveTo(p.x - p.vx*0.32, p.y - p.vy*0.32);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+
+        if(p.x > W+60 || p.y > H+60) ps[i] = nova(false);
+      }
+      requestAnimationFrame(quadro);
+    }
+
+    medir();
+    window.addEventListener('resize', medir);
+    requestAnimationFrame(quadro);
+  }
+
+  /* ---------------- canvas 2: os 157 leads ----------------
+     157 pontos entram em desordem e se organizam em três colunas
+     na proporção medida. Nada aqui é ilustração: é o dado.
+  --------------------------------------------------------- */
+  function pontos(cv){
+    var ctx = cv.getContext('2d');
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var W=0,H=0,ds=[],inicio=0,ligado=false,linhaBase=0;
+    var TOTAL=157, QUAL=Math.round(TOTAL*0.45), DESC=Math.round(TOTAL*0.21);
+
+    function medir(){
+      var r = cv.getBoundingClientRect();
+      W=r.width; H=r.height;
+      cv.width=Math.max(1,W*DPR); cv.height=Math.max(1,H*DPR);
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      montar();
+    }
+
+    function montar(){
+      ds = [];
+      var colW = W/3, cols = 7, passo = Math.min(21, (colW-40)/cols);
+      var maiorCol = Math.ceil(QUAL/cols) - 1;
+      linhaBase = Math.min(H-46, H*0.54 + maiorCol*passo/2);
+      for(var i=0;i<TOTAL;i++){
+        var grupo = i < QUAL ? 0 : (i < QUAL+DESC ? 1 : 2);
+        var idx = grupo===0 ? i : (grupo===1 ? i-QUAL : i-QUAL-DESC);
+        var lin = Math.floor(idx/cols), col = idx%cols;
+        var baseX = grupo*colW + 24;
+        var baseY = linhaBase - lin*passo;
+        ds.push({
+          x: W*0.5 + (Math.random()-0.5)*W*1.1,
+          y: H*0.5 + (Math.random()-0.5)*H*1.4,
+          tx: baseX + col*passo,
+          ty: baseY,
+          grupo: grupo,
+          atraso: 0.15 + Math.random()*0.5 + grupo*0.28,
+          r: 3.6
+        });
+      }
+    }
+
+    function quadro(agora){
+      if(!inicio) inicio = agora;
+      var t = (agora-inicio)/1000;
+      ctx.clearRect(0,0,W,H);
+
+      for(var i=0;i<ds.length;i++){
+        var d = ds[i];
+        var k = ligado ? Math.max(0, Math.min(1,(t-d.atraso)/1.5)) : 0;
+        var e = 1 - Math.pow(1-k, 4);
+        var x = d.x + (d.tx-d.x)*e;
+        var y = d.y + (d.ty-d.y)*e;
+        var a = d.grupo===0 ? 0.92 : (d.grupo===1 ? 0.42 : 0.20);
+        ctx.fillStyle = 'rgba(16,44,74,'+(a*(0.25+0.75*e)).toFixed(3)+')';
+        ctx.beginPath();
+        ctx.arc(x, y, d.r*(1.9-0.9*e), 0, 6.2832);
+        ctx.fill();
+      }
+
+      /* rótulos das colunas */
+      var rot = ['qualificados','descartados','demais leads'];
+      ctx.font = '600 12px "Bricolage Grotesque", system-ui, sans-serif';
+      if('letterSpacing' in ctx) ctx.letterSpacing = '1.7px'; /* caixa alta pede tracking positivo */
+      for(var g=0;g<3;g++){
+        var vis = ligado ? Math.max(0, Math.min(1,(t-1.5-g*0.28)/0.8)) : 0;
+        ctx.fillStyle = 'rgba(16,44,74,'+(0.55*vis).toFixed(3)+')';
+        ctx.fillText(rot[g].toUpperCase(), g*(W/3)+24, linhaBase + 30);
+      }
+      requestAnimationFrame(quadro);
+    }
+
+    medir();
+    window.addEventListener('resize', medir);
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ ligado = true; inicio = 0; } });
+    },{threshold:.3}).observe(cv);
+    requestAnimationFrame(quadro);
+  }
+
+  campo(document.getElementById('campo'), { vazamento:0.30, comporta:false, centro:0.80 });
+
+  /* a marca da cena tem peso: inclina com o ponteiro e sobe conforme a pagina desce */
+  (function(){
+    const cena = document.getElementById('marcaCena');
+    if(!cena) return;
+    const img = cena.querySelector('img');
+    const aneis = cena.querySelectorAll('.anel');
+    let ax=0, ay=0, mx=0, my=0, pr=0, prs=0;
+    window.addEventListener('pointermove', e=>{
+      mx = (e.clientX/window.innerWidth)*2 - 1;
+      my = (e.clientY/window.innerHeight)*2 - 1;
+    });
+    function passo(){
+      ax += (mx-ax)*0.06; ay += (my-ay)*0.06;
+      pr  = Math.max(0, Math.min(1, window.scrollY / Math.max(1, window.innerHeight*0.85)));
+      prs += (pr-prs)*0.08;
+      img.style.transform =
+        `perspective(900px) rotateY(${(ax*13).toFixed(2)}deg) rotateX(${(-ay*10).toFixed(2)}deg)`
+        + ` translate3d(${(ax*16).toFixed(1)}px,${(-prs*130 + ay*10).toFixed(1)}px,0)`
+        + ` scale(${(1 + prs*0.14).toFixed(3)})`;
+      img.style.opacity = (1 - prs*0.75).toFixed(3);
+      aneis[0].style.transform = `translateY(${(-prs*76).toFixed(1)}px) rotate(${(prs*54).toFixed(1)}deg) scale(${(1+prs*0.16).toFixed(3)})`;
+      aneis[1].style.transform = `translateY(${(-prs*34).toFixed(1)}px) rotate(${(-prs*38).toFixed(1)}deg)`;
+      requestAnimationFrame(passo);
+    }
+    requestAnimationFrame(passo);
+  })();
+  campo(document.getElementById('selo'),  { vazamento:0.00, comporta:true,  centro:0.66 });
+  pontos(document.getElementById('pontos'));
+})();
+</script>
+</body>
+</html>
