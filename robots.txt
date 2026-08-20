@@ -1,0 +1,40 @@
+# LMP, robots.txt de levimp.com.br. Criado 20/08/2026.
+#
+# Liberado para buscadores E para os rastreadores de IA (GPTBot, ClaudeBot,
+# PerplexityBot e companhia): a gente QUER ser lido e citado por eles.
+# Bloquear esses robôs é sumir das respostas de IA, que hoje é onde uma parte
+# das indicações de fornecedor acontece.
+#
+# Mesmo padrão já aplicado em imob8.com desde 31/07/2026.
+
+User-agent: *
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://levimp.com.br/sitemap.xml
