@@ -51,7 +51,7 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 
 function pagina(p) {
   const faqLd = p.faq?.length ? {
-    '@type': 'FAQPage', '@id': `${SITE}/${p.slug}#faq`, inLanguage: 'pt-BR',
+    '@type': 'FAQPage', '@id': `${SITE}/${p.slug}.html#faq`, inLanguage: 'pt-BR',
     mainEntity: p.faq.map((f) => ({
       '@type': 'Question', name: f.q,
       acceptedAnswer: { '@type': 'Answer', text: f.a },
@@ -63,7 +63,7 @@ function pagina(p) {
     '@graph': [
       {
         '@type': 'Article',
-        '@id': `${SITE}/${p.slug}#artigo`,
+        '@id': `${SITE}/${p.slug}.html#artigo`,
         headline: p.h1,
         description: p.desc,
         inLanguage: 'pt-BR',
@@ -72,7 +72,7 @@ function pagina(p) {
         about: p.sobre,
         author: { '@type': 'Person', name: 'Levi Magno Pantarotto' },
         publisher: { '@id': `${SITE}/#organizacao` },
-        mainEntityOfPage: `${SITE}/${p.slug}`,
+        mainEntityOfPage: `${SITE}/${p.slug}.html`,
       },
       ...(faqLd ? [faqLd] : []),
     ],
@@ -85,13 +85,13 @@ function pagina(p) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>${esc(p.titulo)}</title>
 <meta name="description" content="${esc(p.desc)}"/>
-<link rel="canonical" href="${SITE}/${p.slug}"/>
+<link rel="canonical" href="${SITE}/${p.slug}.html"/>
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large"/>
 <meta property="og:type" content="article"/>
 <meta property="og:locale" content="pt_BR"/>
 <meta property="og:title" content="${esc(p.titulo)}"/>
 <meta property="og:description" content="${esc(p.desc)}"/>
-<meta property="og:url" content="${SITE}/${p.slug}"/>
+<meta property="og:url" content="${SITE}/${p.slug}.html"/>
 <meta property="og:site_name" content="LMP"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -319,7 +319,7 @@ for (const p of PAGINAS) {
 const urls = [
   { loc: `${SITE}/`, pri: '1.0', freq: 'weekly' },
   { loc: `${SITE}/portfolio.html`, pri: '0.8', freq: 'monthly' },
-  ...PAGINAS.map((p) => ({ loc: `${SITE}/${p.slug}`, pri: '0.7', freq: 'monthly' })),
+  ...PAGINAS.map((p) => ({ loc: `${SITE}/${p.slug}.html`, pri: '0.7', freq: 'monthly' })),
 ];
 fs.writeFileSync(path.join(BASE, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>
