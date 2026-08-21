@@ -335,9 +335,9 @@ h2{font-size:clamp(30px,4.6vw,55px);font-weight:700;max-width:23ch;font-variatio
 .trilha .qtd{font-family:var(--mono);font-size:12.5px;padding:4px 11px;border-radius:100px}
 .trilha.hoje .qtd{background:rgba(228,100,28,.16);color:#FFA974}
 .trilha.lmp .qtd{background:rgba(47,212,196,.16);color:var(--ciano)}
-/* grade fixa, não scroll nem flex-wrap: com overflow as 2 últimas etapas do
-   "hoje" ficavam cortadas (some o contraste 7 x 3, que é o argumento da seção),
-   e com flex-wrap a 7ª esticava sozinha na linha de baixo. 4+3 fica parelho. */
+/* Regra antiga (grade de 4 colunas) substituida em 21/08: agora e uma etapa
+   por linha, com as duas trilhas LADO A LADO. O contraste 7 x 3 passa a ser
+   visivel de um olhar so, que era o ponto do Levi. */
 .etapas{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .trilha.lmp .etapas{grid-template-columns:repeat(3,1fr)}
 @media(max-width:780px){.etapas,.trilha.lmp .etapas{grid-template-columns:repeat(2,1fr)}}
@@ -475,7 +475,7 @@ footer a:hover{color:var(--laranja)}
 /* fluxo: o lado de hoje apaga conforme o scroll avanca, o lado da LMP acende */
 .trilha{position:relative}
 .trilha.hoje .etapa{transition:filter .5s ease,opacity .5s ease}
-.trilha.hoje .etapa.apagou{filter:grayscale(1);opacity:.42}
+.trilha.hoje .etapa.apagou{opacity:.72}
 .trilha.hoje .etapa .corte{position:absolute;left:13px;right:13px;top:50%;height:1px;background:#FFA974;
   transform:scaleX(0);transform-origin:left center;opacity:.75}
 .trilha.lmp .etapa{transition:box-shadow .5s ease,border-color .5s ease}
@@ -618,6 +618,65 @@ footer a:hover{color:var(--laranja)}
   .trilho-barra{left:clamp(44px,4.2vw,96px);right:clamp(44px,4.2vw,96px)}
   .trilho-dica{left:clamp(44px,4.2vw,96px)}
   #rotina .trilho-grude .grade{padding:0 clamp(44px,4.2vw,96px)}
+}
+
+/* ============ v4c: antes e depois, repaginado ============
+   O lado que doi agora parece que doi, os numeros viraram ordem legivel de
+   etapa, e os dois lados ficam lado a lado para a comparacao 7 x 3 acontecer
+   de um olhar so'. A cor do lado ruim e' o laranja da marca puxado para o
+   vermelho, nao um vermelho estranho a paleta. */
+:root{ --alerta:#E2492A; --alerta-claro:#FF8F70; }
+
+.trilhas{margin-top:56px;display:grid;gap:clamp(18px,2.4vw,32px);align-items:start}
+@media(min-width:900px){ .trilhas{grid-template-columns:1fr 1fr} }
+
+.trilha{border-radius:22px;padding:clamp(20px,2.2vw,30px)}
+.trilha.hoje{border:1px solid rgba(226,73,42,.34);
+  background:linear-gradient(180deg,rgba(226,73,42,.10) 0%,rgba(226,73,42,.03) 100%)}
+.trilha.lmp{border:1px solid rgba(47,212,196,.30);
+  background:linear-gradient(180deg,rgba(47,212,196,.09) 0%,rgba(47,212,196,.025) 100%)}
+
+.trilha header{display:block;margin-bottom:20px}
+.trilha h3{font-size:clamp(17px,1.5vw,21px);font-weight:700;color:#fff;
+  display:flex;align-items:center;gap:10px}
+.trilha h3::before{content:"";width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.trilha.hoje h3::before{background:var(--alerta);box-shadow:0 0 0 4px rgba(226,73,42,.18)}
+.trilha.lmp h3::before{background:var(--ciano);box-shadow:0 0 0 4px rgba(47,212,196,.18)}
+.trilha .qtd{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:12px;
+  padding:5px 12px;border-radius:100px;letter-spacing:.02em}
+.trilha.hoje .qtd{background:rgba(226,73,42,.20);color:var(--alerta-claro)}
+.trilha.lmp .qtd{background:rgba(47,212,196,.16);color:var(--ciano)}
+
+/* uma etapa por linha, com o numero grande fazendo o papel de ordem */
+.etapas,.trilha.lmp .etapas{display:grid;grid-template-columns:1fr;gap:8px}
+.etapa{display:flex;align-items:center;gap:14px;border-radius:12px;
+  padding:13px 74px 13px 14px;font-size:clamp(13px,1.05vw,14.5px);line-height:1.34;
+  position:relative;opacity:0;transform:translateY(14px)}
+.trilha.hoje .etapa{background:rgba(255,255,255,.04);
+  border:1px dashed rgba(226,73,42,.42);color:rgba(247,245,241,.9)}
+.trilha.lmp .etapa{background:rgba(47,212,196,.09);
+  border:1px solid rgba(47,212,196,.34);color:#DFFBF6}
+.etapa b{flex:0 0 auto;display:block;margin:0;font-family:var(--mono);
+  font-size:clamp(15px,1.3vw,19px);font-weight:700;letter-spacing:-.01em;
+  opacity:1;min-width:2.1em;text-align:right;font-variant-numeric:tabular-nums}
+.trilha.hoje .etapa b{color:var(--alerta-claro)}
+.trilha.lmp .etapa b{color:var(--ciano)}
+
+/* o rotulo do lado direito, agora centrado na linha */
+.etapa.mao::after,.etapa.auto::after{position:absolute;right:12px;top:50%;
+  transform:translateY(-50%);font-family:var(--mono);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 8px;border-radius:100px}
+.etapa.mao::after{content:"manual";color:var(--alerta-claro);
+  background:rgba(226,73,42,.16);border:1px solid rgba(226,73,42,.3)}
+.etapa.auto::after{content:"IA";color:var(--ciano);
+  background:rgba(47,212,196,.14);border:1px solid rgba(47,212,196,.3)}
+
+/* o risco que a cena desenha nao passa por cima do numero */
+.trilha.hoje .etapa .corte{left:56px;right:66px;background:var(--alerta-claro);opacity:.9}
+
+@media(max-width:480px){
+  .etapa{padding-right:14px;padding-bottom:30px}
+  .etapa.mao::after,.etapa.auto::after{top:auto;bottom:7px;right:10px;transform:none}
 }
 </style>
 </head>
@@ -1642,9 +1701,9 @@ gsap.set('.rev', { opacity: 1, y: 0, clipPath: 'none' });
   eHoje.forEach(function (e, i) {
     var c = e.querySelector('.corte');
     if (c) tl.to(c, { scaleX: 1, duration: 0.32, ease: 'power2.inOut' }, 1.15 + i * 0.16);
-    tl.to(e, { filter: 'grayscale(1)', opacity: 0.40, duration: 0.34 }, 1.22 + i * 0.16);
+    tl.to(e, { opacity: 0.72, duration: 0.34 }, 1.22 + i * 0.16);
   });
-  tl.to(f.hoje, { opacity: 0.42, scale: 0.975, duration: 0.6, ease: 'power2.inOut' }, 2.55)
+  tl.to(f.hoje, { opacity: 0.88, duration: 0.6, ease: 'power2.inOut' }, 2.55)
     .to(f.lmp, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 2.62);
   eLmp.forEach(function (e, i) {
     tl.to(e, { opacity: 1, y: 0, duration: 0.42, ease: 'back.out(1.5)' }, 2.85 + i * 0.30)
