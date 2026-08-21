@@ -212,7 +212,7 @@ h1 em .risco{position:absolute;left:0;right:0;bottom:.08em;height:.10em;backgrou
 .abaixo b i{font-style:normal;color:var(--ciano)}
 
 /* ---- palco: celular + cards ---- */
-/* O laudo é a peça da frente; o celular fica atrás, menor e recortado — ele é a
+/* O laudo é a peça da frente; o celular fica atrás, menor e recortado: ele é a
    consequência do diagnóstico, não o protagonista. */
 .palco{position:relative;z-index:3;height:min(78svh,690px);display:flex;align-items:center;justify-content:center}
 @media(max-width:960px){.palco{height:auto;margin-top:46px;display:block}}
@@ -226,7 +226,7 @@ h1 em .risco{position:absolute;left:0;right:0;bottom:.08em;height:.10em;backgrou
 .exemplo{margin-left:auto;flex-shrink:0;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--ink-soft);border:1px solid var(--linha);border-radius:100px;padding:4px 9px}
 .laudo-itens{padding:6px 0 4px}
-/* a barra vai no rodapé da linha, sobre um trilho — sem trilho e colada no texto
+/* a barra vai no rodapé da linha, sobre um trilho, sem trilho e colada no texto
    ela lia como sublinhado, não como proporção. */
 .li{position:relative;display:flex;align-items:center;gap:12px;padding:12px 0 18px}
 .li::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:3px;border-radius:3px;background:rgba(20,28,38,.07)}
@@ -276,7 +276,7 @@ h1 em .risco{position:absolute;left:0;right:0;bottom:.08em;height:.10em;backgrou
 .flut p{font-family:var(--display);font-weight:700;font-size:16.5px;color:var(--escuro);letter-spacing:-.02em;line-height:1.2}
 .flut span{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:#0E8A5F;font-weight:600}
 .flut span::before{content:"";width:6px;height:6px;border-radius:50%;background:#12B378}
-/* único card flutuante, filho do .laudo — ancorado com top:100% (não bottom
+/* único card flutuante, filho do .laudo, ancorado com top:100% (não bottom
    negativo, que dependia da altura própria do card e acabava cobrindo o
    saldo). Assim ele começa exatamente na borda de baixo do laudo e só sobe
    14px para o efeito de crachá, sem nunca invadir o conteúdo do card. */
@@ -299,7 +299,7 @@ h2{font-size:clamp(30px,4.6vw,55px);font-weight:700;max-width:23ch;font-variatio
 .lede{margin-top:20px;font-size:clamp(16px,1.6vw,19px);color:var(--ink-soft);max-width:60ch}
 .lede b{color:var(--ink);font-weight:600}
 
-/* rotina — grade */
+/* rotina, grade */
 .grade{margin-top:54px;display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:16px}
 .bloco{position:relative;background:var(--branco);border:1px solid var(--linha);border-radius:20px;padding:26px 24px 28px;overflow:hidden;
   transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s;will-change:transform}
@@ -448,6 +448,177 @@ footer a:hover{color:var(--laranja)}
 .resp:hover .q::before{transform:translateY(-3px) scale(1.5)}
 .resp .a{font-size:14.5px;line-height:1.6;color:var(--ink-soft);padding-left:17px}
 @media(max-width:640px){ .lista-resp{grid-template-columns:1fr} .resp{padding:22px 20px 24px} }
+
+/* ================= v2: campo em WebGL e um gesto por secao ================= */
+.campo{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%}
+.rede{position:absolute;inset:0;z-index:1;display:block;width:100%;height:100%;opacity:.55;pointer-events:none}
+/* o mesh de CSS vira RESERVA: so' fica visivel se o WebGL nao subir */
+.mesh.reserva{transition:opacity .6s ease}
+.tem-campo .mesh.reserva{opacity:0}
+.hero .malha{opacity:.26}
+.hero::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(100deg,rgba(7,19,34,.90) 0%,rgba(7,19,34,.72) 26%,rgba(7,19,34,.28) 50%,rgba(7,19,34,0) 68%)}
+@media(max-width:960px){.hero::before{background:linear-gradient(180deg,rgba(7,19,34,.86) 0%,rgba(7,19,34,.55) 46%,rgba(7,19,34,.20) 100%)}}
+.final .caixa .campo{border-radius:28px}
+
+/* titulo revelado linha a linha, cada linha nascendo de baixo da mascara */
+.titulo .lin{display:block;overflow:hidden}
+.titulo .lin > span{display:block;transform:translateY(102%)}
+
+/* luz que segue o ponteiro dentro do card */
+.bloco::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
+  transition:opacity .35s ease;
+  background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),rgba(47,212,196,.16),transparent 62%)}
+.bloco:hover::after{opacity:1}
+.bloco.escuro::after{background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),rgba(228,100,28,.22),transparent 62%)}
+
+/* fluxo: o lado de hoje apaga conforme o scroll avanca, o lado da LMP acende */
+.trilha{position:relative}
+.trilha.hoje .etapa{transition:filter .5s ease,opacity .5s ease}
+.trilha.hoje .etapa.apagou{filter:grayscale(1);opacity:.42}
+.trilha.hoje .etapa .corte{position:absolute;left:13px;right:13px;top:50%;height:1px;background:#FFA974;
+  transform:scaleX(0);transform-origin:left center;opacity:.75}
+.trilha.lmp .etapa{transition:box-shadow .5s ease,border-color .5s ease}
+.trilha.lmp .etapa.acendeu{box-shadow:0 0 0 1px rgba(47,212,196,.5),0 10px 34px -18px rgba(47,212,196,.85);
+  border-color:rgba(47,212,196,.7)}
+.trilha.lmp::before{content:"";position:absolute;inset:-1px;border-radius:22px;pointer-events:none;
+  background:linear-gradient(100deg,transparent 0%,rgba(47,212,196,.14) var(--varre,0%),transparent calc(var(--varre,0%) + 16%))}
+
+/* kpi: uma varredura de luz atravessando a fileira, uma vez so' */
+.kpi{position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;bottom:0;width:38%;pointer-events:none;left:-40%;
+  background:linear-gradient(100deg,transparent,rgba(47,212,196,.14),transparent)}
+.kpi.varrendo::before{animation:varredura 1.15s cubic-bezier(.22,.61,.36,1) forwards}
+@keyframes varredura{to{left:110%}}
+.kpi .num,.kpi .conta,.abaixo b{font-variant-numeric:tabular-nums}
+
+/* fio de progresso na barra de cima */
+.nav::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:100%;transform-origin:left center;
+  transform:scaleX(var(--lido,0));background:linear-gradient(90deg,var(--ciano),var(--laranja));opacity:.9}
+
+/* botao magnetico */
+.btn-cta{will-change:transform}
+
+/* ================= v3: coreografia de entrada ================= */
+/* estado inicial em CSS, para nada piscar antes do JS pegar */
+.rev{opacity:1;transform:none;clip-path:inset(0 0 101% 0)}
+.titulo{perspective:1000px}
+.titulo .lin > span{transform:translateY(104%) rotateX(-52deg);transform-origin:50% 100%}
+.miolo,.caixa{will-change:auto}
+/* a caixa final abre a partir do centro, como uma porta */
+.final .caixa{clip-path:inset(8% 14% 8% 14% round 28px)}
+/* o marcador de etapa desenha a linha entre as etapas */
+.trilha .etapas{position:relative}
+.bloco{will-change:transform,filter,clip-path}
+
+/* ============== v4: hero preso, empilhamento e trilho horizontal ==============
+   Os numeros vieram do bundle do landonorris.com, lido em 21/08/2026.
+   Animacao SEMPRE ligada: nada aqui consulta prefers-reduced-motion. */
+.envelope-hero{position:relative;z-index:1;background:var(--paper)}
+@media(min-width:961px){
+  .envelope-hero .hero{position:sticky;top:0;height:100svh;min-height:100svh;
+    will-change:clip-path,transform}
+}
+/* Laptop de tela baixa: o hero de 100svh cortava os contadores em 144px.
+   Medido em 21/08 num 1280x800. Aqui ele aperta o suficiente para caber. */
+@media(min-width:961px) and (max-height:900px){
+  .hero{padding:94px clamp(18px,4vw,52px) 38px}
+  .hero h1{font-size:clamp(38px,4.5vw,58px)}
+  .hero .selo{margin-bottom:16px}
+  .hero .sub{margin-top:16px;font-size:16px}
+  .hero .acoes{margin-top:22px}
+  .hero .abaixo{margin-top:18px}
+  .hero .abaixo b{font-size:19px}
+}
+/* abaixo de 961px o hero cresce como sempre cresceu e nada fica preso */
+@media(max-width:960px){
+  .envelope-hero{height:auto !important}
+  #rotina{margin-top:0 !important;border-radius:0}
+}
+
+/* a secao seguinte sobe POR CIMA do hero, que fica parado */
+#rotina{position:relative;z-index:6;background:var(--paper);
+  border-radius:34px 34px 0 0;box-shadow:0 -46px 100px -34px rgba(11,27,46,.42)}
+/* tudo que vem depois precisa cobrir o hero tambem */
+/* Toda secao precisa ficar ACIMA do hero preso e ser opaca, senao o hero
+   aparece por tras. Mas forcar fundo claro em todas apagou as escuras: a
+   secao "quem" ficou com texto branco sobre creme e sumiu. Aqui cada uma
+   recebe de volta o fundo que ela ja tinha. */
+.secao,.fita-faixa{position:relative;z-index:6}
+.secao{background:var(--paper)}
+.fita-faixa{background:var(--escuro-2)}
+.secao.fluxo{background:var(--escuro)}
+.secao.quem{background:var(--escuro)}
+.secao.prova{background:linear-gradient(180deg,var(--paper) 0%,#EFEBE4 100%)}
+.secao.diag{background:linear-gradient(180deg,#EFEBE4 0%,var(--paper) 100%)}
+.secao.respostas{background:var(--paper)}
+.secao.final{background:var(--paper)}
+
+/* ---------------- trilho horizontal dos 8 blocos ---------------- */
+@media(min-width:961px){
+  .trilho-env{position:relative}
+  .trilho-grude{position:sticky;top:0;height:100svh;display:flex;align-items:center;
+    overflow:hidden}
+  #rotina .trilho-grude .grade{display:flex;grid-template-columns:none;width:max-content;
+    gap:clamp(18px,2vw,30px);padding:0 clamp(20px,5vw,64px);will-change:transform}
+  #rotina .trilho-grude .grade .bloco{flex:0 0 clamp(272px,25vw,352px);height:auto;
+    min-height:clamp(300px,42vh,382px)}
+  .trilho-barra{position:absolute;left:clamp(20px,5vw,64px);right:clamp(20px,5vw,64px);
+    bottom:clamp(40px,7vh,74px);height:1px;background:var(--linha);z-index:3}
+  .trilho-barra i{position:absolute;left:0;top:-1px;height:3px;width:100%;
+    background:linear-gradient(90deg,var(--ciano),var(--laranja));
+    transform:scaleX(0);transform-origin:left center}
+  .trilho-topo{position:absolute;left:clamp(20px,5vw,64px);right:clamp(20px,5vw,64px);
+  top:clamp(96px,13vh,140px);z-index:3;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.trilho-topo em{font-style:normal;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--laranja);white-space:nowrap}
+.trilho-topo span{font-family:var(--display);font-weight:700;letter-spacing:-.02em;
+  font-size:clamp(17px,1.5vw,24px);color:var(--ink);max-width:52ch;line-height:1.2}
+@media(min-width:1500px){.trilho-topo{left:clamp(44px,4.2vw,96px);right:clamp(44px,4.2vw,96px)}}
+.trilho-dica{position:absolute;left:clamp(20px,5vw,64px);bottom:clamp(56px,9vh,96px);
+    z-index:3;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--ink-soft)}
+}
+
+/* ---------------- varredura: a barra de cor que cobre e recua ------------- */
+.line{position:relative}
+.gl-barra{position:absolute;top:0;left:0;width:100%;height:100%;z-index:5;pointer-events:none}
+.titulo .lin > span{transform:none}
+
+/* ================== v4b: a tela grande passa a ser usada ==================
+   Medido em 21/08 na tela dele: o conteudo parava em 1.180px e sobravam
+   330px de cada lado. Aqui o container cresce em degraus, mas o texto
+   corrido segue limitado por medida de leitura, nao por pixel. */
+@media(min-width:1500px){
+  .secao{padding-left:clamp(44px,4.2vw,96px);padding-right:clamp(44px,4.2vw,96px)}
+  .hero{padding-left:clamp(44px,4.2vw,96px);padding-right:clamp(44px,4.2vw,96px)}
+  .miolo,.final .caixa{max-width:1420px}
+  .hero-txt{max-width:720px}
+  .grade{gap:20px}
+}
+@media(min-width:1800px){
+  .miolo,.final .caixa{max-width:1640px}
+  .hero-txt{max-width:780px}
+}
+@media(min-width:2200px){
+  .miolo,.final .caixa{max-width:2100px}
+  .hero-txt{max-width:840px}
+}
+/* o que NAO acompanha: linha longa demais nao se le. Numeros da regua do
+   Cerebro de Design, 60 a 75 caracteres. */
+.miolo > .lede,.caixa .lede{max-width:64ch}
+.titulo{max-width:24ch}
+.hero .sub{max-width:56ch}
+
+/* trilho em tela grande: cartao maior e ocupando mais altura, em vez de
+   uma fileira pequena no meio de muito vazio */
+@media(min-width:1500px){
+  #rotina .trilho-grude .grade .bloco{flex:0 0 clamp(320px,22vw,420px);
+    min-height:clamp(290px,36vh,392px)}
+  .trilho-barra{left:clamp(44px,4.2vw,96px);right:clamp(44px,4.2vw,96px)}
+  .trilho-dica{left:clamp(44px,4.2vw,96px)}
+  #rotina .trilho-grude .grade{padding:0 clamp(44px,4.2vw,96px)}
+}
 </style>
 </head>
 <body>
@@ -464,8 +635,10 @@ footer a:hover{color:var(--laranja)}
 </nav>
 
 <!-- ============================== HERO ============================== -->
-<header class="hero">
-  <div class="mesh" aria-hidden="true"><b class="b1"></b><b class="b2"></b><b class="b3"></b></div>
+<div class="envelope-hero"><header class="hero">
+  <canvas class="campo" id="campo" aria-hidden="true"></canvas>
+  <canvas class="rede" id="rede" aria-hidden="true"></canvas>
+  <div class="mesh reserva" aria-hidden="true"><b class="b1"></b><b class="b2"></b><b class="b3"></b></div>
   <div class="malha" aria-hidden="true"></div>
 
   <div class="hero-txt">
@@ -543,6 +716,7 @@ footer a:hover{color:var(--laranja)}
     </div>
   </div>
 </header>
+</div>
 
 <!-- marquee -->
 <div class="fita-faixa" aria-hidden="true">
@@ -560,7 +734,7 @@ footer a:hover{color:var(--laranja)}
 <section class="secao" id="rotina">
   <div class="miolo">
     <p class="rotulo rev">Depois do diagnóstico</p>
-    <h2 class="rev">Achado o vazamento, a IA assume o trabalho que estava drenando.</h2>
+    <h2 class="titulo">Achado o vazamento, a IA assume o trabalho que estava drenando.</h2>
     <p class="lede rev">Nenhuma empresa precisa de tudo isso. Precisa dos dois ou três pontos onde <b>o dinheiro dela está saindo</b>. O diagnóstico é quem decide quais. Estes são os blocos que mais aparecem.</p>
 
     <div class="grade">
@@ -611,7 +785,7 @@ footer a:hover{color:var(--laranja)}
 <section class="secao fluxo" id="fluxo">
   <div class="miolo">
     <p class="rotulo rev">Antes e depois</p>
-    <h2 class="rev">O mesmo pedido de orçamento, dos dois jeitos.</h2>
+    <h2 class="titulo">O mesmo pedido de orçamento, dos dois jeitos.</h2>
     <p class="lede rev">Este é um processo real de empresa de serviço. Repare que <b>não muda o que a empresa faz</b>. Muda quantas vezes uma pessoa precisa parar o que estava fazendo.</p>
 
     <div class="trilhas">
@@ -646,7 +820,7 @@ footer a:hover{color:var(--laranja)}
 <section class="secao prova" id="prova">
   <div class="miolo">
     <p class="rotulo rev">Resultado medido, não prometido</p>
-    <h2 class="rev">Um sistema da LMP, em produção, em 30 dias.</h2>
+    <h2 class="titulo">Um sistema da LMP, em produção, em 30 dias.</h2>
     <p class="lede rev">Não é projeção nem teste em laboratório: são os números do painel de um sistema que atende clientes reais todos os dias.</p>
 
     <div class="painel rev">
@@ -711,7 +885,7 @@ footer a:hover{color:var(--laranja)}
 <section class="secao diag" id="diagnostico">
   <div class="miolo">
     <p class="rotulo rev">A diferença</p>
-    <h2 class="rev">Todo mundo vende a ferramenta. Eu começo mostrando a conta.</h2>
+    <h2 class="titulo">Todo mundo vende a ferramenta. Eu começo mostrando a conta.</h2>
     <p class="lede rev">Quem vende automação pede que você acredite antes de ver. Aqui a ordem é o contrário: primeiro eu levanto <b>quanto a repetição custa na sua empresa</b>: em horas, em reais e por processo. Você recebe isso por escrito, e decide com número na mão se vale automatizar. Se não valer, eu digo.</p>
 
     <div class="entrega rev">
@@ -746,7 +920,7 @@ footer a:hover{color:var(--laranja)}
 <section class="secao">
   <div class="miolo">
     <p class="rotulo rev">Como funciona</p>
-    <h2 class="rev">Você não configura nada. A LMP implanta, opera e ajusta.</h2>
+    <h2 class="titulo">Você não configura nada. A LMP implanta, opera e ajusta.</h2>
     <div class="passos">
       <div class="passo rev"><div class="n">01</div><div>
         <h3>Diagnóstico</h3>
@@ -771,7 +945,7 @@ footer a:hover{color:var(--laranja)}
 <section class="secao quem">
   <div class="miolo">
     <p class="rotulo rev">Quem faz</p>
-    <h2 class="rev">Implementação direta, sem camada de agência.</h2>
+    <h2 class="titulo">Implementação direta, sem camada de agência.</h2>
     <div class="par">
       <div class="rev">
         <p><b>Levi Magno Pantarotto.</b> Construo e opero sistemas de IA que estão em produção hoje, atendendo clientes reais, do atendimento por WhatsApp com voz até o funil comercial e a rotina administrativa.</p>
@@ -795,10 +969,11 @@ footer a:hover{color:var(--laranja)}
 <!-- ============================== FINAL ============================== -->
 <section class="secao final">
   <div class="caixa">
-    <div class="mesh" aria-hidden="true"><b class="b1"></b><b class="b2"></b><b class="b3"></b></div>
+    <canvas class="campo campo-fim" id="campoFim" aria-hidden="true"></canvas>
+    <div class="mesh reserva" aria-hidden="true"><b class="b1"></b><b class="b2"></b><b class="b3"></b></div>
     <div class="conteudo">
       <p class="rotulo rev" style="color:var(--ciano)">Próximo passo</p>
-      <h2 class="rev">Me diga o que mais se repete na sua semana. Eu volto com a conta.</h2>
+      <h2 class="titulo">Me diga o que mais se repete na sua semana. Eu volto com a conta.</h2>
       <p class="lede rev">A primeira conversa é direta e sem custo: eu escuto a operação e digo se tem vazamento suficiente para justificar o diagnóstico. Se não tiver, eu falo. Implantação mal indicada vira sistema abandonado, e sistema abandonado não indica ninguém.</p>
       <div class="acoes rev">
         <a class="btn btn-cta" href="https://wa.me/5511996112620?text=Oi%20Levi%2C%20vim%20pelo%20site%20da%20LMP%20e%20quero%20um%20diagn%C3%B3stico%20da%20minha%20opera%C3%A7%C3%A3o." target="_blank" rel="noopener">
@@ -818,7 +993,7 @@ footer a:hover{color:var(--laranja)}
 <section class="secao respostas" id="respostas">
   <div class="miolo">
     <p class="rotulo rev">Antes de contratar alguém</p>
-    <h2 class="rev">As perguntas que todo dono faz, respondidas por escrito.</h2>
+    <h2 class="titulo">As perguntas que todo dono faz, respondidas por escrito.</h2>
     <p class="lede rev">Sem cadastro e sem conversa comercial. Se a resposta resolver e você não precisar de mim, melhor assim: implantação mal indicada vira sistema abandonado.</p>
 
     <div class="lista-resp rev">
@@ -856,11 +1031,11 @@ footer a:hover{color:var(--laranja)}
   <span><a href="https://wa.me/5511996112620" target="_blank" rel="noopener">WhatsApp</a> · <a href="https://www.linkedin.com/in/levimp" target="_blank" rel="noopener">LinkedIn</a></span>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
 <script>
-/* Animação SEMPRE ligada — decisão de projeto: NÃO respeitar prefers-reduced-motion
+/* Animação SEMPRE ligada, decisão de projeto: NÃO respeitar prefers-reduced-motion
    (o Windows do dono tem "reduzir movimento" ligado e isso apagaria o site inteiro). */
 gsap.registerPlugin(ScrollTrigger);
 
@@ -940,10 +1115,8 @@ gsap.to('.malha', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.hero
 })();
 
 /* ---------- reveals ---------- */
-document.querySelectorAll('.rev').forEach((el) => {
-  gsap.to(el, { opacity: 1, y: 0, duration: 0.95, ease: 'power3.out',
-    scrollTrigger: { trigger: el, start: 'top 88%' } });
-});
+/* a coreografia de entrada mudou de lugar: vive no bloco v3, no fim do
+   arquivo, porque virou grande demais para ficar solta aqui. */
 
 /* ---------- etapas do fluxo, com scrub ---------- */
 document.querySelectorAll('.trilha').forEach((t) => {
@@ -995,6 +1168,504 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
     if (alvo) { e.preventDefault(); lenis.scrollTo(alvo, { offset: -70 }); }
   });
 });
+</script>
+
+<script>
+/* =====================================================================
+   v2 dos efeitos. Tudo daqui e' decoracao por cima da marcacao que ja'
+   existe: nenhum texto nasce em JS, entao o Google continua lendo a
+   pagina inteira sem executar nada.
+   Animacao SEMPRE ligada, sem consultar prefers-reduced-motion.
+   ===================================================================== */
+(function () {
+'use strict';
+
+/* ---------------------------------------------------------------- campo
+   Nebulosa em WebGL na paleta da marca, no lugar dos tres borroes de CSS
+   (que sao a coisa mais generica que um site escuro pode ter). Se a placa
+   nao der conta, o mesh de reserva continua no lugar e nada quebra. */
+var FRAG = [
+'precision highp float;',
+'uniform vec2 u_res; uniform float u_t; uniform vec2 u_mouse;',
+'uniform float u_saida; uniform float u_forca;',
+'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453123); }',
+'float ruido(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.0-2.0*f);',
+'  return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),u.x), mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),u.x),u.y); }',
+'float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<5;i++){ v+=a*ruido(p); p*=2.02; a*=0.5; } return v; }',
+'void main(){',
+'  vec2 p=(gl_FragCoord.xy-0.5*u_res.xy)/u_res.y;',
+'  vec2 m=(u_mouse-0.5*u_res.xy)/u_res.y;',
+'  float t=u_t*0.055;',
+'  vec2 q=vec2(fbm(p*1.55+vec2(0.0,t)), fbm(p*1.55+vec2(5.2,1.3-t)));',
+'  vec2 r=vec2(fbm(p*1.55+3.4*q+vec2(1.7,9.2)+0.15*t), fbm(p*1.55+3.4*q+vec2(8.3,2.8)-0.12*t));',
+'  float f=fbm(p*1.55+3.0*r);',
+'  float d=length(p-m); f += exp(-d*d*2.4)*0.20;',
+'  vec3 c=mix(vec3(0.027,0.075,0.133), vec3(0.043,0.106,0.180), smoothstep(0.0,0.70,f));',
+'  c=mix(c, vec3(0.063,0.173,0.290), smoothstep(0.34,0.95,f));',
+'  c=mix(c, vec3(0.184,0.831,0.769), smoothstep(0.64,1.06,f)*0.26*u_forca);',
+'  c=mix(c, vec3(0.894,0.392,0.110), smoothstep(0.80,1.16,f)*0.21*u_forca);',
+'  c += vec3(0.184,0.831,0.769)*pow(smoothstep(0.74,1.0,length(r)),3.0)*0.11*u_forca;',
+'  float vin=smoothstep(1.38,0.22,length(p*vec2(0.86,1.0)));',
+'  c *= mix(0.44,0.94,vin);',
+'  c = mix(c, vec3(0.027,0.075,0.133), u_saida*0.72);',
+'  gl_FragColor=vec4(c,1.0);',
+'}'].join('\n');
+
+var VERT = 'attribute vec2 p; void main(){ gl_Position=vec4(p,0.0,1.0); }';
+
+function campo(cv, forca) {
+  if (!cv) return null;
+  var gl = cv.getContext('webgl', { antialias:false, depth:false, alpha:false,
+                                    powerPreference:'low-power' });
+  if (!gl) return null;
+  function compilar(tipo, src) {
+    var s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s);
+    return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
+  }
+  var vs = compilar(gl.VERTEX_SHADER, VERT), fs = compilar(gl.FRAGMENT_SHADER, FRAG);
+  if (!vs || !fs) return null;
+  var pr = gl.createProgram(); gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return null;
+  gl.useProgram(pr);
+  var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(pr, 'p');
+  gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  var uRes = gl.getUniformLocation(pr,'u_res'), uT = gl.getUniformLocation(pr,'u_t'),
+      uM = gl.getUniformLocation(pr,'u_mouse'), uS = gl.getUniformLocation(pr,'u_saida'),
+      uF = gl.getUniformLocation(pr,'u_forca');
+  gl.uniform1f(uF, forca);
+
+  // metade da resolucao: o campo e' borrado por natureza, e isso corta o custo
+  // pela metade. Em tela pequena cai mais ainda.
+  var esc = innerWidth < 760 ? 0.38 : 0.55;
+  var alvo = { x: 0, y: 0 }, atual = { x: 0, y: 0 }, saida = 0, visivel = true;
+
+  function medir() {
+    var r = cv.getBoundingClientRect();
+    cv.width  = Math.max(2, Math.round(r.width  * esc));
+    cv.height = Math.max(2, Math.round(r.height * esc));
+    gl.viewport(0, 0, cv.width, cv.height);
+    gl.uniform2f(uRes, cv.width, cv.height);
+    alvo.x = cv.width * 0.5; alvo.y = cv.height * 0.5;
+    atual.x = alvo.x; atual.y = alvo.y;
+  }
+  medir();
+  addEventListener('resize', medir);
+  cv.parentElement.addEventListener('pointermove', function (e) {
+    var r = cv.getBoundingClientRect();
+    alvo.x = (e.clientX - r.left) / r.width  * cv.width;
+    alvo.y = (1 - (e.clientY - r.top) / r.height) * cv.height;
+  });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { visivel = en[0].isIntersecting; },
+      { rootMargin: '120px' }).observe(cv);
+  }
+  return {
+    passo: function (t) {
+      if (!visivel) return;
+      atual.x += (alvo.x - atual.x) * 0.055;
+      atual.y += (alvo.y - atual.y) * 0.055;
+      gl.uniform1f(uT, t);
+      gl.uniform2f(uM, atual.x, atual.y);
+      gl.uniform1f(uS, saida);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    },
+    saida: function (v) { saida = v; },
+  };
+}
+
+var campoHero = campo(document.getElementById('campo'), 1.0);
+var campoFim  = campo(document.getElementById('campoFim'), 0.72);
+if (campoHero) document.documentElement.classList.add('tem-campo');
+
+/* ------------------------------------------------------------------ rede
+   O gesto da casa: pontos ligados por fio, reagindo ao ponteiro. E' o
+   estilo-base declarado pelo Levi, e nao existia neste site. */
+var redeVivo = null;
+(function () {
+  var cv = document.getElementById('rede');
+  if (!cv) return;
+  if (innerWidth < 760) { cv.style.display = 'none'; return; }
+  var cx = cv.getContext('2d'), pts = [], mx = -999, my = -999, larg = 0, alt = 0;
+  function medir() {
+    var r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 1.6);
+    larg = r.width; alt = r.height;
+    cv.width = Math.round(larg * dpr); cv.height = Math.round(alt * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var quantos = Math.min(64, Math.round(larg * alt / 24000));
+    pts = [];
+    for (var i = 0; i < quantos; i++) {
+      pts.push({ x: Math.random() * larg, y: Math.random() * alt,
+                 vx: (Math.random() - 0.5) * 0.16, vy: (Math.random() - 0.5) * 0.16 });
+    }
+  }
+  medir(); addEventListener('resize', medir);
+  cv.parentElement.addEventListener('pointermove', function (e) {
+    var r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top;
+  });
+  cv.parentElement.addEventListener('pointerleave', function () { mx = -999; my = -999; });
+  redeVivo = function () {
+    cx.clearRect(0, 0, larg, alt);
+    for (var i = 0; i < pts.length; i++) {
+      var a = pts[i];
+      a.x += a.vx; a.y += a.vy;
+      if (a.x < 0 || a.x > larg) a.vx *= -1;
+      if (a.y < 0 || a.y > alt)  a.vy *= -1;
+      var dm = Math.sqrt((a.x - mx) * (a.x - mx) + (a.y - my) * (a.y - my));
+      if (dm < 150 && dm > 0.5) { a.x += (a.x - mx) / dm * 0.7; a.y += (a.y - my) / dm * 0.7; }
+      for (var j = i + 1; j < pts.length; j++) {
+        var b = pts[j];
+        var d = Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+        if (d > 132) continue;
+        cx.strokeStyle = 'rgba(47,212,196,' + (0.20 * (1 - d / 132)).toFixed(3) + ')';
+        cx.lineWidth = 1; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke();
+      }
+      cx.fillStyle = dm < 150 ? 'rgba(228,100,28,.85)' : 'rgba(47,212,196,.5)';
+      cx.beginPath(); cx.arc(a.x, a.y, dm < 150 ? 2.1 : 1.4, 0, 6.2832); cx.fill();
+    }
+  };
+})();
+
+/* um laco so' para tudo que desenha */
+var t0 = performance.now();
+requestAnimationFrame(function laco(agora) {
+  var t = (agora - t0) / 1000;
+  if (campoHero) campoHero.passo(t);
+  if (campoFim)  campoFim.passo(t * 0.6);
+  if (redeVivo)  redeVivo();
+  requestAnimationFrame(laco);
+});
+
+/* o campo escurece conforme o hero sai: a saida vira parte do filme */
+if (window.ScrollTrigger && campoHero) {
+  ScrollTrigger.create({
+    trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true,
+    onUpdate: function (s) { campoHero.saida(s.progress); },
+  });
+}
+
+/* O titulo por linha da v2 saiu: quem cuida de titulo agora e' a varredura
+   do bloco v4, que e' o gesto medido no landonorris. */
+
+/* ------------------------------ fluxo: o antes apaga, o depois acende ----
+   E' o momento que convence, e ate agora as duas colunas so' apareciam. */
+(function () {
+  var hoje = document.querySelector('.trilha.hoje'), lmp = document.querySelector('.trilha.lmp');
+  if (!hoje || !lmp) return;
+  var manuais = [].slice.call(hoje.querySelectorAll('.etapa.mao'));
+  manuais.forEach(function (e) {
+    var c = document.createElement('i'); c.className = 'corte'; e.appendChild(c);
+  });
+  var autos = [].slice.call(lmp.querySelectorAll('.etapa.auto'));
+  // A CENA PRESA: a pagina para e a historia acontece. Sem isso o argumento
+  // passa em meio segundo de rolagem e ninguem le. Ver bloco v3 no fim.
+  window.__fluxo = { hoje: hoje, lmp: lmp, manuais: manuais, autos: autos };
+})();
+
+/* ------------------------------------------------- kpi: varredura de luz */
+document.querySelectorAll('.kpi').forEach(function (k, i) {
+  ScrollTrigger.create({ trigger: k, start: 'top 88%', once: true,
+    onEnter: function () { setTimeout(function () { k.classList.add('varrendo'); }, i * 130); } });
+});
+
+/* --------------------------------------------- luz que segue o ponteiro */
+document.querySelectorAll('.bloco').forEach(function (b) {
+  b.addEventListener('pointermove', function (e) {
+    var r = b.getBoundingClientRect();
+    b.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    b.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
+});
+
+/* ------------------------------------------------- fio de progresso ---- */
+(function () {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  ScrollTrigger.create({ start: 0, end: 'max', scrub: true,
+    onUpdate: function (s) { nav.style.setProperty('--lido', s.progress.toFixed(4)); } });
+})();
+
+/* ----------------------------------------------------- botao magnetico - */
+document.querySelectorAll('.btn-cta').forEach(function (b) {
+  b.addEventListener('pointermove', function (e) {
+    var r = b.getBoundingClientRect();
+    gsap.to(b, { x: (e.clientX - r.left - r.width / 2) * 0.18,
+                 y: (e.clientY - r.top - r.height / 2) * 0.26,
+                 duration: 0.4, ease: 'power2.out' });
+  });
+  b.addEventListener('pointerleave', function () {
+    gsap.to(b, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1,0.5)' });
+  });
+});
+
+})();
+</script>
+
+<script>
+/* =====================================================================
+   v4: OS GESTOS DO LANDONORRIS, NO SITE DE VERDADE
+
+   Sai a coreografia que eu inventei na v3. Entram os quatro gestos
+   extraidos do bundle dele em 21/08, com os numeros dele:
+
+     07  o hero fica preso e o campo se fecha num quadro
+     08  a secao da rotina sobe POR CIMA do hero parado
+     09  os 8 blocos viram trilho horizontal, andando para a esquerda
+     02  os titulos entram por varredura, com a barra de cor recuando
+         quando a revelacao ja andou METADE (esse e' o detalhe que faltava)
+
+   Nenhum texto nasce aqui. Tudo e' camada por cima do que ja existia.
+   ===================================================================== */
+(function () {
+'use strict';
+if (!window.gsap || !window.ScrollTrigger) return;
+
+var GRANDE = window.matchMedia('(min-width: 961px)').matches;
+
+/* O CSS deixa .rev escondido para nada piscar antes do script pegar. Aqui a
+   gente zera esse estado UMA VEZ, e a partir daqui quem manda e' o JS. Sem
+   isto o trilho horizontal nasce vazio: os blocos existem, tem tamanho, e
+   estao recortados a zero pelo CSS. Foi o que aconteceu na primeira v4. */
+gsap.set('.rev', { opacity: 1, y: 0, clipPath: 'none' });
+
+/* =============================================== 07 + 08: hero preso ===== */
+(function () {
+  var env = document.querySelector('.envelope-hero');
+  var hero = document.querySelector('.hero');
+  var rotina = document.getElementById('rotina');
+  if (!env || !hero || !rotina) return;
+
+  // o envelope precisa ser mais alto que a tela, senao nao sobra rolagem
+  // para o hero ficar preso enquanto a proxima secao sobe.
+  if (!GRANDE) return;   // no celular o hero cresce e nao fica preso
+
+  // rede de seguranca: se o conteudo do hero nao couber numa tela, o gesto
+  // nao entra. Conteudo cortado e pior que gesto ausente.
+  var cabe = true;
+  ['.hero-txt', '.palco'].forEach(function (s) {
+    var e = hero.querySelector(s);
+    if (!e) return;
+    if (e.getBoundingClientRect().bottom > hero.getBoundingClientRect().bottom + 6) cabe = false;
+  });
+  if (!cabe) {
+    hero.style.position = 'relative';
+    hero.style.height = 'auto';
+    env.style.height = 'auto';
+    rotina.style.marginTop = '0';
+    return;
+  }
+  env.style.height = '215vh';
+  rotina.style.marginTop = '-102vh';
+
+  gsap.set(hero, { clipPath: 'inset(0% 0% 0% 0% round 0px)' });
+  gsap.to(hero, {
+    clipPath: 'inset(3.5% 3% 5% 3% round 30px)', scale: 0.985, ease: 'none',
+    scrollTrigger: {
+      trigger: env, start: 'top top',
+      end: function () { return '+=' + Math.round(window.innerHeight * 0.85); },
+      scrub: 0.6, invalidateOnRefresh: true,
+    },
+  });
+})();
+
+/* ==================================== 09: os 8 blocos viram trilho ======= */
+(function () {
+  var grade = document.querySelector('#rotina .grade');
+  if (!grade || !GRANDE) return;
+
+  var env = document.createElement('div');
+  env.className = 'trilho-env';
+  var grude = document.createElement('div');
+  grude.className = 'trilho-grude';
+  grade.parentNode.insertBefore(env, grade);
+  env.appendChild(grude);
+  grude.appendChild(grade);
+
+  var barra = document.createElement('div');
+  barra.className = 'trilho-barra';
+  barra.innerHTML = '<i></i>';
+  var topo = document.createElement('div');
+  topo.className = 'trilho-topo';
+  var rot = document.querySelector('#rotina .rotulo');
+  var tit = document.querySelector('#rotina .titulo');
+  topo.innerHTML = '<em>' + ((rot && rot.textContent.trim()) || 'Depois do diagnóstico') +
+    '</em><span>' + ((tit && tit.textContent.trim()) || '') + '</span>';
+  grude.appendChild(topo);
+
+  var dica = document.createElement('div');
+  dica.className = 'trilho-dica';
+  dica.textContent = 'continue rolando';
+  grude.appendChild(barra);
+  grude.appendChild(dica);
+  var fio = barra.querySelector('i');
+
+  function sobra() { return Math.max(0, grade.scrollWidth - window.innerWidth + 40); }
+  env.style.height = 'calc(100vh + ' + Math.round(sobra() * 1.15) + 'px)';
+
+  gsap.to(grade, {
+    x: function () { return -sobra(); }, ease: 'none',
+    scrollTrigger: {
+      trigger: env, start: 'top top', end: 'bottom bottom', scrub: 0.7,
+      invalidateOnRefresh: true,
+      onRefresh: function () { env.style.height = 'calc(100vh + ' + Math.round(sobra() * 1.15) + 'px)'; },
+      onUpdate: function (s) {
+        fio.style.transform = 'scaleX(' + s.progress.toFixed(4) + ')';
+        dica.style.opacity = (1 - s.progress * 1.6).toFixed(2);
+        // cada bloco endireita quando passa pelo centro da tela
+        for (var i = 0; i < grade.children.length; i++) {
+          var b = grade.children[i];
+          var r = b.getBoundingClientRect();
+          var c = (r.left + r.width / 2 - window.innerWidth / 2) / window.innerWidth;
+          b.style.transform = 'rotate(' + (c * 5).toFixed(2) + 'deg) translateY(' +
+                              (Math.abs(c) * 26).toFixed(1) + 'px)';
+        }
+      },
+    },
+  });
+})();
+
+/* ============================ 02: varredura, o gesto principal =========== */
+/* Quebra o titulo em linhas, revela cada uma por recorte e passa uma barra
+   de cor por cima que recua na metade do caminho. Numeros do original:
+   0,6s de revelacao, 0,6s de barra, 0,15s entre linhas, barra em +0,3s. */
+(function () {
+  var CORES = { ciano: 'var(--ciano)', laranja: 'var(--laranja)', escuro: 'var(--escuro)' };
+
+  function emLinhas(el) {
+    var texto = el.textContent.trim();
+    if (!texto) return [];
+    el.textContent = '';
+    texto.split(/\s+/).forEach(function (p) {
+      var s = document.createElement('span');
+      s.className = 'gl-pal'; s.style.display = 'inline-block'; s.textContent = p;
+      el.appendChild(s); el.appendChild(document.createTextNode(' '));
+    });
+    var pal = [].slice.call(el.querySelectorAll('.gl-pal'));
+    var grupos = [], topo = null;
+    pal.forEach(function (p) {
+      if (topo === null || Math.abs(p.offsetTop - topo) > 4) { grupos.push([]); topo = p.offsetTop; }
+      grupos[grupos.length - 1].push(p.textContent);
+    });
+    el.textContent = '';
+    return grupos.map(function (g) {
+      var d = document.createElement('div');
+      d.className = 'line'; d.textContent = g.join(' ');
+      el.appendChild(d); return d;
+    });
+  }
+
+  function varrer(el, lado, cor, atraso) {
+    var linhas = emLinhas(el);
+    if (!linhas.length) return;
+    var tl = gsap.timeline({ paused: true });
+    linhas.forEach(function (linha, i) {
+      gsap.set(linha, {
+        clipPath: lado === 'direita' ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)',
+        autoAlpha: 1,
+      });
+      var b = document.createElement('div');
+      b.className = 'gl-barra';
+      b.style.backgroundColor = cor;
+      b.style.transformOrigin = lado === 'direita' ? 'right center' : 'left center';
+      linha.appendChild(b);
+      gsap.set(b, { scaleX: 1 });
+      var q = i * 0.15;
+      tl.to(linha, { clipPath: 'inset(0 0% 0 0%)', duration: 0.6, ease: 'power2.out' }, q);
+      tl.to(b, { scaleX: 0, duration: 0.6, ease: 'power2.inOut' }, q + 0.3);
+    });
+    ScrollTrigger.create({
+      trigger: el, start: 'top 90%', once: true,
+      onEnter: function () { gsap.delayedCall(atraso || 0, function () { tl.play(); }); },
+    });
+  }
+
+  // titulo de secao: direcao alternando, laranja e ciano se revezando
+  var titulos = [].slice.call(document.querySelectorAll('.titulo'));
+  titulos.forEach(function (h2, i) {
+    var escuro = !!h2.closest('.fluxo, .caixa, .bloco.escuro');
+    varrer(h2, i % 2 ? 'esquerda' : 'direita', escuro ? CORES.ciano : CORES.laranja, 0);
+  });
+
+  // rotulo e lede entram logo depois, na mesma frase visual
+  document.querySelectorAll('.miolo > .rotulo, .caixa .rotulo').forEach(function (el) {
+    varrer(el, 'direita', CORES.ciano, 0);
+  });
+  document.querySelectorAll('.miolo > .lede, .caixa .lede').forEach(function (el, i) {
+    gsap.set(el, { clipPath: 'inset(0 0 101% 0)' });
+    gsap.fromTo(el, { y: 26 }, {
+      clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 0.9, ease: 'power2.out', delay: 0.22,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      onComplete: function () { el.style.clipPath = 'none'; },
+    });
+  });
+})();
+
+/* ====================== entrada dos blocos que sobraram ================== */
+/* Nada de cortina com desfoque, que era invencao minha. Deslocamento simples
+   com a mesma curva do original, so' para nao chegarem chapados. */
+(function () {
+  var fora = [].slice.call(document.querySelectorAll('.rev')).filter(function (e) {
+    // rotulo e lede ja' sao tratados pela varredura, e no desktop os blocos
+    // do trilho aparecem prontos porque quem anima ali e' o proprio trilho
+    if (e.classList.contains('rotulo') || e.classList.contains('lede')) return false;
+    if (GRANDE && e.closest('#rotina') && e.classList.contains('bloco')) return false;
+    return true;
+  });
+  fora.forEach(function (el, i) {
+    gsap.set(el, { opacity: 0, y: 34 });
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: (i % 3) * 0.09,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      onComplete: function () { el.style.willChange = 'auto'; },
+    });
+  });
+})();
+
+/* ============================ a cena presa do fluxo ====================== */
+/* Mantida da v3, porque o argumento do antes e depois e' o que convence. */
+(function () {
+  var f = window.__fluxo;
+  if (!f || !f.hoje) return;
+  var eHoje = [].slice.call(f.hoje.querySelectorAll('.etapa'));
+  var eLmp = [].slice.call(f.lmp.querySelectorAll('.etapa'));
+  gsap.set(f.lmp, { opacity: 0.16 });
+  gsap.set(eHoje, { opacity: 0, y: 22 });
+  gsap.set(eLmp, { opacity: 0, y: 22 });
+
+  var tl = gsap.timeline({
+    // sem pin: medido em 21/08, a secao tem de 1.205 a 1.809px e nao cabe
+    // em nenhuma tela. Presa, o fecho do argumento nunca aparecia.
+    scrollTrigger: { trigger: '.fluxo', start: 'top 78%', end: 'bottom 32%', scrub: 0.7 },
+  });
+  tl.to(eHoje, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out' }, 0);
+  eHoje.forEach(function (e, i) {
+    var c = e.querySelector('.corte');
+    if (c) tl.to(c, { scaleX: 1, duration: 0.32, ease: 'power2.inOut' }, 1.15 + i * 0.16);
+    tl.to(e, { filter: 'grayscale(1)', opacity: 0.40, duration: 0.34 }, 1.22 + i * 0.16);
+  });
+  tl.to(f.hoje, { opacity: 0.42, scale: 0.975, duration: 0.6, ease: 'power2.inOut' }, 2.55)
+    .to(f.lmp, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 2.62);
+  eLmp.forEach(function (e, i) {
+    tl.to(e, { opacity: 1, y: 0, duration: 0.42, ease: 'back.out(1.5)' }, 2.85 + i * 0.30)
+      .add(function () { e.classList.add('acendeu'); }, 2.95 + i * 0.30);
+  });
+  tl.fromTo(f.lmp, { '--varre': '0%' }, { '--varre': '118%', duration: 1.4, ease: 'none' }, 2.85);
+  tl.to({}, { duration: 0.7 });
+})();
+
+/* =========================== a caixa final abre ========================== */
+(function () {
+  var cx = document.querySelector('.final .caixa');
+  if (!cx) return;
+  gsap.fromTo(cx,
+    { clipPath: 'inset(8% 14% 8% 14% round 28px)', scale: 0.965 },
+    { clipPath: 'inset(0% 0% 0% 0% round 28px)', scale: 1, duration: 1.8, ease: 'power2.inOut',
+      scrollTrigger: { trigger: cx, start: 'top 82%', once: true } });
+})();
+
+ScrollTrigger.refresh();
+})();
 </script>
 </body>
 </html>
