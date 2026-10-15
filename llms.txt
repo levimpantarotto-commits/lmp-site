@@ -6,12 +6,12 @@ A LMP é a marca comercial de LEVI MAGNO MARKETING LTDA, CNPJ 51.288.794/0001-71
 
 O que a IA assume na prática: atendimento e qualificação de leads no WhatsApp, follow-up, cotação, emissão de relatório, organização de funil e rotina administrativa. Atendimento é um exemplo, não a tese: a regra é que tudo que se repete pode ser assumido.
 
-Prova medida em sistema de produção, 30 dias: 157 leads atendidos, 147 com interação (93%), 70 qualificados sem intervenção humana (45%), 33 descartados pelo próprio sistema (21%), sem SDR e sem CRM pago. O custo que esse sistema substitui fica entre R$ 4.200 e R$ 8.000 por mês.
+Métricas de atendimento e qualificação não comprovam economia financeira, venda ou retorno sobre investimento. A avaliação financeira considera custos efetivamente evitáveis e manutenção, sem contar o mesmo gasto duas vezes. Horas liberadas representam capacidade; não viram automaticamente dinheiro no caixa. A calculadora pública usa números informados pelo visitante, sem enviar esses valores a um servidor. O exemplo preenchível é hipotético, não uma proposta nem resultado de cliente.
 
 ## Perguntas respondidas
 
 - [Automação com IA para imobiliárias e construtoras](https://www.levimp.com.br/automacao-para-imobiliarias-e-construtoras.html): Onde uma operação imobiliária perde dinheiro sem perceber, o que a automação com IA resolve de verdade no atendimento e no administrativo, e quando el
-- [Como calcular o retorno de uma automação com IA](https://www.levimp.com.br/como-calcular-o-retorno-de-uma-automacao.html): A conta de retorno de uma automação que o dono faz sozinho, o custo que não aparece na planilha, e o teste que mostra se a hora economizada vira dinhe
+- [Como calcular o retorno de uma automação com IA](https://www.levimp.com.br/como-calcular-o-retorno-de-uma-automacao.html#calculadora): Calculadora local de horas liberadas, custos evitáveis e prazo de retorno, com premissas visíveis e exemplo hipotético. Sem promessa de economia e sem somar capacidade ao caixa.
 - [A IA vai substituir meus funcionários? A resposta honesta](https://www.levimp.com.br/ia-vai-substituir-meus-funcionarios.html): A resposta honesta para a objeção mais comum sobre automação nas pequenas e médias empresas, a diferença entre substituir tarefa e substituir pessoa, 
 - [LMP · Portfólio de automação, IA e sites](https://www.levimp.com.br/portfolio.html): Portfólio da LMP: sites, sistemas de atendimento por IA, campanhas e peças de social. Doze projetos publicados.
 - [Quais processos da sua empresa dá para automatizar com IA](https://www.levimp.com.br/quais-processos-automatizar-com-ia-na-empresa.html): O critério para escolher qual processo automatizar primeiro numa empresa, as três colunas que separam o que sai da sua mesa do que nunca sai, e o test

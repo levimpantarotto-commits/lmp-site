@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
+<!-- Fonte HTML curada desde 2026-10-15; build-respostas.mjs não regenera esta página. Testes em roi-calculadora.test.mjs. -->
 <!-- GA4 da LMP (G-LM1VG7G8SJ). Toda pagina-resposta nova ja nasce medida. -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LM1VG7G8SJ"></script>
 <script>
@@ -35,7 +36,7 @@
       "description": "A conta de retorno de uma automação que o dono faz sozinho, o custo que não aparece na planilha, e o teste que mostra se a hora economizada vira dinheiro ou só vira conforto.",
       "inLanguage": "pt-BR",
       "datePublished": "2026-08-20",
-      "dateModified": "2026-08-20",
+      "dateModified": "2026-10-15",
       "about": "cálculo de retorno sobre investimento em automação com inteligência artificial",
       "author": {
         "@type": "Person",
@@ -56,7 +57,7 @@
           "name": "Como calcular o ROI de uma automação com inteligência artificial?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Levante cinco números: o custo direto mensal das horas repetidas (frequência vezes duração vezes custo da hora), o custo escondido do que se perde ou volta errado, o custo atual das ferramentas e pessoas que a automação substitui, o investimento de implantação e o custo mensal de manutenção. O ganho mensal é a soma dos três primeiros menos a manutenção. O tempo de retorno é o investimento dividido por esse ganho. Acima de doze meses, o projeto precisa de outro motivo além do financeiro."
+            "text": "Estime primeiro a capacidade potencial em horas: frequência vezes duração em minutos, dividida por 60. Se quiser, estime o custo equivalente dessas horas, mas não o some ao ganho financeiro. Para caixa, registre apenas custos que deixarão de existir de fato, como uma ferramenta, um serviço terceirizado ou uma contratação evitada, e desconte a manutenção. O payback é a implantação dividida pelo ganho líquido, somente quando esse ganho for positivo."
           }
         },
         {
@@ -72,7 +73,7 @@
           "name": "Qual custo as empresas esquecem de colocar na conta da automação?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "O custo do que não acontece. O lead sem resposta, o orçamento que saiu dois dias tarde, o cliente que comprou do concorrente enquanto esperava. Esse número costuma ser maior que o das horas gastas, e não aparece em lugar nenhum porque não tem nota fiscal. Junto com ele ficam de fora o retrabalho por erro de digitação, o dinheiro que entra atrasado por causa de aprovação parada, e o risco de o processo inteiro morar na cabeça de uma pessoa só."
+            "text": "Custos efetivamente evitáveis: uma ferramenta cancelada, um serviço terceirizado dispensado ou uma contratação que deixou de ser necessária. Perdas por atraso, retrabalho e oportunidade podem orientar a investigação, mas só entram na conta financeira quando a empresa consegue medi-las sem estimar receita presumida."
           }
         }
       ]
@@ -110,6 +111,14 @@ strong{font-weight:600}
 .faq h2{margin-top:0}
 .faq dt{font-weight:600;margin-top:24px;font-family:var(--display);font-size:19px}
 .faq dd{margin:8px 0 0;color:var(--ink-soft)}
+.calculadora{margin:48px 0;padding:30px;border:1px solid var(--linha);border-radius:14px;background:var(--branco)}
+.calculadora h2{margin-top:0}.calculadora .aviso{color:var(--ink-soft);font-size:16px}
+.campos-calculadora{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:22px 0}
+.campo label{display:block;font-weight:600;font-size:15px;margin-bottom:5px}.campo input{width:100%;min-height:44px;padding:9px 10px;border:1px solid var(--linha);border-radius:7px;background:var(--paper);font:inherit;color:var(--ink)}
+.campo input:focus,.calculadora button:focus-visible{outline:3px solid rgba(47,212,196,.65);outline-offset:2px}.acoes-calculadora{display:flex;flex-wrap:wrap;gap:10px}.calculadora button{min-height:44px;padding:9px 15px;border:0;border-radius:7px;background:var(--escuro);color:var(--branco);font:600 16px var(--body);cursor:pointer}.calculadora button.secundario{background:var(--paper);color:var(--ink);border:1px solid var(--linha)}
+.resultado-calculadora{margin-top:22px;padding-top:18px;border-top:1px solid var(--linha)}.resultado-calculadora p{margin-bottom:8px}.resultado-calculadora .nota{font-size:15px;color:var(--ink-soft)}
+@media (max-width:560px){.calculadora{padding:24px 18px}.campos-calculadora{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 .cta{margin:56px 0 0;background:var(--escuro);color:var(--paper);
   padding:36px 32px;border-radius:14px}
 .cta h2{margin:0 0 10px;color:var(--branco)}
@@ -133,23 +142,39 @@ strong{font-weight:600}
 <h2>A conta base, que é o piso</h2>
 <p>Pegue um processo e multiplique três números:</p>
 <ul><li>quantas vezes ele acontece por mês</li><li>quantos minutos leva cada vez</li><li>quanto custa a hora da pessoa que faz, com encargos</li></ul>
-<p>O resultado é o custo direto mensal. É o número mais fácil de calcular e o menos interessante dos três que você vai precisar.</p>
-<p>Num diagnóstico numa empresa de catorze pessoas, essa conta apontou <strong>72 horas por mês de trabalho repetido</strong>. E nenhuma delas estava no processo que o dono achava que era o problema. Foi a conta que revelou onde olhar, não o valor final do projeto.</p>
+<p>Multiplique execuções por minutos e divida por 60. O resultado é uma estimativa de capacidade potencial em horas por mês, não economia em caixa.</p>
+<p>Se quiser comparar esforço, multiplique essas horas pelo custo-hora. O resultado continua sendo equivalente de capacidade, não dinheiro poupado.</p>
 <h2>O custo que não aparece na planilha</h2>
 <p>Esse é o número que costuma ser maior, e ninguém o registra porque ele não tem nota fiscal.</p>
-<p><strong>Oportunidade perdida.</strong> O lead que não foi respondido, o orçamento que saiu dois dias depois, o cliente que já tinha comprado do concorrente. Some quantos por mês e multiplique pelo seu ticket e pela sua taxa de fechamento. Esse costuma ser o maior número da planilha inteira.</p>
+<p><strong>Oportunidade perdida.</strong> Lead sem resposta e orçamento atrasado são sinais para investigar. Não os transforme em receita presumida na conta: só entram como caixa quando houver uma perda mensurável e evitável.</p>
 <p><strong>Retrabalho.</strong> Erro de digitação, dado que entrou errado no sistema, pedido que voltou. Cada um custa o tempo original mais o tempo de conserto mais a conversa de desculpa.</p>
 <p><strong>Dinheiro parado no tempo.</strong> Nota emitida com atraso, cobrança que saiu tarde, pedido esperando aprovação. Não some ao custo, atrasa a entrada.</p>
 <p><strong>Troca de contexto.</strong> A interrupção não custa os cinco minutos da tarefa, custa os cinco mais o tempo de voltar ao que se estava fazendo.</p>
 <p><strong>Dependência de uma pessoa só.</strong> Se o processo mora com uma pessoa, as férias dela são um custo, a saída dela é um risco, e nenhum dos dois está na planilha.</p>
 <h2>Automação não compete com zero</h2>
 <p>O erro clássico é comparar o investimento na automação com não gastar nada. A comparação real é com o que já está sendo pago hoje para o processo acontecer.</p>
-<p>Uma operação comercial padrão já paga, entre pessoa de pré-venda, CRM e ferramenta de disparo, algo entre <strong>R$ 4.200 e R$ 8.000 por mês</strong>. Esse é o valor de referência, não o zero.</p>
-<p>Num caso real medido por 30 dias numa operação imobiliária, foram 157 leads atendidos, 93% com interação real e 45% qualificados sem nenhuma intervenção humana. A estrutura que aquilo substituiu representava de <strong>R$ 50 mil a R$ 96 mil por ano</strong>. O retorno ali não veio de gente trabalhando mais rápido, veio de estrutura que não precisou existir.</p>
-<h2>A conta completa, em cinco linhas</h2>
-<ul><li><strong>A.</strong> Custo direto por mês, das horas repetidas.</li><li><strong>B.</strong> Custo escondido por mês, do que se perde ou volta.</li><li><strong>C.</strong> Custo atual das ferramentas e pessoas que a automação substitui.</li><li><strong>D.</strong> Investimento na implantação, uma vez.</li><li><strong>E.</strong> Custo mensal de manter aquilo rodando, que sempre existe.</li></ul>
-<p>Ganho mensal é A mais B mais C, menos E. Tempo de retorno é D dividido por esse ganho.</p>
-<p>Se o tempo de retorno passar de doze meses, o projeto precisa de um motivo além do financeiro para existir. Pode ter, risco e capacidade de crescer são motivos legítimos, mas assuma que é isso e não finja que é retorno.</p>
+<p>Use os custos que realmente desaparecerão: uma ferramenta cancelada, um serviço terceirizado dispensado ou uma contratação que deixou de ser necessária. O valor das horas do time continua como capacidade equivalente; não é economia enquanto o salário continua igual.</p>
+<h2>A conta em duas partes</h2>
+<ul><li><strong>Capacidade potencial.</strong> Execuções por mês × minutos por execução ÷ 60. Multiplicar pelo custo-hora ajuda a comparar esforço, mas não é caixa.</li><li><strong>Caixa.</strong> Custos efetivamente evitáveis − manutenção mensal. A implantação entra uma vez no cálculo do payback.</li></ul>
+<p>Quando o ganho líquido mensal for positivo, divida a implantação por ele para estimar o payback. Se não for, não há retorno financeiro calculável — pode haver capacidade, controle ou redução de risco, mas são decisões diferentes.</p>
+<section id="calculadora" class="calculadora" aria-labelledby="titulo-calculadora">
+  <h2 id="titulo-calculadora">Calculadora de capacidade e caixa</h2>
+  <p class="aviso">Preencha dados do seu processo. Os números ficam neste navegador; não são enviados. Use vírgula ou ponto para decimais, sem separador de milhar. Horas e custo equivalente são estimativas de capacidade e não entram no ganho líquido para evitar dupla contagem. Campo financeiro em branco é desconhecido; informe 0 quando o custo for realmente zero.</p>
+  <form id="calculadora-roi" novalidate>
+    <div class="campos-calculadora">
+      <div class="campo"><label for="execucoes-mes">Execuções por mês</label><input id="execucoes-mes" name="execucoesMes" type="text" inputmode="decimal" required></div>
+      <div class="campo"><label for="minutos-execucao">Minutos por execução</label><input id="minutos-execucao" name="minutosPorExecucao" type="text" inputmode="decimal" required></div>
+      <div class="campo"><label for="custo-hora">Custo-hora (opcional, R$)</label><input id="custo-hora" name="custoHora" type="text" inputmode="decimal"></div>
+      <div class="campo"><label for="custos-evitaveis">Custos efetivamente evitáveis/mês (R$)</label><input id="custos-evitaveis" name="custosEvitaveisMes" type="text" inputmode="decimal"></div>
+      <div class="campo"><label for="manutencao-mes">Manutenção/mês (R$)</label><input id="manutencao-mes" name="manutencaoMes" type="text" inputmode="decimal"></div>
+      <div class="campo"><label for="implantacao">Implantação (R$)</label><input id="implantacao" name="implantacao" type="text" inputmode="decimal"></div>
+    </div>
+    <div class="acoes-calculadora"><button type="submit">Calcular</button><button class="secundario" type="button" id="exemplo-roi">Usar exemplo hipotético</button><button class="secundario" type="reset">Limpar</button></div>
+  </form>
+  <div id="resultado-roi" class="resultado-calculadora" role="status" aria-live="polite"><p class="nota">Informe as execuções e os minutos para calcular.</p></div>
+  <noscript><p class="nota">Ative o JavaScript para usar a calculadora. A conta é: capacidade potencial em horas = execuções × minutos ÷ 60; caixa = custos efetivamente evitáveis − manutenção.</p></noscript>
+</section>
+<p>Para comparar o investimento, veja também <a href="https://www.levimp.com.br/quanto-custa-automatizar-um-processo-com-ia.html">o que compõe o custo de automatizar um processo</a>, <a href="https://www.levimp.com.br/quanto-tempo-leva-para-implantar-ia-em-uma-empresa.html">o tempo de implantação</a> e <a href="https://www.levimp.com.br/quais-processos-automatizar-com-ia-na-empresa.html">como priorizar os processos</a>.</p>
 <h2>Onde a conta dá negativo, e é para dar</h2>
 <p><strong>Processo de baixa frequência.</strong> Algo que acontece três vezes por mês raramente paga uma automação, por mais irritante que seja.</p>
 <p><strong>Processo que vai mudar.</strong> Se o ERP troca em seis meses ou a regra fiscal muda, o investimento morre junto.</p>
@@ -158,14 +183,14 @@ strong{font-weight:600}
 <h2>O teste da hora liberada</h2>
 <p>Antes de assinar qualquer coisa, faça uma pergunta e exija a resposta por escrito:</p>
 <p><strong>O que essa pessoa vai fazer com as horas que voltarem?</strong></p>
-<p>Se a resposta for concreta, atender mais clientes, fazer follow-up que hoje ninguém faz, assumir a função de quem ia ser contratado, o retorno é real e você já sabe qual número vai medir.</p>
+<p>Se a resposta for concreta, atender mais clientes, fazer follow-up que hoje ninguém faz, assumir a função de quem ia ser contratado, existe uma hipótese de retorno a medir — não uma garantia.</p>
 <p>Se a resposta for vaga, o projeto pode até valer a pena, mas não é retorno financeiro que você está comprando. É melhor saber disso antes.</p>
   <section class="faq">
     <h2>Perguntas frequentes</h2>
     <dl>
-      <dt>Como calcular o ROI de uma automação com inteligência artificial?</dt><dd>Levante cinco números: o custo direto mensal das horas repetidas (frequência vezes duração vezes custo da hora), o custo escondido do que se perde ou volta errado, o custo atual das ferramentas e pessoas que a automação substitui, o investimento de implantação e o custo mensal de manutenção. O ganho mensal é a soma dos três primeiros menos a manutenção. O tempo de retorno é o investimento dividido por esse ganho. Acima de doze meses, o projeto precisa de outro motivo além do financeiro.</dd>
+      <dt>Como calcular o ROI de uma automação com inteligência artificial?</dt><dd>Estime primeiro a capacidade potencial em horas: frequência vezes duração em minutos, dividida por 60. Se quiser, estime o custo equivalente dessas horas, mas não o some ao ganho financeiro. Para caixa, registre apenas custos que deixarão de existir de fato, como uma ferramenta, um serviço terceirizado ou uma contratação evitada, e desconte a manutenção. O payback é a implantação dividida pelo ganho líquido, somente quando esse ganho for positivo.</dd>
       <dt>Por que hora economizada nem sempre vira dinheiro economizado?</dt><dd>Porque a empresa continua pagando o mesmo salário depois da automação. A hora liberada só vira caixa em três situações: a pessoa passa a gerar receita com aquele tempo, a empresa deixa de fazer uma contratação que faria, ou some um custo que já era pago, como uma ferramenta ou um serviço terceirizado. Antes de assinar, pergunte o que a pessoa vai fazer com o tempo devolvido. Se não houver resposta concreta, o ganho é conforto, e conforto tem valor mas não é retorno.</dd>
-      <dt>Qual custo as empresas esquecem de colocar na conta da automação?</dt><dd>O custo do que não acontece. O lead sem resposta, o orçamento que saiu dois dias tarde, o cliente que comprou do concorrente enquanto esperava. Esse número costuma ser maior que o das horas gastas, e não aparece em lugar nenhum porque não tem nota fiscal. Junto com ele ficam de fora o retrabalho por erro de digitação, o dinheiro que entra atrasado por causa de aprovação parada, e o risco de o processo inteiro morar na cabeça de uma pessoa só.</dd>
+      <dt>Qual custo as empresas esquecem de colocar na conta da automação?</dt><dd>Custos efetivamente evitáveis: uma ferramenta cancelada, um serviço terceirizado dispensado ou uma contratação que deixou de ser necessária. Perdas por atraso, retrabalho e oportunidade podem orientar a investigação, mas só entram na conta financeira quando a empresa consegue medi-las sem estimar receita presumida.</dd>
     </dl>
   </section>
   <section class="cta">
@@ -177,5 +202,50 @@ strong{font-weight:600}
 <footer class="rodape">
   <p><strong>LMP</strong>: automação e implementação de inteligência artificial para empresas. <a href="https://www.levimp.com.br/">Voltar ao site</a></p>
 </footer>
+<script type="module">
+  import { calcularRetornoAutomacao } from './roi-calculadora.mjs';
+
+  const form = document.querySelector('#calculadora-roi');
+  const resultado = document.querySelector('#resultado-roi');
+  const exemplo = document.querySelector('#exemplo-roi');
+  const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+  const numero = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
+  const nomesCampos = { execucoesMes: 'execuções por mês', minutosPorExecucao: 'minutos por execução', custoHora: 'custo-hora', custosEvitaveisMes: 'custos evitáveis', manutencaoMes: 'manutenção', implantacao: 'implantação' };
+
+  function valoresDoFormulario() {
+    return Object.fromEntries(new FormData(form).entries());
+  }
+
+  function mostrarResultado(dados) {
+    if (!dados.valido) {
+      const camposComErro = dados.erros.map((nome) => nomesCampos[nome] || 'resultado do cálculo').join(', ');
+      resultado.innerHTML = `<p><strong>Revise estes campos:</strong> ${camposComErro}. Use números iguais ou maiores que zero.</p>`;
+      return;
+    }
+
+    const equivalente = dados.custoEquivalente === null
+      ? '<p><strong>Custo equivalente:</strong> desconhecido. Preencha o custo-hora para estimá-lo.</p>'
+      : `<p><strong>Custo equivalente da capacidade:</strong> ${moeda.format(dados.custoEquivalente)} por mês. Isso não é economia em caixa.</p>`;
+    let caixa = '<p><strong>Ganho líquido de caixa:</strong> desconhecido. Preencha custos evitáveis e manutenção.</p>';
+    if (dados.ganhoLiquido !== null && !dados.temRetornoFinanceiro) caixa = '<p><strong>Não há retorno financeiro calculável.</strong> Os custos evitáveis não superam a manutenção mensal.</p>';
+    if (dados.temRetornoFinanceiro) caixa = `<p><strong>Ganho líquido de caixa:</strong> ${moeda.format(dados.ganhoLiquido)} por mês.</p>${dados.paybackMeses === null ? '<p><strong>Payback:</strong> desconhecido. Preencha a implantação para estimá-lo.</p>' : `<p><strong>Payback estimado:</strong> ${numero.format(dados.paybackMeses)} meses.</p>`}`;
+    resultado.innerHTML = `<p><strong>Capacidade potencial:</strong> ${numero.format(dados.capacidadeHoras)} horas por mês. É uma estimativa, não economia comprovada.</p>${equivalente}${caixa}<p class="nota">O cálculo não presume receita, desligamento ou ganho garantido.</p>`;
+  }
+
+  form.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    mostrarResultado(calcularRetornoAutomacao(valoresDoFormulario()));
+  });
+
+  exemplo.addEventListener('click', () => {
+    const valores = { execucoesMes: 500, minutosPorExecucao: 4, custoHora: 35, custosEvitaveisMes: 600, manutencaoMes: 200, implantacao: 10000 };
+    Object.entries(valores).forEach(([nome, valor]) => { form.elements[nome].value = valor; });
+    mostrarResultado(calcularRetornoAutomacao(valores));
+  });
+
+  form.addEventListener('reset', () => {
+    window.setTimeout(() => { resultado.innerHTML = '<p class="nota">Informe as execuções e os minutos para calcular.</p>'; }, 0);
+  });
+</script>
 </body>
 </html>

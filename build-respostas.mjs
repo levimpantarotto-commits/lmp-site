@@ -14,7 +14,8 @@
 // Cada página carrega schema.org Article + FAQPage. O bloco FAQ é o que a IA cita
 // direto, porque é pergunta e resposta em formato legível por máquina.
 //
-// Uso:  node build-respostas.mjs
+// Uso: node build-respostas.mjs --slug=slug-da-pagina
+// Sem seleção explícita, não escreve nada. ROI é mantida diretamente em HTML.
 import fs from 'fs';
 import path from 'path';
 
@@ -635,8 +636,33 @@ Se os dois estiverem bons, a automação de atendimento não é a sua prioridade
 ];
 
 // ---------------------------------------------------------------- escrita
+const argumentos = process.argv.slice(2);
+const slugSelecionado = argumentos.length === 1 && argumentos[0].startsWith('--slug=') ? argumentos[0].slice(7) : '';
+if (!PAGINAS.some((p) => p.slug === slugSelecionado)) {
+  throw new Error('Informe uma única página com --slug=slug-da-pagina. Geração em lote desabilitada para preservar revisões existentes.');
+}
+// A página interativa de ROI passou a ter o HTML versionado como fonte autoritativa.
+// Não regenerar a versão antiga do template sobre a calculadora e a revisão factual.
+const PAGINAS_CURADAS = new Set(['como-calcular-o-retorno-de-uma-automacao']);
+if (PAGINAS_CURADAS.has(slugSelecionado)) {
+  throw new Error('Edite a fonte HTML curada e seu módulo/testes diretamente; não regenere a calculadora pelo template antigo.');
+}
+for (const slug of PAGINAS_CURADAS) {
+  for (const arquivo of [`${slug}.html`, 'roi-calculadora.mjs']) {
+    if (!fs.existsSync(path.join(BASE, arquivo))) throw new Error(`Fonte curada ausente: ${arquivo}`);
+  }
+}
+const sitemapAnterior = fs.readFileSync(path.join(BASE, 'sitemap.xml'), 'utf8');
+const datasAnteriores = new Map([...sitemapAnterior.matchAll(/<url>\s*<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)].map((m) => [m[1], m[2]]));
+for (const loc of [`${SITE}/`, `${SITE}/portfolio.html`, ...PAGINAS.map(p => `${SITE}/${p.slug}.html`)]) {
+  if (!datasAnteriores.has(loc)) throw new Error(`Data anterior ausente no sitemap: ${loc}. Revisar antes de gerar.`);
+}
 let n = 0;
-for (const p of PAGINAS) {
+for (const p of PAGINAS.filter((p) => p.slug === slugSelecionado)) {
+  if (PAGINAS_CURADAS.has(p.slug)) {
+    console.log('preservado (fonte HTML curada):', `${p.slug}.html`);
+    continue;
+  }
   fs.writeFileSync(path.join(BASE, `${p.slug}.html`), pagina(p));
   console.log('gerado:', `${p.slug}.html`);
   n++;
@@ -653,7 +679,7 @@ fs.writeFileSync(path.join(BASE, 'sitemap.xml'),
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `  <url>
     <loc>${u.loc}</loc>
-    <lastmod>${HOJE}</lastmod>
+    <lastmod>${u.loc === `${SITE}/${slugSelecionado}.html` ? HOJE : datasAnteriores.get(u.loc)}</lastmod>
     <changefreq>${u.freq}</changefreq>
     <priority>${u.pri}</priority>
   </url>`).join('\n')}
