@@ -1,0 +1,23 @@
+Materiais reutilizados da base local da maquete do Vale, consultada em 22/10/2026.
+
+Madeira: fachada-madeira-{diff,normal,rough}.jpg, copiados de
+work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/.
+
+Pedra: sandstone-{diff,normal,rough}.jpg, Poly Haven, asset sandstone_blocks_05,
+CC0. https://polyhaven.com/a/sandstone_blocks_05
+
+O mapa de pedra é um material provisório em tons bege para o
+estudo; não é fotografia nem evidência da pedra da casa do Igor.
+
+A base declara os materiais da maquete como Poly Haven, CC0:
+https://polyhaven.com/license. Os créditos completos da origem permanecem em
+work/aeropixel-experiencia-3d-20261021/dist/assets/CREDITOS.txt e no manifesto
+materiais-terreno.json. Nenhum material representa levantamento ou textura
+extraída da casa fotografada.
+
+Celular: versões mecânicas de 512px dos mesmos 16 mapas, em mobile/.
+Mantêm cores, função PBR e licença. Não são materiais simplificados desenhados.
+
+Telha, prado, reboco, cascalho e concreto: pares diffuse/normal derivados em
+1024×1024 dos JPEGs 2048×2048 da mesma base local, sem desenho ou geração de
+textura. `FONTES.json` registra o nome, caminho, dimensões e SHA-256 das fontes.

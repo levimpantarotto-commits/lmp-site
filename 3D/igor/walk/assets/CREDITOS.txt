@@ -1,0 +1,10 @@
+Vegetação e céu reutilizados da base 3D do Vale (22/10/2026).
+Poly Haven — CC0 — https://polyhaven.com/license
+trees-real.glb: níveis intermediários de duas árvores da floresta da base;
+folhas com transparência recortada, madeira e mapas normais preservados.
+trees-mobile.glb: mesma geometria com texturas derivadas em512px, mantendoalpha.
+ceu.hdr: iluminação de ambiente da mesma base. Não é captura do imóvel.
+Os materiais têm créditos adicionais em materials/CREDITOS.txt.
+Three.js e loaders: MIT, licença na pasta vendor.
+Posição, escala das árvores, materiais e construção aproximados pelas fotos;
+não constituem levantamento nem texturas capturadas da casa do Igor.

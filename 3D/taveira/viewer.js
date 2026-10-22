@@ -1,17 +1,15 @@
 import * as THREE from './vendor/three.module.js';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
-import { lots, roads, stops, toWorld, moveAlongRoad, isRoadPoint } from './layout.js';
+import { PLAN_ASSET, roads, stops, toWorld, moveAlongRoad, isRoadPoint } from './layout.js';
 import {forestAreas,makeVegetation} from './vegetation.js';
 import {createArchitecture} from './architecture.js';
 
-const BASE='./assets/planta_imp_fn02_base.webp', TREE='./assets/arvore-lod.glb';
+const BASE=PLAN_ASSET, TREE='./assets/arvore-lod.glb';
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-const lotWorld=l=>{const [x,z]=toWorld(l.x+l.w/2,l.y+l.d/2);return {x,z,w:l.w*.45,d:l.d*.45};};
-const inLot=(x,z)=>lots.some(l=>{const a=lotWorld(l);return x>a.x-a.w/2&&x<a.x+a.w/2&&z>a.z-a.d/2&&z<a.z+a.d/2;});
 
 // Implantação raster derivada; casas e árvores são ilustrações, não obras existentes.
-export async function createViewer(container,{onSelect=()=>{},onStatus=()=>{},onFail=()=>{}}={}) {
+export async function createViewer(container,{onStatus=()=>{},onFail=()=>{}}={}) {
   let disposed=false,contextLost=false,raf=0,tween=null,walk=false,casas=false,failed=false,baseTimer=0,texture,vegetationCount=0;
   const keys={forward:false,back:false,left:false,right:false},clock=new THREE.Clock(),scene=new THREE.Scene();scene.background=new THREE.Color(0xb7c9bf);scene.fog=new THREE.Fog(0xb7c9bf,1000,1800);
   const camera=new THREE.PerspectiveCamera(48,1,.1,1300);camera.rotation.order='YXZ';camera.position.set(470,520,470);
@@ -33,10 +31,8 @@ export async function createViewer(container,{onSelect=()=>{},onStatus=()=>{},on
   // Tampas arredondadas unem os trechos sem frestas triangulares nos cotovelos.
   const junctions=roads.flat(),caps=new THREE.InstancedMesh(new THREE.CircleGeometry(2.55,20),roadMat,junctions.length);
   q.setFromEuler(new THREE.Euler(-Math.PI/2,0,0));junctions.forEach((point,i)=>{const [x,z]=toWorld(...point);m.compose(new THREE.Vector3(x,.076,z),q,new THREE.Vector3(1,1,1));caps.setMatrixAt(i,m);});caps.renderOrder=2;caps.receiveShadow=true;scene.add(caps);
-  const lotMesh=new THREE.InstancedMesh(new THREE.PlaneGeometry(1,1),new THREE.MeshStandardMaterial({color:0xc6b982,roughness:1,transparent:true,opacity:.32,side:THREE.DoubleSide}),lots.length);q.setFromEuler(new THREE.Euler(-Math.PI/2,0,0));lots.forEach((l,i)=>{const a=lotWorld(l);m.compose(new THREE.Vector3(a.x,.095,a.z),q,new THREE.Vector3(a.w,a.d,1));lotMesh.setMatrixAt(i,m);});lotMesh.instanceMatrix.needsUpdate=true;scene.add(lotMesh);
-  const outline=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1,.16,1)),new THREE.LineBasicMaterial({color:0xffd55c}));outline.visible=false;scene.add(outline);
   const architecture=createArchitecture(THREE),homes=architecture.homes;homes.visible=false;scene.add(homes,architecture.park);
-  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();let looking=false,lx=0,ly=0,downX=0,downY=0;canvas.addEventListener('pointerdown',e=>{downX=e.clientX;downY=e.clientY;if(walk){looking=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture?.(e.pointerId);}});canvas.addEventListener('pointermove',e=>{if(!walk||!looking)return;camera.rotation.y-=(e.clientX-lx)*.004;camera.rotation.x=clamp(camera.rotation.x-(e.clientY-ly)*.004,-1.25,1.25);lx=e.clientX;ly=e.clientY;requestRender();});const stopLooking=()=>{looking=false;};canvas.addEventListener('pointercancel',stopLooking);canvas.addEventListener('lostpointercapture',stopLooking);canvas.addEventListener('pointerup',e=>{const was=looking;looking=false;if(walk||was||(e.clientX-downX)**2+(e.clientY-downY)**2>16)return;const r=canvas.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObject(lotMesh)[0];if(hit){const a=lotWorld(lots[hit.instanceId]);outline.visible=true;outline.position.set(a.x,.2,a.z);outline.scale.set(a.w,1,a.d);onSelect(lots[hit.instanceId]);requestRender();}});
+  let looking=false,lx=0,ly=0;canvas.addEventListener('pointerdown',e=>{if(walk){looking=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture?.(e.pointerId);}});canvas.addEventListener('pointermove',e=>{if(!walk||!looking)return;camera.rotation.y-=(e.clientX-lx)*.004;camera.rotation.x=clamp(camera.rotation.x-(e.clientY-ly)*.004,-1.25,1.25);lx=e.clientX;ly=e.clientY;requestRender();});const stopLooking=()=>{looking=false;};canvas.addEventListener('pointercancel',stopLooking);canvas.addEventListener('lostpointercapture',stopLooking);canvas.addEventListener('pointerup',stopLooking);
   const syncTarget=()=>{camera.lookAt(controls.target);camera.updateMatrixWorld();};let startMotion;const tick=()=>{raf=0;if(disposed||contextLost)return;const dt=Math.min(.05,clock.getDelta());let moving=false;if(tween){const t=clamp((performance.now()-tween.start)/tween.duration,0,1),s=t*t*(3-2*t);camera.position.lerpVectors(tween.from,tween.to,s);controls.target.lerpVectors(tween.targetFrom,tween.targetTo,s);syncTarget();if(t===1)tween=null;else moving=true;}if(walk){const f=(keys.forward?1:0)-(keys.back?1:0),side=(keys.right?1:0)-(keys.left?1:0);if(f||side){const forward=new THREE.Vector3(0,0,-1).applyEuler(camera.rotation);forward.y=0;forward.normalize();const right=new THREE.Vector3(1,0,0).applyEuler(camera.rotation);const p=moveAlongRoad([camera.position.x,camera.position.z],(forward.x*f+right.x*side)*dt*11,(forward.z*f+right.z*side)*dt*11);camera.position.set(p[0],2.05,p[1]);controls.target.copy(camera.position).add(forward);moving=true;}}render();if(moving||Object.values(keys).some(Boolean))startMotion();};startMotion=()=>{if(!raf&&!disposed)raf=requestAnimationFrame(tick);};
   stepFrame=tick;
   const map={KeyW:'forward',ArrowUp:'forward',KeyS:'back',ArrowDown:'back',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right'},clear=()=>Object.keys(keys).forEach(k=>keys[k]=false),down=e=>{if(e.target?.matches('input,textarea,select,[contenteditable=true]')||e.target?.closest('dialog'))return;if(walk&&map[e.code]){e.preventDefault();keys[map[e.code]]=true;startMotion();}},up=e=>{if(map[e.code])keys[map[e.code]]=false;};addEventListener('keydown',down);addEventListener('keyup',up);addEventListener('blur',clear);

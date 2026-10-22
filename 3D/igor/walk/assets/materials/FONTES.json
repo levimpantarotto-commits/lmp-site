@@ -1,0 +1,16 @@
+{
+  "license": "CC0 conforme CREDITOS.txt da base da maquete e materiais-terreno.json quando aplicável",
+  "derivation": "JPEG 2048x2048 -> JPEG 1024x1024 via Sharp/lanczos3/quality 85; nenhum canvas, desenho ou geração de textura.",
+  "derived": [
+    {"output":"telha-diff.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/telha-diff.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"6A8B6E747B2EE5131225990FC0D62E0898F787697916C85F4FD01B32FBBF91D2"},
+    {"output":"telha-normal.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/telha-normal.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"63A8AFB8CAD6E49F7FC670C42CF0D4E1A711F264B41F0074285A41B1B850CB58"},
+    {"output":"prado-diff.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/prado-diff.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"4272BDDC71A7FA659D1DEEB13A9DF8C42E68A5AC8CDE7523187E4A081E028258"},
+    {"output":"prado-normal.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/prado-normal.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"EFFA95C06AF273C974476D9A74A234668A1C9292F60FFFB4FA40348D638EE7F3"},
+    {"output":"reboco-diff.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/reboco-diff.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"6FD812ED8DD5BE1873C29AEEF38CE9BF1FB30A22C6D4B3A12DB725E98C26A1BE"},
+    {"output":"reboco-normal.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/reboco-normal.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"2D601A46ED5CE2AF866741C53CAFA3CBA472620C272E633B6484D4DE16A80EB1"},
+    {"output":"cascalho-diff.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/cascalho-diff.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"C8D35E03A2D2B2DFB39D686E44E45B9CEFF3BDC5E9ED9E82393997B1D2A48880"},
+    {"output":"cascalho-normal.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/cascalho-normal.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"661B107C1ABCD82C7447F8C49238B504F02E8D12AA0406C029410F8073F12BA5"},
+    {"output":"concreto-diff.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/concreto-diff.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"5AF96604B20E29862B449D86981B196B18BA5CBCB8659C451DD8976411A36130"},
+    {"output":"concreto-normal.jpg","source":"work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/concreto-normal.jpg","sourceDimensions":"2048x2048","outputDimensions":"1024x1024","sourceSha256":"3D1F1C7A5F20A5F7A15F3BC5C5F58C0FDCAF49E71E65A5F17E086B551895C00C"}
+  ]
+}

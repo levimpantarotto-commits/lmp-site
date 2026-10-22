@@ -1,6 +1,8 @@
-// Coordenadas em pixels da implantação ilustrada oficial (750 × 1500).
-// NÃO são metros, cadastro, cotas de terreno, IDs de quadras ou lotes oficiais.
+// Coordenadas de navegação derivadas da implantação raster (grade lógica 750 × 1500).
+// A planta exibida tem 1500 × 3000 px; isto não é CAD, cadastro ou escala métrica.
 export const WIDTH=750, HEIGHT=1500;
+export const PLAN_ASSET='./assets/planta_implantacao_20261022.webp';
+export const PLAN_IMAGE={width:1500,height:3000,sourceWidth:2080,sourceHeight:4160,classification:'raster de divulgação'};
 export const toWorld=(x,y)=>[(x-375)*0.45, (y-750)*0.45];
 export const roads=[
  [[92,43],[160,86],[231,105],[310,110],[343,280],[335,285],[329,300],[335,315],[340,330],[304,430],[272,529],[237,647],[218,731],[214,816],[221,897],[213,974],[198,1050],[200,1135],[212,1210],[220,1295],[232,1382],[232,1434]],
@@ -18,10 +20,14 @@ const rows=[
  [250,548,748,796,25],[258,568,827,872,26],[267,574,903,948,26],[251,576,978,1022,28],
  [232,582,1053,1099,29],[234,590,1130,1176,30]
 ];
-export const lots=rows.flatMap(([x0,x1,y0,y1,n],row)=>Array.from({length:n*2},(_,i)=>{
+// Células internas só sustentam a distribuição ilustrativa opcional de casas.
+// Não são desenhadas, clicáveis nem apresentadas como lotes/estoque ao visitante.
+export const architectureCells=rows.flatMap(([x0,x1,y0,y1,n],row)=>Array.from({length:n*2},(_,i)=>{
  const col=Math.floor(i/2), side=i%2, w=(x1-x0)/n, d=(y1-y0)/2;
  return {key:`amostra-${row}-${col}-${side}`,x:x0+col*w+.5,y:y0+side*d+.5,w:w-1,d:d-1,row,col,side,kind:'residencial',classification:'ilustrativo'};
 }));
+// Compatibilidade privada com a amostra de arquitetura; não é contrato de UI.
+export const lots=architectureCells;
 export const stops=[
  {id:'geral',title:'O bairro por inteiro',description:'Implantação derivada da imagem de divulgação. Veja os lotes, as ruas e a faixa verde.',pixel:[405,845],camera:[470,520,470],target:[10,0,38]},
  {id:'acesso',title:'Pelo acesso principal',description:'A rotatória conecta a avenida ao eixo do loteamento.',pixel:[350,300],camera:[15,18,-160],target:[-6,0,-197]},
