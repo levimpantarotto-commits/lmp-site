@@ -1,0 +1,5 @@
+{
+  "rewrites": [{"source":"/3D","destination":"/3D/index.html"}],
+  "redirects": [{"source":"/3d","destination":"/3D","permanent":false},{"source":"/3d/:path*","destination":"/3D/:path*","permanent":false}],
+  "headers": [{"source":"/3D/(.*)","headers":[{"key":"X-Content-Type-Options","value":"nosniff"}]}]
+}
