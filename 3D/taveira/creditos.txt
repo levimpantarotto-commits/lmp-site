@@ -1,17 +1,17 @@
-LMP — Estudo de varanda / Taveira — outubro de 2026
+JARDIM SÃO FRANCISCO — estudo imersivo LMP para Taveira
+Fontes verificadas em 22/10/2026:
+Book Loteamento São Francisco, fornecido pelo usuário, página 5 (implantação) e páginas 13–18 (perspectivas/entorno).
+Site do empreendimento: https://novojardimsaofrancisco.com.br/
+Implantação ilustrada base: https://novojardimsaofrancisco.com.br/wp-content/uploads/2026/05/planta_imp_fn02_base.webp
+Implantação ilustrada com anotações: https://novojardimsaofrancisco.com.br/wp-content/uploads/2026/05/planta_imp_fn02_completa.webp
+Perspectivas: foto_aerea_02_fn02.webp, rua_residencial_fn01-copy.webp, rua_comercial_fn01-copy.webp, acesso_fn01-copy.webp, parque_linear_fn01-copy.webp, no diretório público /wp-content/uploads/2026/05/ do mesmo domínio.
+Imagens de divulgação do empreendimento, direitos dos respectivos autores. Não são fotografias de construções entregues. Créditos não transferem autoria à LMP.
 
-REFERÊNCIA FOTOGRÁFICA
-Anúncio CA0403_LI, Reserva da Serra, Jundiaí, catálogo Lançou.
-https://static.arboimoveis.com.br/CA0403_LI/visao-varanda-reserva-da-serra1774988178280.jpeg
-https://static.arboimoveis.com.br/CA0403_LI/entrada-para-escritorio-reserva-da-serra1774988127459.jpeg
-https://static.arboimoveis.com.br/CA0403_LI/roll-de-entrada-escada-reserva-da-serra1774988178221.jpeg
-Fotos pertencem a seus respectivos titulares. Usadas como referência e comparação no estudo solicitado.
+DERIVADO: organização espacial orientada pela imagem raster. Não equivale a levantamento, projeto aprovado, planta cadastral ou escala métrica. A amostra de subdivisões do 3D não é inventário oficial dos lotes; não possui IDs cadastrais ou medidas.
+ILUSTRATIVO: casas hipotéticas opcionais, vegetação tridimensional, luz e materiais. Terreno plano de demonstração, NÃO relevo real. Não representar áreas livres como lotes disponíveis. Não há preço, estoque ou condição comercial validada neste estudo.
+Para reconstrução fiel: implantação CAD/vetorial, levantamento topográfico/DEM, cotas e cadastro de lotes reconciliado.
 
-MODELO
-Modelagem própria em Blender. Exterior parcial, não levantamento, não planta medida.
-Proporções, detalhes, luz e paisagem aproximados. Interiores não reconstruídos.
-
-SOFTWARE
-Three.js — licença MIT em vendor/LICENSE-Three.txt.
-Materiais da varanda: cores próprias e microtextura procedural; não representam marca ou acabamento especificado.
-Árvores ilustrativas do entorno: tree_small_02, Poly Haven (CC0), LOD e texturas reduzidos para este estudo: https://polyhaven.com/a/tree_small_02
+Three.js — MIT; licença incluída em vendor/LICENSE-Three.txt.
+Árvore derivada de tree_small_02, Poly Haven, CC0: https://polyhaven.com/a/tree_small_02
+Materiais/casas procedurais: estudo ilustrativo LMP. Nenhum interior real reconstruído.
+Esta versão substitui o recorte incorreto da varanda CA0403_LI; aquele imóvel não é o loteamento solicitado.

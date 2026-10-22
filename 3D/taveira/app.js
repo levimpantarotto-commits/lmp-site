@@ -1,68 +1,16 @@
-const $ = s => document.querySelector(s);
-let viewer, starting = false, attempt = 0, reloadRequired = false;
-const cover = $('#cover'), start = $('#start'), message = $('#load-message');
-const photoTitles = {varanda:'A varanda real.',entrada:'A entrada real.',escada:'A escada real.'};
-function showPhoto(name='varanda') {
-  $('#real-photo').src = `./assets/${name}.jpeg`;
-  $('#real-photo').alt = `Fotografia real: ${name}`;
-  $('#photo-title').textContent = photoTitles[name];
-  document.querySelectorAll('[data-photo]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.photo===name)));
-  if (!$('#photo-dialog').open) $('#photo-dialog').showModal();
-  viewer?.pause();
-}
-$('#compare').addEventListener('click',()=>showPhoto());
-$('#other-photos').addEventListener('click',()=>showPhoto('entrada'));
-document.querySelectorAll('[data-photo]').forEach(b=>b.addEventListener('click',()=>showPhoto(b.dataset.photo)));
-$('#about').addEventListener('click',()=>{$('#about-dialog').showModal();viewer?.pause();});
-document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>document.getElementById(b.dataset.close).close()));
-document.querySelectorAll('dialog').forEach(d=>d.addEventListener('close',()=>viewer?.refresh()));
-function setMode(walking) {
-  $('#walk').setAttribute('aria-pressed',String(walking));
-  $('#walk').innerHTML = walking?'Sair da caminhada <span aria-hidden="true">↗</span>':'Caminhar <span aria-hidden="true">↗</span>';
-  $('#walk-pad').hidden = !walking;
-  $('#mode-hint').textContent = walking?'Arraste para olhar · setas para caminhar':'Arraste para olhar ao redor';
-  if (walking) document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed','false'));
-}
-function failed(error) {
-  viewer?.dispose();viewer = null;starting=false;
-  reloadRequired=true;cover.hidden=false;start.disabled=false;start.innerHTML='Recarregar a experiência ↗';
-  message.textContent='O 3D não abriu neste navegador. As fotos continuam disponíveis; você pode tentar novamente.';
-  $('#scene-label').hidden=true;$('#mode-hint').hidden=true;setMode(false);
-  document.querySelectorAll('[data-view], #walk').forEach(b=>b.disabled=true);
-  console.warn('Varanda: carregamento interrompido',error?.message||error);
-}
-start.addEventListener('click',async()=>{
-  if(starting||viewer)return;
-  if(reloadRequired){location.reload();return;}
-  const currentAttempt=++attempt;
-  starting=true;start.disabled=true;message.textContent='Preparando a varanda…';
-  try {
-    const {createViewer} = await import('./viewer.js');
-    const created=await createViewer($('#canvas-wrap'),{onError:error=>{if(currentAttempt===attempt){attempt++;failed(error);}},onProgress:value=>{if(currentAttempt===attempt)message.textContent=value;}});
-    if(currentAttempt!==attempt){created.dispose();return;}
-    viewer=created;
-    cover.hidden=true;$('#scene-label').hidden=false;$('#mode-hint').hidden=false;
-    document.querySelectorAll('[data-view], #walk').forEach(b=>b.disabled=false);
-    $('#quality-label').textContent='Exterior parcial · paisagem ilustrativa';
-    starting=false;
-    viewer.refresh();
-  }catch(error){if(currentAttempt===attempt){attempt++;failed(error);}}
-});
-document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{
-  if(!viewer)return;viewer.view(Number(b.dataset.view));setMode(false);
-  document.querySelectorAll('[data-view]').forEach(v=>v.setAttribute('aria-pressed',String(v===b)));
-  $('#scene-state').textContent=b.textContent.trim();
-}));
-$('#walk').addEventListener('click',()=>{
-  if(!viewer)return;const walking=$('#walk').getAttribute('aria-pressed')!=='true';viewer.walk(walking);setMode(walking);
-  $('#scene-state').textContent=walking?'↗ Caminhando na varanda':'01 Varanda';
-  if(!walking)document.querySelector('[data-view="0"]').setAttribute('aria-pressed','true');
-});
-document.querySelectorAll('[data-move]').forEach(b=>{
-  function stop(){b.classList.remove('pressed');viewer?.move(b.dataset.move,false);}
-  b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);b.classList.add('pressed');viewer?.move(b.dataset.move,true);});
-  ['pointerup','pointercancel','lostpointercapture','blur'].forEach(type=>b.addEventListener(type,stop));
-});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)viewer?.pause();else viewer?.refresh();});
-window.addEventListener('blur',()=>viewer?.pause());
-window.__varandaQA=()=>viewer?viewer.inspect():{ready:false,loading:starting};
+import {stops} from './layout.js';
+const $=id=>document.getElementById(id);let viewer=null,attempt=0,walking=false;
+const refs=[['Rua residencial','rua_residencial_fn01-copy.webp'],['Rua comercial','rua_comercial_fn01-copy.webp'],['Acesso principal','acesso_fn01-copy.webp'],['Parque linear','parque_linear_fn01-copy.webp']];
+function walk(value){walking=value;viewer?.setWalk(value);$('walk').setAttribute('aria-pressed',String(value));$('walk').textContent=value?'Sair da caminhada':'Caminhar';$('walk-pad').hidden=!value;$('hint').textContent=value?'Arraste para olhar · WASD ou setas para andar':'Arraste para girar · aproxime para explorar';}
+function showDialog(id){walk(false);$('selection').hidden=true;$(id).showModal();}
+$('about').onclick=()=>showDialog('about-dialog');$('map-open').onclick=$('static-map').onclick=$('selected-reference').onclick=()=>showDialog('map-dialog');$('reference').onclick=()=>showDialog('reference-dialog');
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
+document.querySelectorAll('[data-reference]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.reference);$('reference-title').textContent=refs[i][0];$('reference-image').src='./assets/'+refs[i][1];$('reference-image').alt='Perspectiva ilustrada de divulgação: '+refs[i][0];document.querySelectorAll('[data-reference]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+function goTo(i){if(!viewer)return;walk(false);$('selection').hidden=true;viewer.goTo(i);$('scene-title').textContent=stops[i].title;$('description').textContent=stops[i].description;$('step').textContent=`0${i+1} / 05`;document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.view)===i)));}
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>goTo(Number(b.dataset.view)));
+function fail(message){attempt++;viewer?.dispose();viewer=null;window.__taveiraViewer=null;walking=false;$('canvas-wrap').replaceChildren();['scene-top','scene-tools','scene-disclaimer','walk-pad','bottom','selection'].forEach(id=>$(id).hidden=true);$('cover').hidden=false;$('start').disabled=false;$('start').textContent='Tentar abrir o 3D novamente ↗';$('load-state').textContent=`O 3D foi interrompido. ${String(message||'').slice(0,120)} A implantação sem 3D continua disponível abaixo.`;}
+async function start(){const token=++attempt;$('start').disabled=true;$('load-state').textContent='Preparando a implantação e a navegação…';let timer=setTimeout(()=>{if(token===attempt)fail('Tempo de carregamento excedido.');},30000);try{const {createViewer}=await import('./viewer.js');if(token!==attempt)return;const instance=await createViewer($('canvas-wrap'),{onSelect:()=>{$('selection').hidden=false;},onStatus:()=>{},onFail:message=>{if(token===attempt)fail(message);}});if(token!==attempt){instance?.dispose();return;}clearTimeout(timer);viewer=instance;window.__taveiraViewer=viewer;$('cover').hidden=true;['scene-top','scene-tools','scene-disclaimer','bottom'].forEach(id=>$(id).hidden=false);$('houses').setAttribute('aria-pressed','false');$('load-state').textContent='';goTo(0);}catch(error){if(token===attempt)fail(error.message);}finally{clearTimeout(timer);}}
+$('start').onclick=start;$('walk').onclick=()=>{if(viewer){$('selection').hidden=true;walk(!walking);}};$('houses').onclick=()=>{if(!viewer)return;const value=$('houses').getAttribute('aria-pressed')!=='true';viewer.setHouses(value);$('houses').setAttribute('aria-pressed',String(value));$('scene-disclaimer').textContent=value?'Casas hipotéticas · não incluídas nos lotes · relevo esquemático':'Implantação ilustrada · relevo não modelado';};$('selection-close').onclick=()=>$('selection').hidden=true;
+document.querySelectorAll('[data-move]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);viewer?.setMove(b.dataset.move,true);});['pointerup','pointercancel','lostpointercapture'].forEach(type=>b.addEventListener(type,()=>viewer?.setMove(b.dataset.move,false)));});
+window.addEventListener('keydown',e=>{if(e.key==='Escape')walk(false);});window.addEventListener('blur',()=>walk(false));window.addEventListener('pagehide',()=>{attempt++;viewer?.dispose();});
