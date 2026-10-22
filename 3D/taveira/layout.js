@@ -25,7 +25,7 @@ export const lots=rows.flatMap(([x0,x1,y0,y1,n],row)=>Array.from({length:n*2},(_
 export const stops=[
  {id:'geral',title:'O bairro por inteiro',description:'Implantação derivada da imagem de divulgação. Veja os lotes, as ruas e a faixa verde.',pixel:[405,845],camera:[470,520,470],target:[10,0,38]},
  {id:'acesso',title:'Pelo acesso principal',description:'A rotatória conecta a avenida ao eixo do loteamento.',pixel:[350,300],camera:[15,18,-160],target:[-6,0,-197]},
- {id:'ruas',title:'Na frente dos lotes',description:'Percorra o trecho residencial. As divisões destacadas são uma amostra visual, sem numeração cadastral.',pixel:[430,810],camera:[20,13,32],target:[-55,0,27]},
+ {id:'ruas',title:'Na frente dos lotes',description:'Casas variadas inspiradas nas perspectivas oficiais. Implantação amostral; casas não incluídas nos lotes.',pixel:[430,810],camera:[40,7,28],target:[25,1.2,14]},
  {id:'verde',title:'Ao lado da faixa verde',description:'Veja a relação entre a vegetação e as quadras, conforme a implantação ilustrada.',pixel:[215,1080],camera:[-10,55,150],target:[-105,0,130]},
  {id:'parque',title:'Até a área de lazer',description:'Localização indicada na implantação de divulgação. Consulte o projeto e o estágio atual das obras.',pixel:[635,1306],camera:[160,70,280],target:[110,0,245]}
 ];

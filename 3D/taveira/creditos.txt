@@ -15,4 +15,11 @@ Three.js — MIT; licença incluída em vendor/LICENSE-Three.txt.
 Árvore derivada de tree_small_02, Poly Haven, CC0: https://polyhaven.com/a/tree_small_02
 Vegetação: centros isolados e copas de calçada anotados visualmente sobre a implantação 750x1500; precisão limitada ao desenho. Cinco perímetros de mata derivados da mesma imagem recebem preenchimento de copas 3D ilustrativas. Não há inventário de espécies, altura ou posição de cada árvore real. Os maciços NÃO são uma reconstrução exata de indivíduos. A imagem oficial acessível no mapa permanece inalterada.
 Materiais/casas procedurais: estudo ilustrativo LMP. Nenhum interior real reconstruído.
+Revisão arquitetônica: 82 exemplares em cinco tipologias inspiradas na perspectiva
+aérea de abertura e na perspectiva residencial: térrea com telha, sobrado,
+platibanda, volumes escalonados com garagem e casa com pergolado. A implantação
+é amostral, NÃO transcrição de cada casa da perspectiva. Casas são exibidas
+inicialmente, podem ser ocultadas e NÃO estão incluídas na venda dos lotes.
+Quadra, piso de estar e bancos derivam aproximadamente da área de lazer sudeste
+indicada na implantação. Não certificam equipamento, dimensão ou obra executada.
 Esta versão substitui o recorte incorreto da varanda CA0403_LI; aquele imóvel não é o loteamento solicitado.

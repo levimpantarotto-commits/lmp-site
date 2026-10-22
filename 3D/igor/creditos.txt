@@ -1,0 +1,13 @@
+Fontes públicas consultadas em 22/10/2026
+Imóvel: https://www.imobiliariapraiadorosa.com.br/property/linda-casa-no-rosa-com-matricula~202
+Fotografias: https://www.imobiliariapraiadorosa.com.br/uploads/media/sc14-1713538322-800X500.jpg
+Acervo classificado internamente como fotografias do catálogo; ligação entre ambientes não validada.
+
+ESTUDO 3D EXPERIMENTAL: o percurso em /walk/ conecta uma hipótese de ambientes
+a partir das 29 fotografias do mesmo anúncio. Não é tour 360, digital twin,
+levantamento métrico, planta validada ou reprodução fiel da casa real.
+Materiais e elementos visíveis orientaram a modelagem; medidas, distribuição,
+escala, conexões dos quartos, acesso ao deck/anexo e entorno são estimados.
+As fotografias originais continuam disponíveis para comparação. Nenhuma
+disponibilidade, preço, metragem ou atributo comercial novo foi acrescentado.
+Three.js r180, MIT; licença em walk/vendor/LICENSE-Three.txt.
