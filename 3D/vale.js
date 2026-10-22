@@ -10,11 +10,17 @@ import {createTerrainSampler,createRoadExclusion} from './vale-spatial.js';
 import {treeVariation} from './vale-tree-variation.js';
 import {collectGardenAnchors} from './vale-gardens.js';
 import {keepBuildingsWithinTerrain,addTerrainSkirt} from './vale-boundary.js';
+import {quality,lite,budget,installAssetBudget} from './vale-quality.js';
+installAssetBudget(THREE);
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],AS='./assets/maquete/';
 const preferences=matchMedia('(prefers-reduced-motion: reduce)'),query=new URLSearchParams(location.search);
 let reduced=preferences.matches&&query.get('motion')!=='full',renderer,scene,camera,controls,data,ground,surface,mask,photo,buildings,ready=false;
 let architectureStats=null;
+let stage='início',fatal=false,contextLost=false,gpu=null;
+const warnings=[];
+function checkpoint(name){if(fatal)throw Error('Carregamento interrompido');stage=name;$('#load-text').textContent=name;}
+async function optional(name,work,fallback){checkpoint(name);try{return await work();}catch(error){warnings.push(name);console.warn('Detalhe indisponível:',name,error);return fallback;}}
 const buildingFootprintCells=new Set();
 function registerBuildingFootprints(root){
  root.updateMatrixWorld(true);const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3(),n=new THREE.Vector3();
@@ -37,7 +43,7 @@ const copy=[
  ['04 / EDIFICAÇÕES','Do território<br><em>à rua.</em>','Os volumes do cadastro recebem fachadas modeladas, ruas, veículos e iluminação. Os acabamentos são ilustrativos.','GEOMETRIA PÚBLICA / DETALHES MODELADOS'],
  ['05 / POVOADO','Paredes, janelas.<br><em>Escala humana.</em>','Um conjunto de edifícios, e não uma casa solta. A base geográfica é pública; fachadas e objetos próximos são completados artisticamente.','BASE PÚBLICA / DETALHAMENTO ILUSTRATIVO']
 ];
-function request(){if(!raf&&active&&renderer)raf=requestAnimationFrame(render);}
+function request(){if(!fatal&&!raf&&active&&renderer)raf=requestAnimationFrame(render);}
 function sample(a,x,z){const n=data.n,u=THREE.MathUtils.clamp(x+500,0,999.999),v=THREE.MathUtils.clamp(z+500,0,999.999),c=Math.floor(u),r=Math.floor(v),tx=u-c,tz=v-r;return THREE.MathUtils.lerp(THREE.MathUtils.lerp(a[r*n+c],a[r*n+c+1],tx),THREE.MathUtils.lerp(a[(r+1)*n+c],a[(r+1)*n+c+1],tx),tz);}
 function makeStops(){
  let forestView={p:[-325,sample(ground,-325,-190)+1.8,-190],t:[-345,sample(ground,-345,-210)+6,-210]},best=-Infinity;
@@ -75,11 +81,13 @@ async function tour(){if(playing){cancel();return;}playing=true;$('#visit').text
 function setWalk(value){if(!ready)return;walk=value;keys.clear();controls.enabled=!walk;$('#walk-hud').hidden=!walk;document.body.classList.toggle('walking',walk);$('#walk').textContent=walk?'Sair da caminhada ×':'Explorar a pé ↗';if(walk){cancel();const d=camera.getWorldDirection(new THREE.Vector3());camera.position.y=sample(ground,camera.position.x,camera.position.z)+1.7;controls.target.copy(camera.position).add(d);request();}}
 function walkFrame(dt){if(!walk||!keys.size)return;const forward=camera.getWorldDirection(new THREE.Vector3());forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize(),move=new THREE.Vector3();if(keys.has('w')||keys.has('ArrowUp'))move.add(forward);if(keys.has('s')||keys.has('ArrowDown'))move.sub(forward);if(keys.has('a')||keys.has('ArrowLeft'))move.sub(right);if(keys.has('d')||keys.has('ArrowRight'))move.add(right);if(!move.lengthSq())return;move.normalize().multiplyScalar(dt*3.5);ray.set(camera.position,move.clone().normalize());ray.far=move.length()+.6;if(buildings&&ray.intersectObject(buildings,true).length)return;const p=camera.position.clone().add(move);p.x=THREE.MathUtils.clamp(p.x,-495,495);p.z=THREE.MathUtils.clamp(p.z,-495,495);p.y=sample(ground,p.x,p.z)+1.7;if(Math.abs(p.y-camera.position.y)>2)return;const delta=p.clone().sub(camera.position);camera.position.copy(p);controls.target.add(delta);camera.lookAt(controls.target);}
 function render(now){
- raf=0;if(!active)return;const dt=Math.min(.05,(now-last)/1000||.016);last=now;
+ try{
+ raf=0;if(fatal||!active)return;const dt=Math.min(.05,(now-last)/1000||.016);last=now;
  if(transition){const t=transition,p=Math.min(1,(now-t.start)/t.duration),s=p*p*(3-2*p);camera.position.copy(t.p).multiplyScalar((1-s)**2).addScaledVector(t.mid,2*(1-s)*s).addScaledVector(vec(t.to.p),s*s);controls.target.lerpVectors(t.t,vec(t.to.t),s);camera.fov=THREE.MathUtils.lerp(t.f,t.to.f,s);camera.updateProjectionMatrix();if(p===1){transition=null;t.resolve(true);}}
  walkFrame(dt);
  if(!walk){camera.position.x=THREE.MathUtils.clamp(camera.position.x,-2000,2000);camera.position.z=THREE.MathUtils.clamp(camera.position.z,-2000,2000);if(ground&&Math.abs(camera.position.x)<498&&Math.abs(camera.position.z)<498)camera.position.y=Math.max(camera.position.y,sample(ground,camera.position.x,camera.position.z)+1.7);controls.update();}
  updateForest();understory(camera);streetStats.update?.(camera);rockStats.update?.(camera);updateSun();water?.update(now/1000,renderer,camera);renderer.render(scene,camera);frames++;if(transition||(walk&&keys.size))request();
+ }catch(error){unavailable(error);}
 }
 // Match the brightest source of ceu.hdr (measured by analisar_luz.mjs).
 // This is illustrative lighting, not a date/location solar simulation.
@@ -110,10 +118,11 @@ async function buildGround(){data=await fetch(AS+'vale.json').then(r=>r.json());
 }
 async function buildBuildings(){const [g,facadeManifest]=await Promise.all([new GLTFLoader().loadAsync(AS+'arquitetura-detalhada.glb'),fetch(AS+'fachadas-planos.json').then(r=>r.json())]);buildings=g.scene;const boundary=keepBuildingsWithinTerrain(buildings,{buildings:facadeManifest.buildings});architectureStats=await finishArchitecture({gltf:g,renderer,facadeManifest,sample:createTerrainSampler(ground,data.n,2),roadExclusion});architectureStats.boundary=boundary;buildings.traverse(o=>{if(!o.isMesh)return;o.castShadow=!/Glass|interior/.test(o.name);o.receiveShadow=true;for(const m of (Array.isArray(o.material)?o.material:[o.material])){if(!m.name.startsWith('PBR '))m.envMapIntensity=.6;for(const key of ['map','normalMap','roughnessMap'])if(m[key])m[key].anisotropy=8;}});scene.add(buildings);}
 async function buildForest(){
- const [g,meta]=await Promise.all([new GLTFLoader().loadAsync(AS+(innerWidth<700?'floresta-lods-mobile.glb':'floresta-lods.glb')),fetch(AS+'floresta-lods.json').then(r=>r.json())]);g.scene.updateMatrixWorld(true);
+ const [g,meta]=await Promise.all([new GLTFLoader().loadAsync(AS+(lite?'floresta-lods-mobile.glb':'floresta-lods.glb')),fetch(AS+'floresta-lods.json').then(r=>r.json())]);g.scene.updateMatrixWorld(true);
  for(let v=0;v<meta.variants.length;v++){
   prototypes.push(meta.variants[v]);const levels=[];
   for(const [li,lod] of ['near','mid','far'].entries()){
+   if(lite&&li===0){levels.push([]);instances.push([]);continue;}
    const prefix=`v${v}_${lod}`,node=g.scene.getObjectByName(prefix),group=[];if(!node)throw new Error('LOD ausente: '+prefix);
    node.traverse(o=>{if(!o.isMesh)return;const geo=o.geometry.clone();geo.applyMatrix4(o.matrixWorld);const ms=Array.isArray(o.material)?o.material.map(m=>m.clone()):o.material.clone();
     for(const m of (Array.isArray(ms)?ms:[ms])){m.side=THREE.DoubleSide;m.envMapIntensity=.5;if(m.isMeshBasicMaterial)m.color.setRGB(.68,.71,.65);if(m.map)m.map.anisotropy=8;if(m.transparent||m.alphaTest>0){m.transparent=false;m.depthWrite=true;m.alphaTest=.42;m.alphaToCoverage=true;}m.needsUpdate=true;}
@@ -126,34 +135,46 @@ function updateForest(force=false){
  if(!forestLods.length||!ground)return;if(!force&&camera.position.distanceToSquared(lastForest)<9)return;lastForest.copy(camera.position);
  const cs=forestLods.map(()=>[0,0,0]);renderedTrees=0;let nearTotal=0,midTotal=0;
  const ranked=displayCrowns.map((t,i)=>({t,i,d:Math.hypot(t[0]-camera.position.x,t[1]+t[3]*.65-camera.position.y,t[2]-camera.position.z)})).sort((a,b)=>a.d-b.d);
- for(const {t,d} of ranked){const variation=treeVariation(t[0],t[2],forestLods.length),v=variation.variant,p=prototypes[v];let li=2;if(d<60&&nearTotal<(innerWidth<700?8:18)){li=0;nearTotal++;}else if(d<(innerWidth<700?230:300)&&midTotal<(innerWidth<700?100:220)){li=1;midTotal++;}const group=forestLods[v][li],k=cs[v][li];
+ for(const {t,d} of ranked){const variation=treeVariation(t[0],t[2],forestLods.length),v=variation.variant,p=prototypes[v];let li=2;if(d<60&&nearTotal<budget.treesNear){li=0;nearTotal++;}else if(d<budget.treeDistance&&midTotal<budget.treesMid){li=1;midTotal++;}const group=forestLods[v][li],k=cs[v][li];
   const h=THREE.MathUtils.clamp(t[3],5,33),sy=h/(p.height_m||p.height||5),base=THREE.MathUtils.clamp(h*.88,6,23)/(p.width_m||p.width||5),sx=base*variation.scaleX,sz=base*variation.scaleZ;
   dummy.position.set(t[0],t[1]-.45*Math.max(sx,sz),t[2]);dummy.scale.set(sx,sy,sz);dummy.rotation.set(0,variation.yaw,0);dummy.updateMatrix();
   for(const m of group){m.setMatrixAt(k,dummy.matrix);m.setColorAt(k,new THREE.Color().setRGB(...variation.color));}cs[v][li]++;renderedTrees++;
  }
  forestLods.forEach((levels,v)=>levels.forEach((group,l)=>group.forEach(m=>{m.count=cs[v][l];m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;})));
 }
-function unavailable(error){console.error('Vale:',error);document.body.classList.add('unavailable');$('#loading').hidden=true;$('#fallback').hidden=false;$$('footer button,.tools button,#visit').forEach(b=>b.disabled=true);$('#status').textContent='O visor não concluiu o carregamento. A apresentação estática continua acessível.';}
+function unavailable(error){if(fatal)return;fatal=true;ready=false;active=false;keys.clear();if(raf)cancelAnimationFrame(raf);raf=0;console.error('Vale:',stage,error);document.body.classList.add('unavailable');$('#loading').hidden=true;$('#fallback').hidden=false;$$('footer button,.tools button,#visit').forEach(b=>b.disabled=true);
+ const code=contextLost?'GPU_CONTEXT_LOST':stage==='Preparando o visor'?'WEBGL_INIT':error?.name==='RangeError'?'MEMORY_OR_STACK':'LOAD_OR_RENDER';
+ const details={version:'mobile-2',quality,stage,code,message:String(error?.message||error).slice(0,240),gpu};window.__maqueteFailure=details;
+ $('#failure-details').textContent=`Código: ${code} · modo ${quality} · etapa: ${stage}\n${details.message}`;
+ $('#fallback-copy').textContent=code==='WEBGL_INIT'?'O navegador não conseguiu iniciar a aceleração 3D. Tente abrir este mesmo link no Chrome atualizado, fora do navegador de outro aplicativo.':code==='GPU_CONTEXT_LOST'?'O celular interrompeu o processamento gráfico. Feche outras abas e tente o modo leve abaixo.':'O carregamento parou antes de completar. Tente novamente no modo leve; o código abaixo ajuda a identificar a falha.';
+}
 async function init(){try{
  if(query.get('webgl')==='off')throw Error('Fallback solicitado');
- renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,innerWidth<700?1:1.5));renderer.setSize($('#world').clientWidth,$('#world').clientHeight);renderer.toneMapping=THREE.AgXToneMapping;renderer.toneMappingExposure=1.15;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;$('#world').appendChild(renderer.domElement);
+ checkpoint('Preparando o visor');renderer=new THREE.WebGLRenderer({antialias:!lite,powerPreference:lite?'default':'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,lite?1:1.5));renderer.setSize($('#world').clientWidth,$('#world').clientHeight);renderer.toneMapping=THREE.AgXToneMapping;renderer.toneMappingExposure=1.15;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;$('#world').appendChild(renderer.domElement);
+ const gl=renderer.getContext();gpu={textureUnits:gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS),maxTextureSize:gl.getParameter(gl.MAX_TEXTURE_SIZE)};
+ renderer.domElement.addEventListener('webglcontextlost',event=>{event.preventDefault();contextLost=true;unavailable(Error('Contexto gráfico interrompido pelo dispositivo.'));});
+ renderer.debug.onShaderError=()=>{throw Error('Não foi possível compilar um material para esta GPU.');};
  scene=new THREE.Scene();scene.background=new THREE.Color(0xb9c8cd);scene.fog=new THREE.Fog(0xbac5c6,950,3200);camera=new THREE.PerspectiveCamera(43,innerWidth/innerHeight,.15,6000);controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=false;controls.minDistance=.5;controls.maxDistance=2500;controls.maxPolarAngle=Math.PI*.9;controls.zoomSpeed=.7;controls.addEventListener('change',request);controls.addEventListener('start',cancel);
- scene.add(new THREE.HemisphereLight(0xe3f1ff,0x433e2c,.45));sun=new THREE.DirectionalLight(0xffedce,3.3);sun.castShadow=true;sun.shadow.mapSize.set(innerWidth<700?2048:4096,innerWidth<700?2048:4096);sun.shadow.normalBias=.05;sun.shadow.bias=-.00006;sun.shadow.radius=2;scene.add(sun,sun.target);
- const sky=new HDRLoader().loadAsync(AS+'ceu.hdr').then(t=>{t.mapping=THREE.EquirectangularReflectionMapping;scene.environment=t;scene.environmentIntensity=.65;scene.background=t;scene.backgroundBlurriness=.025;scene.backgroundIntensity=.85;request();});
- await buildGround();$('#load-text').textContent='Modelando floresta, ruas e fachadas…';const sampleGround=(x,z)=>sample(ground,x,z);
+ scene.add(new THREE.HemisphereLight(0xe3f1ff,0x433e2c,lite?.9:.45));sun=new THREE.DirectionalLight(0xffedce,3.3);sun.castShadow=true;sun.shadow.mapSize.set(budget.shadows,budget.shadows);sun.shadow.normalBias=.05;sun.shadow.bias=-.00006;sun.shadow.radius=2;scene.add(sun,sun.target);
+ await optional('Preparando a luz',async()=>{const t=await new HDRLoader().loadAsync(AS+'ceu.hdr');t.mapping=THREE.EquirectangularReflectionMapping;scene.environment=t;scene.environmentIntensity=.65;scene.background=t;scene.backgroundBlurriness=.025;scene.backgroundIntensity=.85;},null);
+ checkpoint('Preparando terreno e materiais');await buildGround();const sampleGround=(x,z)=>sample(ground,x,z);
  const displayedGround=createTerrainSampler(ground,data.n,2);
- water=buildValleyWater({scene,data,ground,sample:sampleGround});rockStats=await buildRiverRocks({scene,sample:displayedGround,water});
+ checkpoint('Preparando o rio');water=buildValleyWater({scene,data,ground,sample:sampleGround});rockStats=await optional('Preparando as rochas',()=>buildRiverRocks({scene,sample:displayedGround,water}),{});
+ checkpoint('Preparando as ruas');
  streets=await buildStreets({scene,renderer,sample:displayedGround,textures:terrainTextures});
  roadExclusion=createRoadExclusion(streets.routes.map(r=>({halfWidth:r.width/2+.35,points:r.curve.getSpacedPoints(Math.ceil(r.len)).map(p=>[p.x,p.z])})));
  const beforeRoadFilter=displayCrowns.length;
  displayCrowns=displayCrowns.filter(t=>!roadExclusion(t[0],t[2],Math.max(1.5,Math.min(3.5,t[3]*.1))));
  excludedRoadTrees=beforeRoadFilter-displayCrowns.length;makeStops();
- await Promise.all([sky,buildBuildings(),buildForest()]);registerBuildingFootprints(buildings);
+ checkpoint('Preparando as edificações');await buildBuildings();registerBuildingFootprints(buildings);
+ await optional('Preparando as árvores',buildForest,null);
  const gardenAnchors=collectGardenAnchors(buildings),gardenProfile=terrainTextures.setGardens(gardenAnchors);
  architectureStats.gardens={anchors:gardenAnchors.length,...gardenProfile.stats,illustrative:true};
- understory=await createUnderstory({scene,ground,mask,data,sample:displayedGround,gardenProfile,exclude:(x,z)=>roadExclusion(x,z,.25)||buildingFootprintCells.has(`${Math.floor(x/2)},${Math.floor(z/2)}`)});
- [streetStats,facadeDetails]=await Promise.all([buildStreetProps({scene,sample:displayedGround,streets}),addFacadeDetails({scene,buildings,renderer})]);
+ understory=await optional('Preparando a vegetação próxima',()=>createUnderstory({scene,ground,mask,data,sample:displayedGround,gardenProfile,exclude:(x,z)=>roadExclusion(x,z,.25)||buildingFootprintCells.has(`${Math.floor(x/2)},${Math.floor(z/2)}`)}),()=>{});
+ streetStats=await optional('Preparando os veículos',()=>buildStreetProps({scene,sample:displayedGround,streets}),{});
+ facadeDetails=await optional('Preparando os acabamentos',()=>addFacadeDetails({scene,buildings,renderer}),null);
  if(facadeDetails?.view)stops[3]=facadeDetails.view;
+ if(fatal)return;checkpoint('Finalizando a cena');$('#status').textContent=warnings.length?'Alguns detalhes não carregaram: '+warnings.join(', ')+'.':lite?'Modo leve para celular':'';
  ready=true;$('#loading').hidden=true;$('#walk').disabled=false;$('#visit').disabled=false;setCopy(0);request();new ResizeObserver(()=>{camera.aspect=$('#world').clientWidth/$('#world').clientHeight;camera.updateProjectionMatrix();renderer.setSize($('#world').clientWidth,$('#world').clientHeight);request();}).observe($('#world'));if(query.has('stop'))await go(THREE.MathUtils.clamp(Number(query.get('stop'))||0,0,4));if(query.get('walk')==='1')setWalk(true);window.dispatchEvent(new CustomEvent('maquete:ready'));
  }catch(e){unavailable(e);}}
 $$('[data-stop]').forEach(b=>b.onclick=()=>go(+b.dataset.stop));$('#visit').onclick=tour;$('#home').onclick=()=>go(0);$('#walk').onclick=async()=>{if(!ready)return;if(current===0)await go(1);setWalk(!walk);};$('#house-pin').hidden=true;
@@ -165,4 +186,6 @@ window.__maqueteSpatialQA=()=>({ready,excludedRoadTrees,displayedTreeCount:displ
 window.__maqueteArchitectureQA=()=>({...architectureStats,industrialReplacedTriangles:facadeDetails?.removedTriangles});
 // Local QA hook: deterministic architectural inspection from any side of the recorte.
 window.__maqueteView=(p,t)=>{cancel();setWalk(false);camera.position.fromArray(p);controls.target.fromArray(t);camera.updateProjectionMatrix();controls.update();request();};
+if(matchMedia('(pointer:coarse)').matches)$('#walk-hud p').textContent='Segure as setas para andar · arraste a cena para olhar';
+window.__maqueteDeviceQA=()=>({version:'mobile-2',quality,stage,ready,fatal,contextLost,gpu,warnings:[...warnings],textures:renderer?.info.memory.textures,geometries:renderer?.info.memory.geometries,budget});
 init();

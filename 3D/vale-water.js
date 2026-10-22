@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {lite} from './vale-quality.js';
 import {Reflector} from './vendor/Reflector.js';
 
 // The same manually interpreted corridor as the prior viewer. This is a visual
@@ -141,11 +142,11 @@ export function buildValleyWater({scene,data,ground,sample}){
  const mesh=new THREE.Mesh(geometry,material);mesh.name='Rio contínuo / nível e acabamento ilustrativos / DEM preservado';mesh.receiveShadow=true;mesh.renderOrder=1;scene.add(mesh);
  const qa={illustrative:true,demModified:false,interpretedOutletCorrection:{original:[OUTLINE[20],OUTLINE[21]],corrected:[CORRIDOR[20],CORRIDOR[21]],reason:'O contorno antigo terminava sobre um talude ~10 m acima do leito; saída reposicionada sobre o corredor baixo do DEM.'},sectionCount:N,sectionStepM:STEP,profileUpstreamM:profile[0],profileDownstreamM:profile[N-1],maxProfileGrade:Math.max(...profile.slice(1).map((h,i)=>(profile[i]-h)/STEP)),waterAreaM2:wetArea,corridorAreaM2:corridorArea,wetAreaFraction:wetArea/corridorArea,wetSampleFraction:wetSamples/allSamples,formerWetSampleFraction:oldWetSamples/allSamples,dryCrossSections:rowWet.filter(n=>!n).length,minimumWetWidthSampleM:Math.min(...rowWet)*STEP,connectedComponents:componentCount,fullLengthComponents,largestComponentFraction:largest/wetSamples,maxIllustrativeDepthM:maxDepth,maxIllustrativeDepthPoint:maxDepthPoint,triangles:indices.length/3,vertices:positions.length/3,warning:'Nível visual inferido; não é levantamento de nível d’água, inundação ou batimetria.'};
  mesh.userData.qa=qa;
- qa.shading={shallowBedVisible:true,reflection:'512px near-camera planar approximation; HDR fallback farther away',reflectionPasses:0};
+ qa.shading={shallowBedVisible:true,reflection:lite?'Environment reflection only (mobile budget)':'512px near-camera planar approximation; HDR fallback farther away',reflectionPasses:0};
  let mirror=null,lastPosition=new THREE.Vector3(Infinity,Infinity,Infinity),lastQuaternion=new THREE.Quaternion(),lastFov=0;
  return {mesh,qa,levelAt:level,extentAt:extent,depthAt:(x,z)=>{const [l,r]=extent(z);return x>=l&&x<=r?Math.max(0,level(z)-height(x,z)):0;},update:(seconds,renderer,camera)=>{
   normal.offset.set(seconds*.003,seconds*.007);
-  if(!renderer||!camera)return;
+  if(lite||!renderer||!camera)return;
   const [l,r]=extent(camera.position.z),distance=Math.max(l-camera.position.x,0,camera.position.x-r),near=distance<100&&camera.position.y-level(camera.position.z)<100&&Math.abs(camera.position.z)<500;
   reflection.strength.value=near?1:0;if(!near)return;
   if(mirror&&camera.position.distanceToSquared(lastPosition)<.0001&&1-Math.abs(camera.quaternion.dot(lastQuaternion))<1e-7&&camera.fov===lastFov)return;

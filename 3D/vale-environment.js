@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {conformRibbon} from './vale-spatial.js';
 import {gardenProfileFor} from './vale-gardens.js';
+import {lite} from './vale-quality.js';
+import {finishTerrainLite} from './vale-terrain-lite.js';
 
 // All finishes and street furniture are illustrative. Paths were traced on the
 // source orthophoto; they are not cadastral vectors or a vehicle inventory.
@@ -19,6 +21,7 @@ function inside(x,z,poly){let yes=false;for(let i=0,j=poly.length-1;i<poly.lengt
 async function tx(name,renderer,color=true){const t=await new THREE.TextureLoader().loadAsync(AS+name);if(color)t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return t;}
 
 export async function finishTerrain({scene,renderer,data,ground,mask,geometry}){
+ if(lite)return finishTerrainLite({scene,renderer,data,ground,mask,geometry,riverbed,yard,yard2});
  const [grass,soil,concrete,asphalt,rock,gravel,rough]=await Promise.all([tx('prado-diff.jpg',renderer),tx('floresta-solo.jpg',renderer),tx('concreto-diff.jpg',renderer),tx('asfalto-diff.jpg',renderer),tx('rocha-diff.jpg',renderer),tx('cascalho-diff.jpg',renderer),tx('prado-rough.jpg',renderer,false)]);
  const [grassN,soilN,rockN,gravelN,asphaltN,rockR,gravelR]=await Promise.all(['prado-normal.jpg','floresta-normal.jpg','rocha-normal.jpg','cascalho-normal.jpg','asfalto-normal.jpg','rocha-rough.jpg','cascalho-rough.jpg'].map(file=>tx(file,renderer,false)));
  const types=new Uint8Array(data.n*data.n*4);
@@ -125,7 +128,9 @@ export async function buildStreets({scene,renderer,sample,textures}){
 }
 
 export async function buildStreetProps({scene,sample,streets}){
- const loader=new GLTFLoader(),[props,...assets]=await Promise.all(['props.glb','veiculo-carconcept-realista.glb','veiculo-carconcept-realista-medio.glb','veiculo-carconcept-realista-distante.glb','veiculo-realista.glb','veiculo-realista-medio.glb','veiculo-realista-distante.glb'].map(file=>loader.loadAsync(AS+file)));
+ const loader=new GLTFLoader(),files=lite?['props.glb','veiculo-carconcept-realista-distante.glb','veiculo-realista-distante.glb']:['props.glb','veiculo-carconcept-realista.glb','veiculo-carconcept-realista-medio.glb','veiculo-carconcept-realista-distante.glb','veiculo-realista.glb','veiculo-realista-medio.glb','veiculo-realista-distante.glb'];
+ const loaded=[];for(const file of files)loaded.push(await loader.loadAsync(AS+file));
+ const [props,...cars]=loaded,assets=lite?[cars[0],cars[0],cars[0],cars[1],cars[1],cars[1]]:cars;
  props.scene.updateMatrixWorld(true);
  const stats={cars:0,lamps:0,vehicles:['Car Concept / Darmstadt Graphics Group GmbH + Eric Chadwick (2024) / CC-BY 4.0','Ferrari 458 Italia / vicent091036 / CC-BY 4.0'],illustrative:true,lodCounts:[0,0,0],vehicleTriangles:0,maxWheelGapM:0,vehicleFamilies:{sedan:0,ferrari:0}};
  function instanceNode(name,placements){const node=props.scene.getObjectByName(name);if(!node)return false;node.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(node.matrixWorld).invert(),m=new THREE.Matrix4(),o=new THREE.Object3D();node.traverse(mesh=>{if(!mesh.isMesh)return;const geo=mesh.geometry.clone();m.multiplyMatrices(inv,mesh.matrixWorld);geo.applyMatrix4(m);const im=new THREE.InstancedMesh(geo,mesh.material,placements.length);im.castShadow=true;im.receiveShadow=true;placements.forEach((p,i)=>{o.position.set(p.x,sample(p.x,p.z)+.22,p.z);o.rotation.set(0,p.yaw||0,0);o.scale.setScalar(p.scale||1);o.updateMatrix();im.setMatrixAt(i,o.matrix);});im.computeBoundingSphere();scene.add(im);});return true;}
@@ -160,13 +165,13 @@ export async function buildStreetProps({scene,sample,streets}){
    const im=new THREE.InstancedMesh(geo,material,Math.max(1,placements.length));im.name=`Veículo ${name} / LOD ${level} / ${material.name}`;im.count=0;im.visible=false;im.castShadow=level<2;im.receiveShadow=true;im.instanceMatrix.setUsage(THREE.DynamicDrawUsage);im.userData.paint=isPaint;scene.add(im);meshes.push(im);
   });return meshes;
  }
- const groups={sedan:assets.slice(0,3).map((asset,level)=>[instancedFamily(asset,'Car Concept CC-BY',level)]),ferrari:assets.slice(3,6).map((asset,level)=>[instancedFamily(asset,'Ferrari 458 Italia',level)])};
+ const groups={sedan:assets.slice(0,3).map((asset,level)=>[lite&&level<2?[]:instancedFamily(asset,'Car Concept CC-BY',level)]),ferrari:assets.slice(3,6).map((asset,level)=>[lite&&level<2?[]:instancedFamily(asset,'Ferrari 458 Italia',level)])};
  const assetTriangles=assets.map(asset=>{let n=0;asset.scene.traverse(o=>{if(o.isMesh)n+=(o.geometry.index?o.geometry.index.count:o.geometry.attributes.position.count)/3;});return n;});
  const previous=new THREE.Vector3(Infinity,Infinity,Infinity);
  stats.update=camera=>{
   if(camera.position.distanceToSquared(previous)<.25)return;previous.copy(camera.position);
   const lists={sedan:[[],[],[]],ferrari:[[],[],[]]};
-  placements.forEach(p=>{const d=p.position.distanceTo(camera.position),level=d<35?0:d<100?1:2;lists[p.family][level].push(p);});
+  placements.forEach(p=>{const d=p.position.distanceTo(camera.position),level=lite?2:d<35?0:d<100?1:2;lists[p.family][level].push(p);});
   stats.lodCounts=[0,0,0];stats.vehicleTriangles=0;
   // Count a placement once; meshes are only its material parts.
   for(const name of Object.keys(groups))for(let level=0;level<3;level++){const count=lists[name][level].length;stats.lodCounts[level]+=count;stats.vehicleTriangles+=count*assetTriangles[(name==='sedan'?0:3)+level];}
