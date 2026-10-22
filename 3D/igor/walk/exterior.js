@@ -1,4 +1,5 @@
 import {GLTFLoader} from './vendor/GLTFLoader.js';
+import {buildDiningSet} from './interior-detail.js';
 
 // Formas observáveis nas fotos 03/04/05. Escala e profundidade permanecem estimadas.
 export const roofPlanes=[
@@ -27,8 +28,7 @@ export function buildExterior(THREE,scene,M,box,cylinder){
  box(1.8,.45,-.82,1.2,.10,.5,M.wood);box(1.8,.80,-.60,1.2,.56,.06,M.wood);
  for(const x of[1.3,2.3])for(const z of[-1.0,-.64])box(x,.22,z,.055,.44,.055,M.woodDark);
  // Mesa redonda e cadeiras da cozinha; formas reconhecíveis nas fotos06/11.
- cylinder(3.6,.81,6.7,.64,.065,M.wood,32);for(const x of[3.25,3.95])for(const z of[6.35,7.05])box(x,.4,z,.06,.8,.06,M.woodDark);
- for(const [x,z,turn] of[[2.65,6.7,-Math.PI/2],[3.6,5.7,Math.PI],[3.6,7.7,0]]){box(x,.44,z,.42,.06,.43,M.wood);const back=box(x+Math.sin(turn)*.19,.76,z+Math.cos(turn)*.19,.44,.55,.05,M.woodDark);back.rotation.y=turn;for(const dx of[-.17,.17])for(const dz of[-.17,.17])box(x+dx,.22,z+dz,.045,.44,.045,M.woodDark);}
+ buildDiningSet(THREE,scene,M);
  // Pavimentação da chegada em pedra, gramado separado e caminho de placas.
  const patio=new THREE.Shape([[-6,0],[-6,8.4],[-.8,7.0],[5.5,3.9],[10.3,3.9],[10.3,0]].map(([x,z])=>new THREE.Vector2(x,z)));
  const pg=new THREE.ShapeGeometry(patio),pos=pg.attributes.position,uv=pg.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,pos.getX(i)/3,pos.getY(i)/3);
