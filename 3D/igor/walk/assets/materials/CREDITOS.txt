@@ -1,7 +1,10 @@
 Materiais reutilizados da base local da maquete do Vale, consultada em 22/10/2026.
 
-Madeira: fachada-madeira-{diff,normal,rough}.jpg, copiados de
-work/aeropixel-experiencia-3d-20261021/dist/assets/maquete/.
+Madeira: fachada-madeira-{diff,normal,rough}.jpg substituídos em22/10 pela
+captura Poly Haven wood_floor, CC0, https://polyhaven.com/a/wood_floor.
+Escala1,7m; mapas originais1K e derivados mobile512px. MADEIRA-FONTE.json
+registra URLs e hashes. A madeira anterior do Vale está preservada na origem
+e no histórico Git; foi rejeitada para este interior por cor/veios inadequados.
 
 Pedra: sandstone-{diff,normal,rough}.jpg, Poly Haven, asset sandstone_blocks_05,
 CC0. https://polyhaven.com/a/sandstone_blocks_05
