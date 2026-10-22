@@ -1,0 +1,17 @@
+LMP — Estudo de varanda / Taveira — outubro de 2026
+
+REFERÊNCIA FOTOGRÁFICA
+Anúncio CA0403_LI, Reserva da Serra, Jundiaí, catálogo Lançou.
+https://static.arboimoveis.com.br/CA0403_LI/visao-varanda-reserva-da-serra1774988178280.jpeg
+https://static.arboimoveis.com.br/CA0403_LI/entrada-para-escritorio-reserva-da-serra1774988127459.jpeg
+https://static.arboimoveis.com.br/CA0403_LI/roll-de-entrada-escada-reserva-da-serra1774988178221.jpeg
+Fotos pertencem a seus respectivos titulares. Usadas como referência e comparação no estudo solicitado.
+
+MODELO
+Modelagem própria em Blender. Exterior parcial, não levantamento, não planta medida.
+Proporções, detalhes, luz e paisagem aproximados. Interiores não reconstruídos.
+
+SOFTWARE
+Three.js — licença MIT em vendor/LICENSE-Three.txt.
+Materiais da varanda: cores próprias e microtextura procedural; não representam marca ou acabamento especificado.
+Árvores ilustrativas do entorno: tree_small_02, Poly Haven (CC0), LOD e texturas reduzidos para este estudo: https://polyhaven.com/a/tree_small_02

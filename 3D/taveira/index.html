@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#232a22"><meta name="robots" content="noindex,nofollow">
+  <title>Reserva da Serra · estudo da varanda | LMP</title>
+  <meta name="description" content="Estudo navegável de uma varanda, desenvolvido a partir de uma fotografia do imóvel. Proporções aproximadas, não é um levantamento ou tour da casa completa.">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+</head>
+<body>
+  <header class="masthead"><a class="wordmark" href="/3D/" aria-label="LMP, experiências 3D">LMP<span>estudos imobiliários</span></a><button class="quiet" id="about">Sobre este estudo <span aria-hidden="true">↗</span></button></header>
+  <main>
+    <section class="intro" aria-labelledby="title"><div><p class="eyebrow">TAVEIRA · RESERVA DA SERRA</p><h1 id="title">Um lugar para ficar.</h1></div><p class="intro-copy">A varanda, por outro ponto de vista.<br>Explore o estudo e compare com a foto do imóvel.</p></section>
+    <section class="viewer" aria-label="Estudo 3D interativo da varanda">
+      <div class="canvas-wrap" id="canvas-wrap"></div>
+      <div class="cover" id="cover"><img src="./assets/varanda.jpeg" alt="Fotografia real da varanda: piso bege, mesa e cadeiras brancas, guarda-corpo de vidro e vista verde." width="1600" height="1200" fetchpriority="high"><div class="cover-shade"></div><div class="start-block"><span class="eyebrow">FOTOGRAFIA DO IMÓVEL</span><h2>Entre na varanda.</h2><button class="primary" id="start">Explorar em 3D <span aria-hidden="true">↗</span></button><p id="load-message" role="status" aria-live="polite">Carregamento sob demanda · versão leve</p></div></div>
+      <div class="scene-label" id="scene-label" hidden><span class="live-dot"></span> ESTUDO 3D <span class="separator">/</span> PROPORÇÕES APROXIMADAS</div>
+      <button id="compare" class="photo-button" aria-label="Ver fotografia real para comparar">Ver foto real <span aria-hidden="true">↗</span></button>
+      <div class="mode-hint" id="mode-hint" hidden>Arraste para olhar ao redor</div>
+      <div class="walk-pad" id="walk-pad" hidden aria-label="Controles para caminhar"><button data-move="forward" aria-label="Caminhar para frente">↑</button><button data-move="left" aria-label="Caminhar para esquerda">←</button><button data-move="back" aria-label="Caminhar para trás">↓</button><button data-move="right" aria-label="Caminhar para direita">→</button></div>
+      <div class="viewer-foot"><span id="scene-state" role="status">01 <span>Varanda</span></span><span id="quality-label">Exterior parcial · CA0403_LI</span></div>
+    </section>
+    <nav class="toolbar" aria-label="Explorar a varanda"><div class="stops"><button data-view="0" aria-pressed="true" disabled><span>01</span> Varanda</button><button data-view="1" aria-pressed="false" disabled><span>02</span> À mesa</button><button data-view="2" aria-pressed="false" disabled><span>03</span> A vista</button></div><button id="walk" class="walk-toggle" aria-pressed="false" disabled>Caminhar <span aria-hidden="true">↗</span></button></nav>
+    <footer><p>Uma aproximação visual a partir de fotografia. Sem planta ou medidas confirmadas.</p><button class="text-link" id="other-photos">Outras fotos do imóvel ↗</button></footer>
+  </main>
+  <dialog id="photo-dialog" aria-labelledby="photo-title"><div class="dialog-header"><div><p class="eyebrow">ACERVO DO ANÚNCIO · CA0403_LI</p><h2 id="photo-title">A varanda real.</h2></div><button class="close" data-close="photo-dialog" aria-label="Fechar fotografia">✕</button></div><img id="real-photo" src="./assets/varanda.jpeg" alt="Fotografia real da varanda" width="1600" height="1200"><div class="photo-tabs"><button data-photo="varanda" aria-pressed="true">Varanda</button><button data-photo="entrada" aria-pressed="false">Entrada</button><button data-photo="escada" aria-pressed="false">Escada</button></div><p class="caption">Fotografias do anúncio. Entrada e escada não foram reconstruídas em 3D.</p></dialog>
+  <dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-header"><h2 id="about-title">O que você está vendo.</h2><button class="close" data-close="about-dialog" aria-label="Fechar informações">✕</button></div><div class="about-content"><p>Este é um primeiro estudo para a apresentação imobiliária de Taveira, usando a fotografia da varanda do imóvel <strong>CA0403_LI, Reserva da Serra, Jundiaí</strong>.</p><dl><dt>Referência real</dt><dd>A fotografia orientou piso, guarda-corpo, esquadria, mesa, cadeiras e vaso.</dd><dt>Aproximação visual</dt><dd>Dimensões, posições, detalhes e iluminação foram estimados. A paisagem 3D é ilustrativa, não um levantamento do entorno.</dd><dt>Fora deste estudo</dt><dd>Não há planta verificada, reconstrução dos interiores ou passeio pela casa completa. Não use esta cena para conferir medidas ou acabamento contratado.</dd></dl><p>Arraste para olhar. No modo Caminhar, use as setas na tela ou W, A, S, D. Os móveis e limites da varanda têm bloqueio de passagem.</p><a href="./creditos.txt" target="_blank" rel="noopener">Fontes e créditos ↗</a></div></dialog>
+  <script type="module" src="./app.js"></script>
+</body></html>
