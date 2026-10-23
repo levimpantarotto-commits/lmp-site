@@ -1,0 +1,18 @@
+{
+  "source": "https://polyhaven.com/a/rock_face",
+  "license": "CC0",
+  "illustrative": true,
+  "operation": "Reamostragem512 e neutralização de cor do albedo, sem modificar fotos do imóvel",
+  "files": [
+    {
+      "output": "cuba-diff.jpg",
+      "sourceSha256": "b989c832327538a9e546cca359417acb9a657d041f300407e8398daaf743f5bc",
+      "sha256": "9ce49622fe91769e856967c86a2b614955eec9c2911df8c13122554a41564146"
+    },
+    {
+      "output": "cuba-normal.jpg",
+      "sourceSha256": "352b87db2502d54487b0ed8abdfb621fae2abf7d360a281b419f567346178cf0",
+      "sha256": "328e5f67b44d47fd2b68a6e06307762c291694773c5d573586222e31221a8df1"
+    }
+  ]
+}

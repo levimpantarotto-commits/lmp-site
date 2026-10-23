@@ -1,0 +1,785 @@
+{
+  "method": "SIFT + Lowe ratio + essential-matrix RANSAC + recoverPose + triangulation; homography/pose sanity classification",
+  "rng_seed": 1337,
+  "selected_focal_px": 700,
+  "sensitivity_focal_px": [
+    500.0,
+    700.0,
+    900.0
+  ],
+  "filters": {
+    "positive_depth": true,
+    "reprojection_px_max": 2.0,
+    "parallax_deg_min": 1.0
+  },
+  "honesty": "Teste esparso local. Não é Gaussian Splatting treinado, não tem escala conhecida e não reconstrói paredes, teto ou cômodos como medidas exatas. Geometrias rejeitadas não são exportadas para o visualizador; suas correspondências e métricas ficam no relatório/auditoria.",
+  "pairs": [
+    {
+      "id": "00-01",
+      "group": "mezanino",
+      "photos": [
+        "00.jpg",
+        "01.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        2862,
+        2766
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 40,
+      "focal_sensitivity": {
+        "500": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 11,
+          "raw_triangulated_points": 12,
+          "exported_unique_points": 11,
+          "pose_inliers": 12,
+          "homography_inliers": 7,
+          "homography_ratio": 0.175,
+          "median_reprojection_px": 0.2131,
+          "median_parallax_deg": 38.8937
+        },
+        "700": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 9,
+          "raw_triangulated_points": 10,
+          "exported_unique_points": 9,
+          "pose_inliers": 10,
+          "homography_inliers": 7,
+          "homography_ratio": 0.175,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 52.5195
+        },
+        "900": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 9,
+          "raw_triangulated_points": 10,
+          "exported_unique_points": 9,
+          "pose_inliers": 10,
+          "homography_inliers": 7,
+          "homography_ratio": 0.175,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 64.6936
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "01-02",
+      "group": "mezanino",
+      "photos": [
+        "01.jpg",
+        "02.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        2766,
+        2682
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 23,
+      "focal_sensitivity": {
+        "500": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 8,
+          "raw_triangulated_points": 10,
+          "exported_unique_points": 8,
+          "pose_inliers": 10,
+          "homography_inliers": 7,
+          "homography_ratio": 0.3043,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 95.4992
+        },
+        "700": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 8,
+          "raw_triangulated_points": 10,
+          "exported_unique_points": 8,
+          "pose_inliers": 10,
+          "homography_inliers": 7,
+          "homography_ratio": 0.3043,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 116.207
+        },
+        "900": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 8,
+          "raw_triangulated_points": 10,
+          "exported_unique_points": 8,
+          "pose_inliers": 10,
+          "homography_inliers": 7,
+          "homography_ratio": 0.3043,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 129.1075
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "03-04",
+      "group": "fachada",
+      "photos": [
+        "03.jpg",
+        "04.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        4948,
+        4102
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 13,
+      "focal_sensitivity": {
+        "500": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 3,
+          "raw_triangulated_points": 4,
+          "exported_unique_points": 3,
+          "pose_inliers": 4,
+          "homography_inliers": 5,
+          "homography_ratio": 0.3846,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 8.4769
+        },
+        "700": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 3,
+          "raw_triangulated_points": 4,
+          "exported_unique_points": 3,
+          "pose_inliers": 4,
+          "homography_inliers": 5,
+          "homography_ratio": 0.3846,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 151.7441
+        },
+        "900": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 6,
+          "raw_triangulated_points": 7,
+          "exported_unique_points": 6,
+          "pose_inliers": 7,
+          "homography_inliers": 5,
+          "homography_ratio": 0.3846,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 148.9477
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "04-05",
+      "group": "fachada",
+      "photos": [
+        "04.jpg",
+        "05.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        4102,
+        4367
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 11,
+      "focal_sensitivity": {
+        "500": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 3,
+          "raw_triangulated_points": 3,
+          "exported_unique_points": 3,
+          "pose_inliers": 3,
+          "homography_inliers": 5,
+          "homography_ratio": 0.4545,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 14.3974
+        },
+        "700": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 3,
+          "raw_triangulated_points": 3,
+          "exported_unique_points": 3,
+          "pose_inliers": 3,
+          "homography_inliers": 5,
+          "homography_ratio": 0.4545,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 10.5822
+        },
+        "900": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 4,
+          "raw_triangulated_points": 4,
+          "exported_unique_points": 4,
+          "pose_inliers": 5,
+          "homography_inliers": 5,
+          "homography_ratio": 0.4545,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 156.9097
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "03-05",
+      "group": "fachada",
+      "photos": [
+        "03.jpg",
+        "05.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        4948,
+        4367
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 189,
+      "focal_sensitivity": {
+        "500": {
+          "status": "candidate",
+          "reason": null,
+          "point_count": 120,
+          "raw_triangulated_points": 134,
+          "exported_unique_points": 120,
+          "pose_inliers": 134,
+          "homography_inliers": 62,
+          "homography_ratio": 0.328,
+          "median_reprojection_px": 0.1724,
+          "median_parallax_deg": 20.8764
+        },
+        "700": {
+          "status": "candidate",
+          "reason": null,
+          "point_count": 112,
+          "raw_triangulated_points": 127,
+          "exported_unique_points": 112,
+          "pose_inliers": 127,
+          "homography_inliers": 62,
+          "homography_ratio": 0.328,
+          "median_reprojection_px": 0.2637,
+          "median_parallax_deg": 24.0388
+        },
+        "900": {
+          "status": "candidate",
+          "reason": null,
+          "point_count": 106,
+          "raw_triangulated_points": 121,
+          "exported_unique_points": 106,
+          "pose_inliers": 121,
+          "homography_inliers": 62,
+          "homography_ratio": 0.328,
+          "median_reprojection_px": 0.2702,
+          "median_parallax_deg": 29.2042
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "06-07",
+      "group": "interior",
+      "photos": [
+        "06.jpg",
+        "07.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        2875,
+        1904
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 29,
+      "focal_sensitivity": {
+        "500": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 5,
+          "raw_triangulated_points": 5,
+          "exported_unique_points": 5,
+          "pose_inliers": 5,
+          "homography_inliers": 6,
+          "homography_ratio": 0.2069,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 95.3676
+        },
+        "700": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 3,
+          "raw_triangulated_points": 3,
+          "exported_unique_points": 3,
+          "pose_inliers": 3,
+          "homography_inliers": 6,
+          "homography_ratio": 0.2069,
+          "median_reprojection_px": 0.1024,
+          "median_parallax_deg": 11.5409
+        },
+        "900": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 9,
+          "raw_triangulated_points": 9,
+          "exported_unique_points": 9,
+          "pose_inliers": 9,
+          "homography_inliers": 6,
+          "homography_ratio": 0.2069,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 107.7001
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "07-08",
+      "group": "interior",
+      "photos": [
+        "07.jpg",
+        "08.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        1904,
+        3891
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 27,
+      "focal_sensitivity": {
+        "500": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 5,
+          "raw_triangulated_points": 6,
+          "exported_unique_points": 5,
+          "pose_inliers": 6,
+          "homography_inliers": 6,
+          "homography_ratio": 0.2222,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 82.0437
+        },
+        "700": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 4,
+          "raw_triangulated_points": 5,
+          "exported_unique_points": 4,
+          "pose_inliers": 5,
+          "homography_inliers": 6,
+          "homography_ratio": 0.2222,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 113.7276
+        },
+        "900": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 4,
+          "raw_triangulated_points": 5,
+          "exported_unique_points": 4,
+          "pose_inliers": 5,
+          "homography_inliers": 6,
+          "homography_ratio": 0.2222,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 127.4577
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "06-08",
+      "group": "interior",
+      "photos": [
+        "06.jpg",
+        "08.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        2875,
+        3891
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 145,
+      "focal_sensitivity": {
+        "500": {
+          "status": "candidate",
+          "reason": null,
+          "point_count": 91,
+          "raw_triangulated_points": 96,
+          "exported_unique_points": 91,
+          "pose_inliers": 96,
+          "homography_inliers": 90,
+          "homography_ratio": 0.6207,
+          "median_reprojection_px": 0.1752,
+          "median_parallax_deg": 37.2145
+        },
+        "700": {
+          "status": "geometry-unstable",
+          "reason": "Paralaxe extrema sob intrínseca estimada; pose possivelmente degenerada.",
+          "point_count": 91,
+          "raw_triangulated_points": 96,
+          "exported_unique_points": 91,
+          "pose_inliers": 96,
+          "homography_inliers": 90,
+          "homography_ratio": 0.6207,
+          "median_reprojection_px": 0.1747,
+          "median_parallax_deg": 66.124
+        },
+        "900": {
+          "status": "geometry-unstable",
+          "reason": "Paralaxe extrema sob intrínseca estimada; pose possivelmente degenerada.",
+          "point_count": 91,
+          "raw_triangulated_points": 96,
+          "exported_unique_points": 91,
+          "pose_inliers": 96,
+          "homography_inliers": 90,
+          "homography_ratio": 0.6207,
+          "median_reprojection_px": 0.1746,
+          "median_parallax_deg": 85.9835
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "08-10",
+      "group": "interior",
+      "photos": [
+        "08.jpg",
+        "10.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        3891,
+        4125
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 74,
+      "focal_sensitivity": {
+        "500": {
+          "status": "geometry-unstable",
+          "reason": "Paralaxe extrema sob intrínseca estimada; pose possivelmente degenerada.",
+          "point_count": 47,
+          "raw_triangulated_points": 52,
+          "exported_unique_points": 47,
+          "pose_inliers": 52,
+          "homography_inliers": 46,
+          "homography_ratio": 0.6216,
+          "median_reprojection_px": 0.1614,
+          "median_parallax_deg": 75.2509
+        },
+        "700": {
+          "status": "geometry-unstable",
+          "reason": "Paralaxe extrema sob intrínseca estimada; pose possivelmente degenerada.",
+          "point_count": 47,
+          "raw_triangulated_points": 52,
+          "exported_unique_points": 47,
+          "pose_inliers": 52,
+          "homography_inliers": 46,
+          "homography_ratio": 0.6216,
+          "median_reprojection_px": 0.1776,
+          "median_parallax_deg": 102.4796
+        },
+        "900": {
+          "status": "geometry-unstable",
+          "reason": "Paralaxe extrema sob intrínseca estimada; pose possivelmente degenerada.",
+          "point_count": 47,
+          "raw_triangulated_points": 52,
+          "exported_unique_points": 47,
+          "pose_inliers": 52,
+          "homography_inliers": 46,
+          "homography_ratio": 0.6216,
+          "median_reprojection_px": 0.1853,
+          "median_parallax_deg": 118.7131
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "10-11",
+      "group": "interior",
+      "photos": [
+        "10.jpg",
+        "11.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        4125,
+        3456
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 13,
+      "focal_sensitivity": {
+        "500": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 2,
+          "raw_triangulated_points": 2,
+          "exported_unique_points": 2,
+          "pose_inliers": 3,
+          "homography_inliers": 4,
+          "homography_ratio": 0.3077,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 12.8454
+        },
+        "700": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 4,
+          "raw_triangulated_points": 4,
+          "exported_unique_points": 4,
+          "pose_inliers": 4,
+          "homography_inliers": 4,
+          "homography_ratio": 0.3077,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 148.1849
+        },
+        "900": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 4,
+          "raw_triangulated_points": 4,
+          "exported_unique_points": 4,
+          "pose_inliers": 4,
+          "homography_inliers": 4,
+          "homography_ratio": 0.3077,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 154.5742
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "19-20",
+      "group": "externo",
+      "photos": [
+        "19.jpg",
+        "20.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        5000,
+        3786
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 69,
+      "focal_sensitivity": {
+        "500": {
+          "status": "geometry-unstable",
+          "reason": "Paralaxe muito baixa para uma triangulação espacial robusta.",
+          "point_count": 44,
+          "raw_triangulated_points": 48,
+          "exported_unique_points": 44,
+          "pose_inliers": 48,
+          "homography_inliers": 47,
+          "homography_ratio": 0.6812,
+          "median_reprojection_px": 0.3287,
+          "median_parallax_deg": 2.7306
+        },
+        "700": {
+          "status": "geometry-unstable",
+          "reason": "Paralaxe muito baixa para uma triangulação espacial robusta.",
+          "point_count": 43,
+          "raw_triangulated_points": 47,
+          "exported_unique_points": 43,
+          "pose_inliers": 49,
+          "homography_inliers": 47,
+          "homography_ratio": 0.6812,
+          "median_reprojection_px": 0.1932,
+          "median_parallax_deg": 1.6195
+        },
+        "900": {
+          "status": "geometry-unstable",
+          "reason": "Paralaxe muito baixa para uma triangulação espacial robusta.",
+          "point_count": 31,
+          "raw_triangulated_points": 35,
+          "exported_unique_points": 31,
+          "pose_inliers": 49,
+          "homography_inliers": 47,
+          "homography_ratio": 0.6812,
+          "median_reprojection_px": 0.2315,
+          "median_parallax_deg": 1.6201
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "21-22",
+      "group": "externo",
+      "photos": [
+        "21.jpg",
+        "22.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        3289,
+        5000
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 18,
+      "focal_sensitivity": {
+        "500": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 4,
+          "raw_triangulated_points": 5,
+          "exported_unique_points": 4,
+          "pose_inliers": 5,
+          "homography_inliers": 5,
+          "homography_ratio": 0.2778,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 110.4145
+        },
+        "700": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 4,
+          "raw_triangulated_points": 5,
+          "exported_unique_points": 4,
+          "pose_inliers": 7,
+          "homography_inliers": 5,
+          "homography_ratio": 0.2778,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 29.1882
+        },
+        "900": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 6,
+          "raw_triangulated_points": 7,
+          "exported_unique_points": 6,
+          "pose_inliers": 7,
+          "homography_inliers": 5,
+          "homography_ratio": 0.2778,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 139.0453
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    },
+    {
+      "id": "23-26",
+      "group": "externo",
+      "photos": [
+        "23.jpg",
+        "26.jpg"
+      ],
+      "image_size": [
+        800,
+        500
+      ],
+      "keypoints": [
+        1501,
+        1601
+      ],
+      "lowe_ratio": 0.72,
+      "ratio_matches": 29,
+      "focal_sensitivity": {
+        "500": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 3,
+          "raw_triangulated_points": 5,
+          "exported_unique_points": 3,
+          "pose_inliers": 5,
+          "homography_inliers": 6,
+          "homography_ratio": 0.2069,
+          "median_reprojection_px": 0.4522,
+          "median_parallax_deg": 1.4952
+        },
+        "700": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 3,
+          "raw_triangulated_points": 5,
+          "exported_unique_points": 3,
+          "pose_inliers": 6,
+          "homography_inliers": 6,
+          "homography_ratio": 0.2069,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 1.298
+        },
+        "900": {
+          "status": "rejected-few-inliers",
+          "reason": "Poucos inliers de pose/triangulação.",
+          "point_count": 1,
+          "raw_triangulated_points": 1,
+          "exported_unique_points": 1,
+          "pose_inliers": 5,
+          "homography_inliers": 6,
+          "homography_ratio": 0.2069,
+          "median_reprojection_px": 0.0,
+          "median_parallax_deg": 2.1799
+        }
+      },
+      "selected_focal_px": 700,
+      "limitation": "Escala, orientação global e deslocamento são desconhecidos; pares não foram unidos em uma nuvem comum."
+    }
+  ],
+  "dense_03_05": {
+    "status": "rejected-dense-fragmented",
+    "reason": "Disparidade fragmentada em pequenas ilhas; não forma uma superfície coerente.",
+    "pair": "03-05",
+    "focal_px": 700,
+    "pose_inliers": 127,
+    "raw_valid_points": 6372,
+    "support_fraction": 0.01593,
+    "largest_component": 445,
+    "largest_component_ratio": 0.069837,
+    "max_export_points": 60000,
+    "limitations": "Nuvem par-local de estéreo retificado; escala e orientação são arbitrárias. Não é malha, planta ou acabamento reconstruído."
+  }
+}

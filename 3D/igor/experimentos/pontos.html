@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Igor — pontos triangulados</title>
+  <link rel="stylesheet" href="pontos.css">
+</head>
+<body>
+  <main class="test">
+    <section class="stage" aria-label="Visualizador de pontos triangulados"><canvas id="cloud"></canvas></section>
+    <aside class="panel">
+      <p class="eyebrow">EXPERIMENTO 03 · CAPTURA A PARTIR DAS FOTOS</p>
+      <h1>Pontos triangulados</h1>
+      <p id="status">Carregando o teste local…</p>
+      <label>Par de fotos <select id="pair" aria-label="Escolher par de fotos"></select></label>
+      <label>Leitura <select id="mode" aria-label="Escolher tipo de nuvem"><option value="sparse">Pontos esparsos candidatos</option><option value="dense">Denso experimental 03–05</option></select></label>
+      <label>Tamanho do ponto <input id="size" type="range" min="1" max="8" value="3"></label>
+      <div class="actions"><button id="reset" type="button">Recentrar</button><button id="photos" type="button">Ver fotos originais</button><button id="matches" type="button">Ver correspondências</button><button id="denseAudit" type="button">Auditoria densa</button></div>
+      <p class="warning">Cada par tem escala, orientação e deslocamento próprios. Estes são pontos que passaram na triangulação; não é uma planta, não é uma malha e não é Gaussian Splatting treinado.</p>
+    </aside>
+  </main>
+  <dialog id="sourceDialog"><button class="close" type="button" aria-label="Fechar">×</button><div id="sourcePhotos"></div></dialog>
+  <script type="module" src="pontos.js"></script>
+</body>
+</html>
