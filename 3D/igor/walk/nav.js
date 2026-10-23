@@ -1,6 +1,9 @@
 // Hipótese espacial experimental: medidas, ligações e volumes estimados das fotos.
-import {createDoors} from './doors.js?v=interior-r1';
+import {createDoors} from './doors.js?v=details-r2';
 import {applyObservedFacade} from './facade-reference.js?v=facade-r3';
+import {deckObstacles} from './deck-details.js';
+import {observedObstacles} from './observed-details.js';
+import {bathObstacles} from './bath-details.js';
 export const levels={ground:0,upper:3}; const R=.20;
 export const rooms=[
  {id:'sala',name:'Sala',note:'Núcleo social observado; escala estimada.',kind:'NÚCLEO OBSERVADO',photo:11,level:0,rect:[0,0,5.8,9],spawn:[3,0,1],yaw:Math.PI,estimate:true},{id:'cozinha',name:'Cozinha',note:'Integrada à sala; limite funcional.',kind:'NÚCLEO OBSERVADO',photo:6,level:0,rect:[2.9,5.4,5.8,9],spawn:[3.0,0,8.2],yaw:0,estimate:true},{id:'banheiro1',name:'Banheiro social',note:'Ligação espacial estimada.',kind:'LIGAÇÃO ESTIMADA',photo:13,level:0,rect:[0,9,2.7,12],spawn:[1.4,0,10.5],yaw:0,estimate:true},{id:'hall',name:'Hall',note:'Distribuição estimada entre os quartos.',kind:'LIGAÇÃO ESTIMADA',photo:12,level:0,rect:[2.7,9,5.8,12],spawn:[4.2,0,10.7],yaw:0,estimate:true},{id:'quarto14',name:'Quarto I',note:'Volume e ligação estimados.',kind:'LIGAÇÃO ESTIMADA',photo:14,level:0,rect:[5.8,0,9.8,8],spawn:[7.8,0,6.9],yaw:0,estimate:true},{id:'quarto15',name:'Quarto II',note:'Volume e ligação estimados.',kind:'LIGAÇÃO ESTIMADA',photo:15,level:0,rect:[5.8,8,9.8,12],spawn:[9.1,0,10.8],yaw:0,estimate:true},{id:'banheiro2',name:'Banheiro II',note:'Volume e ligação estimados.',kind:'LIGAÇÃO ESTIMADA',photo:16,level:0,rect:[9.8,8,12.5,12],spawn:[11.1,0,10.7],yaw:0,estimate:true},{id:'mezanino',name:'Mezanino',note:'Piso superior observado; abertura estimada.',kind:'NÚCLEO OBSERVADO',photo:1,level:3,rect:[0,0,5.8,9],spawn:[3.4,3,7.3],yaw:0,estimate:true},{id:'quarto18',name:'Quarto de teto inclinado',note:'Ligação superior estimada, relocalizada atrás do mezanino; não é prova de planta.',kind:'LIGAÇÃO ESTIMADA',photo:18,level:3,rect:[0,9,5.8,13],spawn:[3,3,11.3],yaw:0,estimate:true},{id:'deck',name:'Deck',note:'Acesso e escala estimada.',kind:'LIGAÇÃO ESTIMADA',photo:19,level:0,rect:[-4,0,0,9],spawn:[-2,0,4],yaw:0,estimate:true},{id:'jardim',name:'Jardim frontal',note:'Área externa de conexão estimada.',kind:'NÚCLEO OBSERVADO',photo:3,level:0,rect:[-6,-18,14,0],spawn:[11,0,-14],yaw:2.69,estimate:true},{id:'quintalDireito',name:'Jardim lateral',note:'Circulação externa estimada.',kind:'LIGAÇÃO ESTIMADA',photo:20,level:0,rect:[9.8,0,16,8],spawn:[13,0,6],yaw:0,estimate:true}
@@ -20,16 +23,21 @@ Object.assign(walls[1].openings[0],{from:.25,to:1.45});
 Object.assign(walls[9].openings[0],{from:1,to:2.2});
 rooms.find(r=>r.id==='cozinha').spawn=[3.9,0,8.3];
 furniture.find(f=>f.id==='sofa').rect=[.35,1.5,1.2,3.5];
-furniture.find(f=>f.id==='sofaDireito').rect=[4.65,1.5,5.5,3.5];
-furniture.find(f=>f.id==='bancada').rect=[4.95,7.25,5.65,8.8];
+furniture.find(f=>f.id==='sofaDireito').rect=[3.7,1.5,4.55,3.5];
+// Foto10: banco de alvenaria em U. Dimensões e implantação estimadas;
+// retorno no fundo mantém corredor frontal, escada e porta do deck livres.
+furniture.push({id:'sofaFundo',rect:[1.2,2.75,3.7,3.5],level:0,kind:'sofa',height:.9});
+furniture.find(f=>f.id==='bancada').rect=[4.95,6.68,5.65,8.8];
 furniture.find(f=>f.id==='cama14').rect=[7.9,3.8,9.5,6.0];
 Object.assign(furniture.find(f=>f.id==='cama15'),{rect:[6.4,10.45,8.5,11.85],turn:Math.PI/2});
 furniture.push({id:'geladeira',rect:[2.1,8.15,2.85,8.85],level:0,kind:'fridge',height:2.0});
+furniture.find(f=>f.id==='sofaMezanino').turn=Math.PI; // foto01: encosto no vidro, assento voltado ao ambiente
 applyObservedFacade(rooms,floorAreas,walls,furniture);
 export const stairs={rect:[.4,3.9,1.5,7.2],from:0,to:3,axis:'z'};
 // Colisores dos detalhes construídos em exterior.js, sem duplicar suas malhas.
 export const exteriorObstacles=[[2.44,6.48,2.86,6.92],[3.39,5.48,3.81,5.92],[3.39,7.48,3.81,7.92],[1.2,-1.08,2.4,-.57],[-.15,-1.75,-.05,-1.65],[5.77,-1.75,5.87,-1.65],[3.38,-1.62,3.82,-1.18],[5.28,-1.62,5.72,-1.18],[-3.22,2.78,-2.78,3.22],[-3.22,6.78,-2.78,7.22]];
 exteriorObstacles.push([5.85,.14,6.41,.90]); // armário observado sob a janela lateral
+exteriorObstacles.push(...deckObstacles.map(o=>o.rect),...observedObstacles,...bathObstacles.map(o=>o.rect));
 export const doorSystem=createDoors(walls,furniture,exteriorObstacles);
 const inside=(x,z,r,margin=0)=>x>r[0]+margin&&x<r[2]-margin&&z>r[1]+margin&&z<r[3]-margin; const inFloor=(x,z,a)=>inside(x,z,a.rect)&&!(a.holes||[]).some(h=>inside(x,z,h));
 const distanceToSegment=(x,z,a,b)=>{const dx=b[0]-a[0],dz=b[1]-a[1],d=dx*dx+dz*dz,t=d?Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/d)):0;return{t,d:Math.hypot(x-(a[0]+dx*t),z-(a[1]+dz*t))}}; walls.forEach(w=>w.__length=Math.hypot(w.b[0]-w.a[0],w.b[1]-w.a[1]));

@@ -18,7 +18,7 @@ export function exportBakeSource(scene,M){
 }
 export async function applyBakedLighting(THREE,scene,{mobile=false,enabled=true}={}){
  if(!enabled)return {enabled:false,reason:'comparison-baseline'};
- const base=new URL('./assets/baked/',import.meta.url),asset=name=>new URL(`${name}?v=interior-r1`,base),response=await fetch(asset('atlas.json'));
+ const base=new URL('./assets/baked/',import.meta.url),asset=name=>new URL(`${name}?v=details-r2`,base),response=await fetch(asset('atlas.json'));
  if(!response.ok)return{enabled:false,reason:'atlas-unavailable'};
  const atlas=await response.json(),meshes=scene.children.filter(o=>o.isMesh&&!o.material.transparent),expectedIndices=atlas.eligibleMeshIndices;
  if(atlas.version!==2||!Array.isArray(atlas.meshes)||!atlas.meshes.length||!Number.isFinite(atlas.indirectScale)||atlas.indirectScale<=0||!Number.isInteger(atlas.resolution)||atlas.resolution<1||atlas.resolution>2048||!Number.isInteger(atlas.mobileResolution)||atlas.mobileResolution<1||atlas.mobileResolution>1024||!Number.isInteger(atlas.sceneMeshCount)||atlas.sceneMeshCount!==meshes.length||typeof atlas.geometrySourceKey!=='string'||atlas.geometrySourceKey!==sourceGeometryKey(meshes)||!Array.isArray(expectedIndices)||expectedIndices.length!==atlas.meshes.length||new Set(expectedIndices).size!==expectedIndices.length||new Set(atlas.meshes.map(e=>e.index)).size!==atlas.meshes.length||expectedIndices.some(index=>!Number.isInteger(index)||index<0||index>=meshes.length)||atlas.meshes.some((entry,index)=>entry.index!==expectedIndices[index]))throw Error('Atlas inválido');

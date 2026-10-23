@@ -1,15 +1,19 @@
 import * as THREE from './vendor/three.module.js';
-import {createMaterials} from './materials.js?v=interior-r1';
-import {buildInteriorAssets} from './interior-assets.js?v=interior-r1';
-import {secondaryRoofs} from './roof-layout.js?v=interior-r1';
-import {addPottedPlants} from './plant-detail.js?v=interior-r1';
-import {buildExterior,addReferenceTrees} from './exterior.js?v=interior-r1';
-import {addGrassClusters} from './grass-detail.js?v=interior-r1';
+import {createMaterials} from './materials.js?v=details-r2';
+import {buildInteriorAssets} from './interior-assets.js?v=details-r2';
+import {buildDeckDetails} from './deck-details.js';
+import {buildObservedDetails} from './observed-details.js';
+import {buildBathDetails} from './bath-details.js';
+import {takeMirrorSurfaces,buildMirrors} from './mirror-detail.js';
+import {secondaryRoofs} from './roof-layout.js?v=details-r2';
+import {addPottedPlants} from './plant-detail.js?v=details-r2';
+import {buildExterior,addReferenceTrees} from './exterior.js?v=details-r2';
+import {addGrassClusters} from './grass-detail.js?v=details-r2';
 import {HDRLoader} from './vendor/HDRLoader.js';
 import {createFootsteps} from './footsteps.js';
-import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=interior-r1';
+import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=details-r2';
 import {facadeAxis,worldX,worldYaw,movement} from './view-transform.js';
-import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem} from './nav.js?v=interior-r1';
+import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem} from './nav.js?v=details-r2';
 const $=id=>document.getElementById(id),canvas=$('cena'),mobile=matchMedia('(pointer:coarse)').matches;
 let renderer,stopped=false,frame=0;
 const footsteps=createFootsteps();
@@ -58,15 +62,18 @@ async function startScene(){
  for(const r of secondaryRoofs(rooms,floorAreas)){const roof=box(r.x,(r.front+r.back)/2,r.z,r.w,.12,Math.hypot(r.d,r.back-r.front),M.roof);roof.rotation.x=-Math.atan2(r.back-r.front,r.d);}
  for(let z=.8;z<9;z+=1.7){const opening=z>3.5&&z<7.1;box(opening?3.8:2.9,2.86,z,opening?4:5.8,.13,.16,M.woodDark);}
  const interiorStats=buildInteriorAssets(THREE,scene,M,furniture.filter(f=>f.id!=='mesa'),{mobile});
- // Prateleiras e utensílios da foto06, restritos à área sobre a bancada.
- for(const h of[1.65,2.15]){box(5.55,h,8.15,.34,.055,1.18,M.wood);for(let i=0;i<4;i++){const z=7.73+i*.27;cylinder(5.48,h+.12,z,.055,.20,M.white,16);cylinder(5.48,h+.225,z,.058,.02,M.woodDark,16);}}
- for(const [x,z,y] of[[2.8,3.1,2.62],[4.1,7.1,2.65],[2.9,2.2,5.55]]){cylinder(x,y,z,.16,.25,M.woodDark);cylinder(x,y-.14,z,.11,.025,M.light);const light=new THREE.PointLight(0xffd4a1,3.2,6,2);light.position.set(x,y-.25,z);scene.add(light);}
+ const deckStats=buildDeckDetails(THREE,scene,M,{mobile});
+ const observedStats=buildObservedDetails(THREE,scene,M);
+ const bathStats=buildBathDetails(THREE,scene,M);
+ const mirrorSpecs=takeMirrorSurfaces(THREE,scene);
+ for(const [x,z,y] of[[2.5,2.2,2.38],[4.1,7.1,2.65],[2.9,2.2,5.18]]){const light=new THREE.PointLight(0xffd4a1,2.2,5,2);light.position.set(x,y-.12,z);scene.add(light);}
  box(2.9,.09,9,5.8,.17,.045,M.woodDark);
  box(2.9,2.86,4.2,.2,.25,8.7,M.woodDark);
  box(6,-.25,4,60,.25,60,M.grass);
  // A casa é estática: agrupar superfícies opacas reduz chamadas sem alterar
  // o contrato de colisão. Vidros permanecem separados para ordenação correta.
  const batches=new Map();scene.updateMatrixWorld(true);
+ for(const mesh of scene.children.filter(n=>n.isMesh&&!n.material.transparent))for(const attr of ['position','normal','uv'])if(!mesh.geometry.attributes[attr])throw Error(`Atributo ${attr} ausente: ${mesh.name||JSON.stringify(mesh.userData)}`);
  for(const mesh of [...scene.children]){if(!mesh.isMesh||mesh.material.transparent)continue;const key=`${mesh.material.uuid}:${mesh.castShadow}:${mesh.receiveShadow}`;if(!batches.has(key))batches.set(key,{material:mesh.material,cast:mesh.castShadow,receive:mesh.receiveShadow,items:[]});const clone=mesh.geometry.clone().applyMatrix4(mesh.matrixWorld),flat=clone.index?clone.toNonIndexed():clone;batches.get(key).items.push(flat);if(flat!==clone)clone.dispose();scene.remove(mesh);mesh.geometry.dispose();}
  for(const batch of batches.values()){const geometry=new THREE.BufferGeometry();for(const name of ['position','normal','uv']){const size=batch.items[0].attributes[name].itemSize,length=batch.items.reduce((n,g)=>n+g.attributes[name].array.length,0),values=new Float32Array(length);let offset=0;for(const g of batch.items){values.set(g.attributes[name].array,offset);offset+=g.attributes[name].array.length;}geometry.setAttribute(name,new THREE.BufferAttribute(values,size));}geometry.computeBoundingSphere();const mesh=new THREE.Mesh(geometry,batch.material);mesh.castShadow=batch.cast;mesh.receiveShadow=batch.receive;scene.add(mesh);batch.items.forEach(g=>g.dispose());}
  const exportBake=()=>exportBakeSource(scene,M);
@@ -78,6 +85,8 @@ async function startScene(){
  // alimenta a geometria, a interação e a colisão de nav.js.
  doorSystem.build(THREE,scene,M);
  const bakeSnapshot=new URLSearchParams(location.search).has('bake-export')?exportBake():null;
+ const mirrorSystem=buildMirrors(THREE,scene,mirrorSpecs,{mobile});
+ window.__igorDetails={stats:()=>({deck:{triangles:deckStats.triangles,budget:deckStats.budget},bath:{triangles:bathStats.triangles,budget:bathStats.budget},observed:{triangles:observedStats.triangles,budget:observedStats.budget},mirrors:mirrorSystem.diagnostics()})};
  const vegetationStats=await addReferenceTrees(THREE,scene,{mobile});
  const grassStats=await addGrassClusters(THREE,scene,{mobile});vegetationStats.grassTriangles=grassStats.triangles;vegetationStats.grass=grassStats;
  const plantStats=await addPottedPlants(THREE,scene,M);vegetationStats.potted=plantStats;
@@ -91,7 +100,7 @@ async function startScene(){
  function toggleDoor(){const id=doorSystem.nearest(state)?.id;if(!id)return;stopMoving();const result=doorSystem.toggle(id,state);doorMessageId=result.ok?null:id;$('door-message').textContent=result.ok?'':result.status==='passagem_obstruida'?'Afaste-se um passo para liberar a abertura da porta.':'Aproxime-se da porta.';requestRender();}
  $('door-toggle').onclick=toggleDoor;
  addEventListener('keydown',e=>{if(e.code==='KeyE'&&!e.repeat&&walking&&!$('photoDialog').open&&$('cover').hidden){e.preventDefault();toggleDoor();}});
- function render(){camera.position.set(worldX(state.x),state.y+1.65,state.z);camera.rotation.set(pitch,worldYaw(yaw),0);syncRoom();updateDoorControl();renderer.render(scene,camera);}
+ function render(){camera.position.set(worldX(state.x),state.y+1.65,state.z);camera.rotation.set(pitch,worldYaw(yaw),0);syncRoom();updateDoorControl();mirrorSystem.update(state);renderer.render(scene,camera);}
  function footSurface(){if(state.y>.15&&state.y<2.85)return 'wood';const a=floorAreas.find(a=>Math.abs(a.level-state.y)<.2&&state.x>a.rect[0]&&state.x<a.rect[2]&&state.z>a.rect[1]&&state.z<a.rect[3]);if(a?.material==='grass'&&state.z<0){const p=[[-6,0],[-6,-8.4],[-.8,-7],[5.5,-3.9],[10.3,-3.9],[10.3,0]];let inside=false;for(let i=0,j=p.length-1;i<p.length;j=i++){if((p[i][1]>state.z)!==(p[j][1]>state.z)&&state.x<(p[j][0]-p[i][0])*(state.z-p[i][1])/(p[j][1]-p[i][1])+p[i][0])inside=!inside;}if(inside)return 'stone';}return a?.material||'stone';}
  function tick(t){frame=0;if(stopped)return;const dt=Math.min(.04,(t-(lastTime||t))/1000);lastTime=t;if(walking&&keys.size&&!$('photoDialog').open){let f=(keys.has('forward')?1:0)-(keys.has('back')?1:0),s=(keys.has('right')?1:0)-(keys.has('left')?1:0),n=Math.hypot(f,s)||1;f/=n;s/=n;const delta=movement(yaw,f,s),before=state;state=move(state,delta.x*dt*2.3,delta.z*dt*2.3);footsteps.moved(before,state,footSurface());}if(!$('photoDialog').open)doorSystem.advance(dt,state);render();if((walking&&keys.size&&!$('photoDialog').open)||(doorSystem.isAnimating()&&!$('photoDialog').open))frame=requestAnimationFrame(tick);else{lastTime=0;void footsteps.stop();}}
  function requestRender(){if(!stopped&&!frame)frame=requestAnimationFrame(tick);}

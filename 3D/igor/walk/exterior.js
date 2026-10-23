@@ -1,7 +1,7 @@
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {buildDiningSet} from './interior-detail.js';
-import {roofPlanes} from './roof-layout.js?v=interior-r1';
-export {roofPlanes} from './roof-layout.js?v=interior-r1';
+import {roofPlanes} from './roof-layout.js?v=details-r2';
+export {roofPlanes} from './roof-layout.js?v=details-r2';
 
 // Formas observáveis nas fotos 03/04/05. Escala e profundidade permanecem estimadas.
 export const treePlacements=[

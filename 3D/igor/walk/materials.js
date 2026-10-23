@@ -1,5 +1,5 @@
 export async function createMaterials(THREE,renderer,{mobile=false}={}){
- const asset=name=>new URL(`./assets/materials/${mobile?'mobile/':''}${name}?v=interior-r1`,import.meta.url).href;
+ const asset=name=>new URL(`./assets/materials/${mobile?'mobile/':''}${name}?v=details-r2`,import.meta.url).href;
  const loader=new THREE.TextureLoader(),maxAnisotropy=Math.min(mobile?4:8,renderer.capabilities?.getMaxAnisotropy?.()??1);
  const load=async(name,{color=false,repeat=1}={})=>{const texture=await loader.loadAsync(asset(name));texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.repeat.set(repeat,repeat);texture.anisotropy=maxAnisotropy;texture.colorSpace=color?THREE.SRGBColorSpace:THREE.NoColorSpace;return texture};
  // Dois mapas por vez limitam o pico de decodificação durante o carregamento.
