@@ -1,5 +1,5 @@
 // Hipótese espacial experimental: medidas, ligações e volumes estimados das fotos.
-import {createDoors} from './doors.js?v=facade-r3';
+import {createDoors} from './doors.js?v=interior-r1';
 import {applyObservedFacade} from './facade-reference.js?v=facade-r3';
 export const levels={ground:0,upper:3}; const R=.20;
 export const rooms=[

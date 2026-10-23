@@ -66,3 +66,22 @@ export function buildGrassDetail(THREE,scene,M,{mobile=false}={}){
  grass.name='front-lawn-short-grass';grass.castShadow=false;grass.receiveShadow=true;grass.instanceMatrix.needsUpdate=true;if(grass.instanceColor)grass.instanceColor.needsUpdate=true;scene.add(grass);
  return {mesh:grass,placements,triangles:placements.length*8,drawCalls:1};
 }
+
+// Tufos fotográficos da base do Vale. Instâncias limitadas e sem loop ocioso.
+export async function addGrassClusters(THREE,scene,{mobile=false}={}){
+ const {GLTFLoader}=await import('./vendor/GLTFLoader.js');
+ const source=(await new GLTFLoader().loadAsync(new URL('./assets/grass-clusters.glb',import.meta.url).href)).scene;
+ source.updateMatrixWorld(true);const variants=[];source.traverse(o=>{if(o.isMesh)variants.push(o);});
+ if(!variants.length||variants.length>3)throw Error('Variantes de grama inválidas');
+ const positions=placeGrassBlades({mobile,count:mobile?150:420,seed:0x48f6}),stats={instances:positions.length,triangles:0,drawCalls:variants.length,variants:variants.length};
+ variants.forEach((o,index)=>{
+  const geometry=o.geometry.clone().applyMatrix4(o.matrixWorld);geometry.computeBoundingBox();const b=geometry.boundingBox,size=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());if(![size.x,size.y,size.z].every(v=>Number.isFinite(v)&&v>0))throw Error('Geometria de grama inválida');geometry.translate(-c.x,-b.min.y,-c.z);geometry.scale(.42/Math.max(size.x,size.z),.075/size.y,.42/Math.max(size.x,size.z));
+  const material=o.material.clone();material.side=THREE.DoubleSide;material.alphaTest=.4;material.transparent=false;material.roughness=1;
+  const normals=geometry.attributes.normal;for(let i=0;i<normals.count;i++){const v=new THREE.Vector3(normals.getX(i)*.22,.94,normals.getZ(i)*.22).normalize();normals.setXYZ(i,v.x,v.y,v.z);}
+  material.onBeforeCompile=shader=>{shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
+   vec3 clusterWorld=(modelMatrix*instanceMatrix*vec4(position,1.0)).xyz;
+   transformed.y *= 1.0-smoothstep(5.0,9.0,distance(cameraPosition.xz,clusterWorld.xz));`);shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_begin>',THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;','normal *= 1.0;'));};material.customProgramCacheKey=()=> 'grass-clusters-nearfield-v2';
+  const chosen=positions.filter((_,i)=>i%variants.length===index),mesh=new THREE.InstancedMesh(geometry,material,chosen.length),m=new THREE.Matrix4(),q=new THREE.Quaternion();
+  chosen.forEach((p,i)=>{q.setFromAxisAngle(new THREE.Vector3(0,1,0),p.rotation);const s=.80+p.tone*.4;m.compose(new THREE.Vector3(p.x,.002,p.z),q,new THREE.Vector3(s,s,s));mesh.setMatrixAt(i,m);});mesh.receiveShadow=true;mesh.castShadow=false;scene.add(mesh);stats.triangles+=(geometry.index?.count||geometry.attributes.position.count)/3*chosen.length;
+ });return stats;
+}

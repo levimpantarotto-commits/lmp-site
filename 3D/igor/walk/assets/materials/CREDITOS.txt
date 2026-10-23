@@ -13,14 +13,26 @@ O mapa de pedra é um material provisório em tons bege para o
 estudo; não é fotografia nem evidência da pedra da casa do Igor.
 
 A base declara os materiais da maquete como Poly Haven, CC0:
-https://polyhaven.com/license. Os créditos completos da origem permanecem em
-work/aeropixel-experiencia-3d-20261021/dist/assets/CREDITOS.txt e no manifesto
-materiais-terreno.json. Nenhum material representa levantamento ou textura
+https://polyhaven.com/license. Os créditos e manifestos completos da origem
+permanecem no acervo interno de produção. Nenhum material representa levantamento ou textura
 extraída da casa fotografada.
 
-Celular: versões mecânicas de 512px dos mesmos 16 mapas, em mobile/.
+Celular: versões mecânicas de 512px dos mesmos 21 mapas, em mobile/.
 Mantêm cores, função PBR e licença. Não são materiais simplificados desenhados.
 
 Telha, prado, reboco, cascalho e concreto: pares diffuse/normal derivados em
 1024×1024 dos JPEGs 2048×2048 da mesma base local, sem desenho ou geração de
-textura. `FONTES.json` registra o nome, caminho, dimensões e SHA-256 das fontes.
+textura. O manifesto interno registra a origem, dimensões e SHA-256 das fontes.
+
+Tecidos: Poly Haven rough_linen, CC0 https://polyhaven.com/a/rough_linen.
+Diffuse neutralizado para tingimento, normalGL e rugosidade da mesma captura;
+escala0,2707m da amostra, não tecido medido da casa. DETALHES-FONTE.json
+registra fontes e hashes. Desktop1024/mobile512, reamostragem mínima de aspecto.
+Planta: Poly Haven potted_plant_01, CC0, https://polyhaven.com/a/potted_plant_01.
+Derivado GLB512px, redução de malha preservando silhueta; espécie ilustrativa.
+Tufos: grass_bermuda_01, CC0, https://polyhaven.com/a/grass_bermuda_01,
+reutilizados do subbosque.glb da base do Vale. Posição/altura estimadas.
+
+Cubas: rock_face, CC0 https://polyhaven.com/a/rock_face, selecionado da base,
+512px em ambos os perfis; albedo neutralizado, normal reduzido; CUBA-FONTE.json.
+Substitui mapa de alvenaria aplicado indevidamente à pedra do lavatório.

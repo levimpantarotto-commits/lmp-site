@@ -1,20 +1,15 @@
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {buildDiningSet} from './interior-detail.js';
+import {roofPlanes} from './roof-layout.js?v=interior-r1';
+export {roofPlanes} from './roof-layout.js?v=interior-r1';
 
 // Formas observáveis nas fotos 03/04/05. Escala e profundidade permanecem estimadas.
-export const roofPlanes=[
- {id:'cobertura-principal',x:2.9,z:4.5,w:7.0,d:10.1,front:5.95,back:6.55},
- {id:'alpendre-frontal',x:2.9,z:-.55,w:7.0,d:2.9,front:2.72,back:3.65},
- {id:'ala-direita',x:8.0,z:1.5,w:4.8,d:4.2,front:3.05,back:4.45},
- {id:'ala-direita-retorno',x:8.0,z:5.9,w:4.8,d:4.6,front:4.45,back:3.05},
- {id:'ala-posterior',x:2.9,z:11,w:6.3,d:4.4,front:6.55,back:6.15}
-];
 export const treePlacements=[
  [-8,-9,0,10,0],[-9,-2,0,12,1],[-7.5,5,0,10.5,0],[-8,12,0,13,1],
  [-3,17,0,11,0],[3,18,0,12,1],[10,18,0,10,0],[16,13,0,11,1],
  [-13,-5,0,13,0],[-12,7,0,12,1],[-12,17,0,12,0],[17,4,0,8,1]
 ];
-export function buildExterior(THREE,scene,M,box,cylinder){
+export function buildExterior(THREE,scene,M,box,cylinder,walls=[]){
  function slope(r){const rise=r.back-r.front,len=Math.hypot(r.d,rise),angle=-Math.atan2(rise,r.d),mesh=box(r.x,(r.front+r.back)/2,r.z,r.w,.10,len,M.roof);mesh.rotation.x=angle;
   const underside=box(r.x,(r.front+r.back)/2-.09,r.z,r.w,.06,len,M.wood);underside.rotation.x=angle;
   for(const side of[-1,1]){const fascia=box(r.x+side*(r.w/2-.04),(r.front+r.back)/2-.04,r.z,.09,.18,len+.05,M.woodDark);fascia.rotation.x=angle;}
@@ -55,7 +50,10 @@ export function buildExterior(THREE,scene,M,box,cylinder){
  box(-6.15,.85,-5.5,.30,1.7,25,M.stone);box(14,.88,-4,.26,1.76,28,M.stone);
  for(let i=0;i<10;i++)box(13.8,1.06,-16+i*2.7,.14,2.12,.14,M.plaster);
  // Sombra de contato/escala física: rodapé e calha no beiral.
- box(2.9,.10,-.12,5.8,.20,.18,M.stone);box(2.9,2.66,-2.05,7.1,.10,.10,M.metal);
+ // Rodapé recortado pelos vãos reais, sem degrau de20cm atravessando a porta.
+ const doorIntervals=(walls[0]?.openings||[{from:3.5,to:5.3,type:'door'}]).filter(o=>o.type==='door').sort((a,b)=>a.from-b.from);let cursor=0;
+ for(const o of [...doorIntervals,{from:5.8,to:5.8}]){if(o.from>cursor)box((cursor+o.from)/2,.10,-.12,o.from-cursor,.20,.18,M.stone);cursor=o.to;}
+ box(2.9,2.66,-2.05,7.1,.10,.10,M.metal);
  for(const x of[-.36,6.15])cylinder(x,1.33,-1.95,.035,2.66,M.metal,12);
 }
 
