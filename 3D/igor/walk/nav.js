@@ -4,7 +4,9 @@ import {applyObservedFacade} from './facade-reference.js?v=facade-r3';
 import {deckObstacles} from './deck-details.js';
 import {observedObstacles} from './observed-details.js';
 import {bathObstacles} from './bath-details.js';
-export const levels={ground:0,upper:3}; const R=.20;
+import {kitchenObstacles} from './kitchen-reference.js';
+import {createPlanCalibration} from './spatial-calibration.js';
+export const levels={ground:0,upper:3}; let R=.20;
 export const rooms=[
  {id:'sala',name:'Sala',note:'Núcleo social observado; escala estimada.',kind:'NÚCLEO OBSERVADO',photo:11,level:0,rect:[0,0,5.8,9],spawn:[3,0,1],yaw:Math.PI,estimate:true},{id:'cozinha',name:'Cozinha',note:'Integrada à sala; limite funcional.',kind:'NÚCLEO OBSERVADO',photo:6,level:0,rect:[2.9,5.4,5.8,9],spawn:[3.0,0,8.2],yaw:0,estimate:true},{id:'banheiro1',name:'Banheiro social',note:'Ligação espacial estimada.',kind:'LIGAÇÃO ESTIMADA',photo:13,level:0,rect:[0,9,2.7,12],spawn:[1.4,0,10.5],yaw:0,estimate:true},{id:'hall',name:'Hall',note:'Distribuição estimada entre os quartos.',kind:'LIGAÇÃO ESTIMADA',photo:12,level:0,rect:[2.7,9,5.8,12],spawn:[4.2,0,10.7],yaw:0,estimate:true},{id:'quarto14',name:'Quarto I',note:'Volume e ligação estimados.',kind:'LIGAÇÃO ESTIMADA',photo:14,level:0,rect:[5.8,0,9.8,8],spawn:[7.8,0,6.9],yaw:0,estimate:true},{id:'quarto15',name:'Quarto II',note:'Volume e ligação estimados.',kind:'LIGAÇÃO ESTIMADA',photo:15,level:0,rect:[5.8,8,9.8,12],spawn:[9.1,0,10.8],yaw:0,estimate:true},{id:'banheiro2',name:'Banheiro II',note:'Volume e ligação estimados.',kind:'LIGAÇÃO ESTIMADA',photo:16,level:0,rect:[9.8,8,12.5,12],spawn:[11.1,0,10.7],yaw:0,estimate:true},{id:'mezanino',name:'Mezanino',note:'Piso superior observado; abertura estimada.',kind:'NÚCLEO OBSERVADO',photo:1,level:3,rect:[0,0,5.8,9],spawn:[3.4,3,7.3],yaw:0,estimate:true},{id:'quarto18',name:'Quarto de teto inclinado',note:'Ligação superior estimada, relocalizada atrás do mezanino; não é prova de planta.',kind:'LIGAÇÃO ESTIMADA',photo:18,level:3,rect:[0,9,5.8,13],spawn:[3,3,11.3],yaw:0,estimate:true},{id:'deck',name:'Deck',note:'Acesso e escala estimada.',kind:'LIGAÇÃO ESTIMADA',photo:19,level:0,rect:[-4,0,0,9],spawn:[-2,0,4],yaw:0,estimate:true},{id:'jardim',name:'Jardim frontal',note:'Área externa de conexão estimada.',kind:'NÚCLEO OBSERVADO',photo:3,level:0,rect:[-6,-18,14,0],spawn:[11,0,-14],yaw:2.69,estimate:true},{id:'quintalDireito',name:'Jardim lateral',note:'Circulação externa estimada.',kind:'LIGAÇÃO ESTIMADA',photo:20,level:0,rect:[9.8,0,16,8],spawn:[13,0,6],yaw:0,estimate:true}
 ];
@@ -33,7 +35,31 @@ Object.assign(furniture.find(f=>f.id==='cama15'),{rect:[6.4,10.45,8.5,11.85],tur
 furniture.push({id:'geladeira',rect:[2.1,8.15,2.85,8.85],level:0,kind:'fridge',height:2.0});
 furniture.find(f=>f.id==='sofaMezanino').turn=Math.PI; // foto01: encosto no vidro, assento voltado ao ambiente
 applyObservedFacade(rooms,floorAreas,walls,furniture);
-export const stairs={rect:[.4,3.9,1.5,7.2],from:0,to:3,axis:'z'};
+// Fotos10/11: U encostado, aberto para +Z (cozinha), não uma barreira ao fundo.
+Object.assign(furniture.find(f=>f.id==='sofa'),{rect:[.18,.30,1.10,3.00],turn:-Math.PI/2});
+Object.assign(furniture.find(f=>f.id==='sofaDireito'),{rect:[2.55,.30,3.40,3.00],turn:Math.PI/2});
+Object.assign(furniture.find(f=>f.id==='sofaFundo'),{rect:[1.10,.15,2.55,1.05],turn:Math.PI});
+walls.push({...wall([3.52,0],[3.52,3.15],0,'plaster'),height:1.48});
+Object.assign(walls[1].openings[0],{from:3.1,to:4.3});
+rooms.find(r=>r.id==='sala').spawn=[2.05,0,2.4];
+// A bancada é contínua na parede da foto07. A antiga porta atravessava esse
+// móvel; o acesso interno estimado à ala passa pelo quarto posterior existente.
+walls[8].openings=[{from:.55,to:2.25,bottom:1.40,top:2.10,type:'window',panels:4}];
+walls[13].openings=[{from:.55,to:1.75,bottom:0,top:2.5,type:'door'}];
+walls[3].openings[1]={from:2.85,to:3.95,bottom:0,top:2.5,type:'door'};
+walls[9].openings[0]={from:1,to:2.1,bottom:0,top:2.5,type:'door'};
+walls[15].openings[0]={from:1,to:2.2,bottom:0,top:2.5,type:'door'};
+Object.assign(rooms.find(r=>r.id==='cozinha'),{spawn:[4.20,0,5.45],yaw:Math.PI});
+for(const id of['bancada','geladeira']){const i=furniture.findIndex(f=>f.id===id);if(i>=0)furniture.splice(i,1);}
+for(const item of kitchenObstacles)furniture.push({id:item.id,rect:[...item.rect],level:0,kind:'kitchen-footprint'});
+// Camas deixam de ser blocos demasiado curtos após converter o plano em metros.
+Object.assign(furniture.find(f=>f.id==='cama15'),{rect:[5.95,10.18,8.55,12.00],turn:Math.PI/2});
+Object.assign(furniture.find(f=>f.id==='cama18'),{rect:[.4,9.9,2.2,12.6],turn:0});
+export const stairs={rect:[.4,4.2,1.5,8.1],from:0,to:3,axis:'z'};
+floorAreas.find(f=>f.level===3&&f.holes).holes=[[0,3.9,1.8,8.0],[2.45,4.1,3.95,5.55]];
+// O vidro fotografado é piso, não um buraco intransponível.
+floorAreas.push({rect:[2.45,4.1,3.95,5.55],level:3,material:'floorGlass'});
+export const calibration=createPlanCalibration(floorAreas,walls);R=.20/calibration.scale;
 // Colisores dos detalhes construídos em exterior.js, sem duplicar suas malhas.
 export const exteriorObstacles=[[2.44,6.48,2.86,6.92],[3.39,5.48,3.81,5.92],[3.39,7.48,3.81,7.92],[1.2,-1.08,2.4,-.57],[-.15,-1.75,-.05,-1.65],[5.77,-1.75,5.87,-1.65],[3.38,-1.62,3.82,-1.18],[5.28,-1.62,5.72,-1.18],[-3.22,2.78,-2.78,3.22],[-3.22,6.78,-2.78,7.22]];
 exteriorObstacles.push([5.85,.14,6.41,.90]); // armário observado sob a janela lateral

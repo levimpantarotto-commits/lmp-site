@@ -2,14 +2,16 @@
 // Sem criar cômodos ou esconder vãos para encaixar a decoração.
 export const observedObstacles=[[8.85,11.18,9.60,11.84]];
 export const detailEvidence={kitchen:{photos:[6,7,8],observed:['cooktop','micro-ondas','cafeteira','torradeira','nichos','portas de madeira']},bedroom:{photos:[15],observed:['armário de madeira','ar-condicionado','toalhas','arandelas']},pendants:{photos:[1,10,11],observed:['cúpula trançada','lâmpadas pendentes']},classification:'formas derivadas; coordenadas, dimensões e ligações estimadas'};
-export function buildObservedDetails(T,scene,M){
+export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  const meshes=[],add=(g,m,x,y,z,name,rot=0)=>{const o=new T.Mesh(g,m);o.position.set(x,y,z);o.rotation.y=rot;o.name=name;o.castShadow=o.receiveShadow=true;o.userData.observedDetail=name;scene.add(o);meshes.push(o);return o;};
  const box=(x,y,z,w,h,d,m,name,rot=0)=>{const g=new T.BoxGeometry(w,h,d),p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv;for(let i=0;i<u.count;i++)u.setXY(i,(Math.abs(n.getX(i))>.5?p.getZ(i):p.getX(i))/2,(Math.abs(n.getY(i))>.5?p.getZ(i):p.getY(i))/2);return add(g,m,x,y,z,name,rot);};
  const bevel=(x,y,z,w,h,d,m,name,r=.012)=>{const g=new T.BoxGeometry(w,h,d,6,6,6),p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv,q=Math.min(r,w*.22,h*.22,d*.22),half=[w/2,h/2,d/2];for(let i=0;i<p.count;i++){const v=[p.getX(i),p.getY(i),p.getZ(i)],inset=v.map((v,k)=>Math.max(-half[k]+q,Math.min(half[k]-q,v))),vnorm=new T.Vector3(...v.map((v,k)=>v-inset[k])).normalize();p.setXYZ(i,...inset.map((v,k)=>v+vnorm.getComponent(k)*q));n.setXYZ(i,vnorm.x,vnorm.y,vnorm.z);u.setXY(i,(Math.abs(vnorm.x)>.5?v[2]:v[0])/2,(Math.abs(vnorm.y)>.5?v[2]:v[1])/2);}return add(g,m,x,y,z,name);};
  const cyl=(x,y,z,r,h,m,name,seg=20)=>add(new T.CylinderGeometry(r,r,h,seg),m,x,y,z,name);
  const tube=(points,r,m,name,seg=18)=>add(new T.TubeGeometry(new T.CatmullRomCurve3(points.map(v=>new T.Vector3(...v))),seg,r,5,false),m,0,0,0,name);
  const steel=M.stainless||M.metal,black=M.black,wood=M.wood,dark=M.woodDark;
- // Os aparelhos serão assentados no tampo único de interior-assets.
+ // Referência antiga preservada apenas para comparação; a cozinha integrada
+ // vigente é kitchen-reference.js, nunca desenhar os dois conjuntos juntos.
+ if(includeLegacyKitchen){
  box(5.30,.928,6.31,.50,.045,.51,black,'cooktop');
  for(const x of[5.16,5.44])for(const z of[6.17,6.44]){cyl(x,.958,z,.075,.020,steel,'burner');cyl(x,.970,z,.048,.014,black,'burner-cap');for(const sign of[-1,1]){box(x+sign*.075,.988,z,.014,.02,.18,M.metal,'burner-support');box(x,.988,z+sign*.075,.18,.02,.014,M.metal,'burner-support');}}
  for(const z of[6.08,6.23,6.38,6.53])cyl(5.04,.964,z,.025,.028,black,'cooktop-knob',12);
@@ -31,6 +33,7 @@ export function buildObservedDetails(T,scene,M){
  for(const h of[1.50,1.91,2.32])box(5.47,h,8.08,.50,.055,1.64,M.plaster,'kitchen-niche-shelf');
  for(const z of[7.26,7.82,8.37,8.90])box(5.47,2.10,z,.50,.38,.05,M.plaster,'kitchen-niche-divider');
  for(let i=0;i<8;i++){const z=7.40+i*.18;cyl(5.34,2.01,z,.045,.14,i%3?M.ceramic||M.white:M.metal,'storage-jar',14);cyl(5.34,2.09,z,.047,.018,wood,'jar-lid',14);}
+ }
  // Armário de duas portas ripadas e ferragens da foto15.
  box(9.225,1.15,11.52,.75,2.30,.64,wood,'bedroom-cupboard');
  for(const x of[9.04,9.41]){box(x,1.17,11.182,.345,2.10,.045,dark,'cupboard-door-frame');for(let i=0;i<12;i++)box(x,.20+i*.17,11.15,.302,.158,.025,wood,'cupboard-slat');}

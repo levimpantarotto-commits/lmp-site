@@ -1,19 +1,22 @@
 import * as THREE from './vendor/three.module.js';
-import {createMaterials} from './materials.js?v=details-r2';
-import {buildInteriorAssets} from './interior-assets.js?v=details-r2';
+import {createMaterials} from './materials.js?v=scale-r1';
+import {buildInteriorAssets} from './interior-assets.js?v=scale-r1';
 import {buildDeckDetails} from './deck-details.js';
-import {buildObservedDetails} from './observed-details.js';
+import {buildObservedDetails} from './observed-details.js?v=scale-r1';
+import {buildKitchenReference} from './kitchen-reference.js?v=scale-r1';
+import {buildMasonryReference} from './masonry-reference.js?v=scale-r1';
+import {calibrateNode,metricPosition} from './spatial-calibration.js?v=scale-r1';
 import {buildBathDetails} from './bath-details.js';
 import {takeMirrorSurfaces,buildMirrors} from './mirror-detail.js';
-import {secondaryRoofs} from './roof-layout.js?v=details-r2';
-import {addPottedPlants} from './plant-detail.js?v=details-r2';
-import {buildExterior,addReferenceTrees} from './exterior.js?v=details-r2';
-import {addGrassClusters} from './grass-detail.js?v=details-r2';
+import {secondaryRoofs} from './roof-layout.js?v=scale-r1';
+import {addPottedPlants} from './plant-detail.js?v=scale-r1';
+import {buildExterior,addReferenceTrees} from './exterior.js?v=scale-r1';
+import {addGrassClusters} from './grass-detail.js?v=scale-r1';
 import {HDRLoader} from './vendor/HDRLoader.js';
 import {createFootsteps} from './footsteps.js';
-import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=details-r2';
+import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=scale-r1';
 import {facadeAxis,worldX,worldYaw,movement} from './view-transform.js';
-import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem} from './nav.js?v=details-r2';
+import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem,calibration} from './nav.js?v=scale-r1';
 const $=id=>document.getElementById(id),canvas=$('cena'),mobile=matchMedia('(pointer:coarse)').matches;
 let renderer,stopped=false,frame=0;
 const footsteps=createFootsteps();
@@ -36,10 +39,13 @@ async function startScene(){
  const pmrem=new THREE.PMREMGenerator(renderer),environment=pmrem.fromEquirectangular(hdr);
  scene.environment=environment.texture;scene.environmentIntensity=.55;hdr.dispose();pmrem.dispose();
  const material=(color,roughness=.8,extra={})=>new THREE.MeshStandardMaterial({color,roughness,...extra});
+ const planScale=calibration.scale;
+ M.floorGlass=material(0x9ac1c0,.08,{transparent:true,opacity:.24,metalness:.18,depthWrite:false});
+ const metricBuild=fn=>{const previous=new Set(scene.children);const result=fn();for(const node of scene.children)if(!previous.has(node))calibrateNode(node,planScale);return result;};
  function box(x,y,z,w,h,d,mat=M.plaster,rotation=0){const geo=new THREE.BoxGeometry(w,h,d),uv=geo.attributes.uv,norm=geo.attributes.normal;for(let i=0;i<uv.count;i++){const nx=Math.abs(norm.getX(i)),ny=Math.abs(norm.getY(i));uv.setXY(i,uv.getX(i)*(nx>.5?d:w)/2,uv.getY(i)*(ny>.5?d:h)/2);}const mesh=new THREE.Mesh(geo,mat);mesh.position.set(x,y,z);mesh.rotation.y=rotation;mesh.castShadow=mesh.receiveShadow=true;scene.add(mesh);return mesh;}
  function cylinder(x,y,z,r,h,mat,segments=18){const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,segments),mat);mesh.position.set(x,y,z);mesh.castShadow=mesh.receiveShadow=true;scene.add(mesh);return mesh;}
  // Pisos e vãos: geometria e colisão compartilham a mesma fonte.
- floorAreas.forEach(f=>{const holes=f.holes||[],xs=[f.rect[0],f.rect[2],...holes.flatMap(h=>[h[0],h[2]])].sort((a,b)=>a-b),zs=[f.rect[1],f.rect[3],...holes.flatMap(h=>[h[1],h[3]])].sort((a,b)=>a-b);for(let i=1;i<xs.length;i++)for(let j=1;j<zs.length;j++){const x=(xs[i-1]+xs[i])/2,z=(zs[j-1]+zs[j])/2;if(xs[i]-xs[i-1]<.001||zs[j]-zs[j-1]<.001||holes.some(h=>x>h[0]&&x<h[2]&&z>h[1]&&z<h[3]))continue;box(x,f.level-.08,z,xs[i]-xs[i-1],.16,zs[j]-zs[j-1],M[f.material]||M.wood);}});
+ floorAreas.forEach(f=>{const holes=f.holes||[],xs=[f.rect[0],f.rect[2],...holes.flatMap(h=>[h[0],h[2]])].sort((a,b)=>a-b),zs=[f.rect[1],f.rect[3],...holes.flatMap(h=>[h[1],h[3]])].sort((a,b)=>a-b);for(let i=1;i<xs.length;i++)for(let j=1;j<zs.length;j++){const x=(xs[i-1]+xs[i])/2,z=(zs[j-1]+zs[j])/2;if(xs[i]-xs[i-1]<.001||zs[j]-zs[j-1]<.001||holes.some(h=>x>h[0]&&x<h[2]&&z>h[1]&&z<h[3]))continue;box(x,f.level-(f.material==='floorGlass'?.0175:.08),z,xs[i]-xs[i-1],f.material==='floorGlass'?.035:.16,zs[j]-zs[j-1],M[f.material]||M.wood);}});
  walls.forEach(w=>{const dx=w.b[0]-w.a[0],dz=w.b[1]-w.a[1],length=Math.hypot(dx,dz),rot=-Math.atan2(dz,dx),nx=dx/length,nz=dz/length,open=w.openings||[],xs=[0,length,...open.flatMap(o=>[o.from,o.to]),...(w.materialRanges||[]).flatMap(r=>[r.from,r.to])].sort((a,b)=>a-b),ys=[0,w.height,...open.flatMap(o=>[o.bottom,o.top])].sort((a,b)=>a-b),place=(u,v,width,height,depth,mat)=>box(w.a[0]+nx*u,w.base+v,w.a[1]+nz*u,width,height,depth,mat,rot);
   for(let i=1;i<xs.length;i++)for(let j=1;j<ys.length;j++){const u=(xs[i-1]+xs[i])/2,v=(ys[j-1]+ys[j])/2;if(xs[i]-xs[i-1]<.001||ys[j]-ys[j-1]<.001||open.some(o=>u>o.from&&u<o.to&&v>o.bottom&&v<o.top))continue;const range=(w.materialRanges||[]).find(r=>u>=r.from&&u<=r.to);place(u,v,xs[i]-xs[i-1],ys[j]-ys[j-1],.18,M[range?.material||w.material]||M.plaster);}
   for(const o of open){const width=o.to-o.from,h=o.top-o.bottom,mid=(o.from+o.to)/2,cy=(o.top+o.bottom)/2,frame=o.frameWidth||.055;place(o.from,cy,frame,h+.08,.22,M.woodDark);place(o.to,cy,frame,h+.08,.22,M.woodDark);place(mid,o.top,width,frame,.22,M.woodDark);if(o.type==='window'){place(mid,o.bottom,width,frame,.24,M.woodDark);const panels=o.panels??(width>1.2?2:1);for(let p=0;p<panels;p++){place(o.from+(p+.5)*width/panels,cy,width/panels-frame,h-frame,.026,M.glass);if(p>0)place(o.from+p*width/panels,cy,frame,h,.13,M.woodDark);}}else place(mid,.02,width,.04,.25,M.wood);}
@@ -47,23 +53,28 @@ async function startScene(){
  // Juntas finas do porcelanato observado nas fotos06/11, sem alterar colisão.
  const grout=material(0xb8b2a5,.92);
  for(const f of floorAreas.filter(f=>f.material==='tile'&&f.level===0)){const[a,b,c,d]=f.rect;for(let x=a+.6;x<c-.01;x+=.6)box(x,.002,(b+d)/2,.004,.003,d-b,grout).castShadow=false;for(let z=b+.6;z<d-.01;z+=.6)box((a+c)/2,.002,z,c-a,.003,.004,grout).castShadow=false;}
+ const masonryStats=buildMasonryReference(THREE,scene,M,walls);
  const count=18,[sx,sz,ex,ez]=stairs.rect,run=(ez-sz)/count,rise=(stairs.to-stairs.from)/count;
  for(let i=0;i<count;i++)box((sx+ex)/2,stairs.from+(i+1)*rise-.035,sz+(i+.5)*run,ex-sx,.07,run+.015,M.wood);
  for(const x of[sx+.04,ex-.04]){for(let i=1;i<count;i+=3)box(x,(i+1)*rise+.45,sz+(i+.5)*run,.035,.9,.035,M.woodDark);const rail=box(x,1.5+.9,(sz+ez)/2,.045,.045,Math.hypot(ez-sz,stairs.to),M.woodDark);rail.rotation.x=-Math.atan2(stairs.to,ez-sz);}
  // Guarda-corpo de madeira das fotos01/02, não uma placa de vidro inventada.
- for(const z of[3.5,4.7,5.9,7.1])box(1.85,3.48,z,.075,.96,.075,M.wood);
- for(const y of[3.28,3.58,3.93]){box(1.85,y,5.3,.065,.075,3.6,M.wood);box(.9,y,3.45,1.85,.075,.065,M.wood);}
- for(const x of[.04,.9])box(x,3.48,3.45,.075,.96,.075,M.wood);
+ for(const z of[3.9,5.25,6.6,8.0])box(1.85,3.48,z,.075,.96,.075,M.wood);
+ for(const y of[3.28,3.58,3.93]){box(1.85,y,5.95,.065,.075,4.1,M.wood);box(.9,y,3.85,1.85,.075,.065,M.wood);}
+ for(const x of[.04,.9])box(x,3.48,3.85,.075,.96,.075,M.wood);
+ // Moldura do painel de vidro fotografado, separada do vão da escada.
+ for(const x of[2.45,3.95])box(x,2.96,4.825,.07,.10,1.52,M.woodDark);
+ for(const z of[4.1,5.55])box(3.20,2.96,z,1.57,.10,.07,M.woodDark);
  // Tapete claro visível na foto01; escala/posição dentro do estudo estimadas.
  box(3.15,3.006,3.12,1.9,.012,1.45,M.fabricWhite).castShadow=false;
  for(let z=.6;z<9;z+=1.35)box(2.9,5.65,z,6.3,.16,.17,M.woodDark);
  buildExterior(THREE,scene,M,box,cylinder,walls);
  for(const r of rooms.filter(r=>['banheiro1','banheiro2','hall','quarto15'].includes(r.id))){const[a,b,c,d]=r.rect;box((a+c)/2,2.88,(b+d)/2,c-a,.08,d-b,M.wood);}
  for(const r of secondaryRoofs(rooms,floorAreas)){const roof=box(r.x,(r.front+r.back)/2,r.z,r.w,.12,Math.hypot(r.d,r.back-r.front),M.roof);roof.rotation.x=-Math.atan2(r.back-r.front,r.d);}
- for(let z=.8;z<9;z+=1.7){const opening=z>3.5&&z<7.1;box(opening?3.8:2.9,2.86,z,opening?4:5.8,.13,.16,M.woodDark);}
+ for(let z=.8;z<9;z+=1.7){const opening=z>3.9&&z<8.0;box(opening?3.8:2.9,2.86,z,opening?4:5.8,.13,.16,M.woodDark);}
  const interiorStats=buildInteriorAssets(THREE,scene,M,furniture.filter(f=>f.id!=='mesa'),{mobile});
  const deckStats=buildDeckDetails(THREE,scene,M,{mobile});
  const observedStats=buildObservedDetails(THREE,scene,M);
+ const kitchenStats=buildKitchenReference(THREE,scene,M);
  const bathStats=buildBathDetails(THREE,scene,M);
  const mirrorSpecs=takeMirrorSurfaces(THREE,scene);
  for(const [x,z,y] of[[2.5,2.2,2.38],[4.1,7.1,2.65],[2.9,2.2,5.18]]){const light=new THREE.PointLight(0xffd4a1,2.2,5,2);light.position.set(x,y-.12,z);scene.add(light);}
@@ -72,25 +83,30 @@ async function startScene(){
  box(6,-.25,4,60,.25,60,M.grass);
  // A casa é estática: agrupar superfícies opacas reduz chamadas sem alterar
  // o contrato de colisão. Vidros permanecem separados para ordenação correta.
+ // Uma conversão única do plano lógico em metros para a cena, bake, luzes e
+ // materiais dinâmicos. Colisões usam o mesmo fator no raio/velocidade/câmera.
+ for(const node of scene.children)calibrateNode(node,planScale);
  const batches=new Map();scene.updateMatrixWorld(true);
  for(const mesh of scene.children.filter(n=>n.isMesh&&!n.material.transparent))for(const attr of ['position','normal','uv'])if(!mesh.geometry.attributes[attr])throw Error(`Atributo ${attr} ausente: ${mesh.name||JSON.stringify(mesh.userData)}`);
  for(const mesh of [...scene.children]){if(!mesh.isMesh||mesh.material.transparent)continue;const key=`${mesh.material.uuid}:${mesh.castShadow}:${mesh.receiveShadow}`;if(!batches.has(key))batches.set(key,{material:mesh.material,cast:mesh.castShadow,receive:mesh.receiveShadow,items:[]});const clone=mesh.geometry.clone().applyMatrix4(mesh.matrixWorld),flat=clone.index?clone.toNonIndexed():clone;batches.get(key).items.push(flat);if(flat!==clone)clone.dispose();scene.remove(mesh);mesh.geometry.dispose();}
  for(const batch of batches.values()){const geometry=new THREE.BufferGeometry();for(const name of ['position','normal','uv']){const size=batch.items[0].attributes[name].itemSize,length=batch.items.reduce((n,g)=>n+g.attributes[name].array.length,0),values=new Float32Array(length);let offset=0;for(const g of batch.items){values.set(g.attributes[name].array,offset);offset+=g.attributes[name].array.length;}geometry.setAttribute(name,new THREE.BufferAttribute(values,size));}geometry.computeBoundingSphere();const mesh=new THREE.Mesh(geometry,batch.material);mesh.castShadow=batch.cast;mesh.receiveShadow=batch.receive;scene.add(mesh);batch.items.forEach(g=>g.dispose());}
- const exportBake=()=>exportBakeSource(scene,M);
+ const exportBake=()=>({...exportBakeSource(scene,M),planScale,areaCalibration:calibration});
  let bakedStats={enabled:false};
  const lightQuery=new URLSearchParams(location.search);
  if(lightQuery.get('lighting')!=='baseline'&&!lightQuery.has('bake-export'))bakedStats=await applyBakedLighting(THREE,scene,{mobile}).catch(error=>({enabled:false,reason:error.message}));
  if(bakedStats.enabled)ambientFill.intensity=.28;
  // Folhas móveis ficam fora do agrupamento estático. A mesma instância
  // alimenta a geometria, a interação e a colisão de nav.js.
- doorSystem.build(THREE,scene,M);
+ metricBuild(()=>doorSystem.build(THREE,scene,M));
  const bakeSnapshot=new URLSearchParams(location.search).has('bake-export')?exportBake():null;
- const mirrorSystem=buildMirrors(THREE,scene,mirrorSpecs,{mobile});
- window.__igorDetails={stats:()=>({deck:{triangles:deckStats.triangles,budget:deckStats.budget},bath:{triangles:bathStats.triangles,budget:bathStats.budget},observed:{triangles:observedStats.triangles,budget:observedStats.budget},mirrors:mirrorSystem.diagnostics()})};
+ const mirrorSystem=metricBuild(()=>buildMirrors(THREE,scene,mirrorSpecs,{mobile}));
+ window.__igorDetails={stats:()=>({area:calibration,kitchen:{triangles:kitchenStats.triangles,budget:kitchenStats.budget},masonry:{triangles:masonryStats.triangles,budget:masonryStats.budget},deck:{triangles:deckStats.triangles,budget:deckStats.budget},bath:{triangles:bathStats.triangles,budget:bathStats.budget},observed:{triangles:observedStats.triangles,budget:observedStats.budget},mirrors:mirrorSystem.diagnostics()})};
+ const vegetationBefore=new Set(scene.children);
  const vegetationStats=await addReferenceTrees(THREE,scene,{mobile});
  const grassStats=await addGrassClusters(THREE,scene,{mobile});vegetationStats.grassTriangles=grassStats.triangles;vegetationStats.grass=grassStats;
  const plantStats=await addPottedPlants(THREE,scene,M);vegetationStats.potted=plantStats;
- const visualRoot=new THREE.Group();for(const child of [...scene.children])visualRoot.add(child);visualRoot.scale.x=-1;visualRoot.position.x=facadeAxis;scene.add(visualRoot);
+ for(const node of scene.children)if(!vegetationBefore.has(node))calibrateNode(node,planScale);
+ const visualRoot=new THREE.Group();for(const child of [...scene.children])visualRoot.add(child);visualRoot.scale.x=-1;visualRoot.position.x=facadeAxis*planScale;scene.add(visualRoot);
  let doorMessageId=null;
  let state={x:11,z:-14,y:0},yaw=2.69,pitch=.035,walking=false,drag=false,lastX=0,lastY=0,lastTime=0,activeRoom=null;
  const keys=new Set(),keyMap={KeyW:'forward',ArrowUp:'forward',KeyS:'back',ArrowDown:'back',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right'};
@@ -100,9 +116,9 @@ async function startScene(){
  function toggleDoor(){const id=doorSystem.nearest(state)?.id;if(!id)return;stopMoving();const result=doorSystem.toggle(id,state);doorMessageId=result.ok?null:id;$('door-message').textContent=result.ok?'':result.status==='passagem_obstruida'?'Afaste-se um passo para liberar a abertura da porta.':'Aproxime-se da porta.';requestRender();}
  $('door-toggle').onclick=toggleDoor;
  addEventListener('keydown',e=>{if(e.code==='KeyE'&&!e.repeat&&walking&&!$('photoDialog').open&&$('cover').hidden){e.preventDefault();toggleDoor();}});
- function render(){camera.position.set(worldX(state.x),state.y+1.65,state.z);camera.rotation.set(pitch,worldYaw(yaw),0);syncRoom();updateDoorControl();mirrorSystem.update(state);renderer.render(scene,camera);}
+ function render(){camera.position.set(worldX(state.x)*planScale,state.y+1.65,state.z*planScale);camera.rotation.set(pitch,worldYaw(yaw),0);syncRoom();updateDoorControl();mirrorSystem.update(state);renderer.render(scene,camera);}
  function footSurface(){if(state.y>.15&&state.y<2.85)return 'wood';const a=floorAreas.find(a=>Math.abs(a.level-state.y)<.2&&state.x>a.rect[0]&&state.x<a.rect[2]&&state.z>a.rect[1]&&state.z<a.rect[3]);if(a?.material==='grass'&&state.z<0){const p=[[-6,0],[-6,-8.4],[-.8,-7],[5.5,-3.9],[10.3,-3.9],[10.3,0]];let inside=false;for(let i=0,j=p.length-1;i<p.length;j=i++){if((p[i][1]>state.z)!==(p[j][1]>state.z)&&state.x<(p[j][0]-p[i][0])*(state.z-p[i][1])/(p[j][1]-p[i][1])+p[i][0])inside=!inside;}if(inside)return 'stone';}return a?.material||'stone';}
- function tick(t){frame=0;if(stopped)return;const dt=Math.min(.04,(t-(lastTime||t))/1000);lastTime=t;if(walking&&keys.size&&!$('photoDialog').open){let f=(keys.has('forward')?1:0)-(keys.has('back')?1:0),s=(keys.has('right')?1:0)-(keys.has('left')?1:0),n=Math.hypot(f,s)||1;f/=n;s/=n;const delta=movement(yaw,f,s),before=state;state=move(state,delta.x*dt*2.3,delta.z*dt*2.3);footsteps.moved(before,state,footSurface());}if(!$('photoDialog').open)doorSystem.advance(dt,state);render();if((walking&&keys.size&&!$('photoDialog').open)||(doorSystem.isAnimating()&&!$('photoDialog').open))frame=requestAnimationFrame(tick);else{lastTime=0;void footsteps.stop();}}
+ function tick(t){frame=0;if(stopped)return;const dt=Math.min(.04,(t-(lastTime||t))/1000);lastTime=t;if(walking&&keys.size&&!$('photoDialog').open){let f=(keys.has('forward')?1:0)-(keys.has('back')?1:0),s=(keys.has('right')?1:0)-(keys.has('left')?1:0),n=Math.hypot(f,s)||1;f/=n;s/=n;const delta=movement(yaw,f,s),before=state;state=move(state,delta.x*dt*2.3/planScale,delta.z*dt*2.3/planScale);footsteps.moved(metricPosition(before,planScale),metricPosition(state,planScale),footSurface());}if(!$('photoDialog').open)doorSystem.advance(dt,state);render();if((walking&&keys.size&&!$('photoDialog').open)||(doorSystem.isAnimating()&&!$('photoDialog').open))frame=requestAnimationFrame(tick);else{lastTime=0;void footsteps.stop();}}
  function requestRender(){if(!stopped&&!frame)frame=requestAnimationFrame(tick);}
  function stopMoving(){keys.clear();drag=false;lastTime=0;footsteps.stop();requestRender();}
  function setWalking(value){walking=value;$('walk-toggle').setAttribute('aria-pressed',String(value));$('walk-toggle').textContent=value?'Pausar caminhada':'Caminhar';$('touch').hidden=!value;if(!value)stopMoving();requestRender();}
@@ -119,5 +135,5 @@ async function startScene(){
  function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();requestRender();}addEventListener('resize',resize);
  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();fallback('O navegador interrompeu o 3D. Você pode tentar novamente ou consultar as fotos.');});$('retry').onclick=()=>location.reload();
  const map=$('map-shapes');rooms.filter(r=>r.level===0).forEach(r=>{const node=document.createElementNS('http://www.w3.org/2000/svg','rect');for(const [k,v]of Object.entries({x:(worldX(r.rect[2])+11)*5,y:(r.rect[1]+19)*5,width:(r.rect[2]-r.rect[0])*5,height:(r.rect[3]-r.rect[1])*5,fill:r.estimate?'#8d68424d':'#dbd2b22e',stroke:'#d8c8aa','stroke-width':.6}))node.setAttribute(k,String(v));map.append(node);});
- const readyMs=Math.round(performance.now()-started);window.__igorWalk={exportBake:()=>bakeSnapshot,getState:()=>({...state,yaw,pitch,walking,room:activeRoom?.id,idle:!frame,baked:bakedStats,triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,vegetation:vegetationStats,interior:{triangles:interiorStats.triangles,withinBudget:interiorStats.withinBudget,byId:interiorStats.byId},mobile,readyMs,pixelRatio:renderer.getPixelRatio(),memory:{...renderer.info.memory},sound:footsteps.diagnostics(),doors:doorSystem.snapshot()}),jumpTo:id=>{const r=rooms.find(r=>r.id===id);if(r)jump(r);},reset:()=>{state={x:11,z:-14,y:0};yaw=2.69;pitch=.035;stopMoving();},step:(dx,dz)=>{state=move(state,dx,dz);requestRender();},inspectPose:p=>{if(isWalkable(p.x,p.z,p.y)){stopMoving();state={x:p.x,y:p.y,z:p.z};yaw=p.yaw??yaw;pitch=p.pitch??0;requestRender();return true;}return false;},isWalkable};resize();
+ const readyMs=Math.round(performance.now()-started);window.__igorWalk={exportBake:()=>bakeSnapshot,getState:()=>({...state,metric:metricPosition(state,planScale),area:calibration,yaw,pitch,walking,room:activeRoom?.id,idle:!frame,baked:bakedStats,triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,vegetation:vegetationStats,interior:{triangles:interiorStats.triangles,withinBudget:interiorStats.withinBudget,byId:interiorStats.byId},mobile,readyMs,pixelRatio:renderer.getPixelRatio(),memory:{...renderer.info.memory},sound:footsteps.diagnostics(),doors:doorSystem.snapshot()}),jumpTo:id=>{const r=rooms.find(r=>r.id===id);if(r)jump(r);},reset:()=>{state={x:11,z:-14,y:0};yaw=2.69;pitch=.035;stopMoving();},step:(dx,dz)=>{state=move(state,dx,dz);requestRender();},inspectPose:p=>{if(isWalkable(p.x,p.z,p.y)){stopMoving();state={x:p.x,y:p.y,z:p.z};yaw=p.yaw??yaw;pitch=p.pitch??0;requestRender();return true;}return false;},isWalkable};resize();
 }
