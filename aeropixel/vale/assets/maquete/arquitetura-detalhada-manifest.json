@@ -1,0 +1,39 @@
+{
+  "source": "swissBUILDINGS3D 2021: original registered geometry retained",
+  "finish": "Illustrative facades and vehicles, not a survey",
+  "windows": 2970,
+  "doors": 226,
+  "roof_units": 123,
+  "wall_planes": 7631,
+  "base_faces": 27058,
+  "architecture": {
+    "bytes": 20232084,
+    "meshes": 10,
+    "nodes": 10,
+    "images": 2,
+    "textures": 4,
+    "uv_primitives": 2,
+    "normal_primitives": 11
+  },
+  "props": {
+    "bytes": 906236,
+    "meshes": 20,
+    "nodes": 24,
+    "images": 0,
+    "textures": 0,
+    "uv_primitives": 17,
+    "normal_primitives": 20
+  },
+  "prop_roots": [
+    "car_sedan",
+    "car_van",
+    "car_hatch",
+    "lamp"
+  ],
+  "prop_origin": "Each root at origin, ground at y=0 after glTF Y-up; car forward is +Z after export",
+  "textures": [
+    "Poly Haven brushed_concrete CC0 diffuse and OpenGL normal, embedded 1024px"
+  ],
+  "roofscape": "Sparse illustrative vents, hatches and rooftop units placed on measured roof triangles; not equipment survey",
+  "render": "production/maquete/arquitetura-close.png"
+}

@@ -1,0 +1,331 @@
+{
+  "asset": "assets/maquete/floresta-lods.glb",
+  "variants": [
+    {
+      "variant": "v0",
+      "height_m": 5.027446746826172,
+      "width_m": 4.817679405212402,
+      "original_leaf_components": 44168,
+      "source": "island_tree_01",
+      "levels": [
+        {
+          "object": "v0_near",
+          "triangles": 100609,
+          "leaf_cards": 44168
+        },
+        {
+          "object": "v0_mid",
+          "triangles": 20716,
+          "leaf_cards": 7362
+        },
+        {
+          "object": "v0_far",
+          "triangles": 8,
+          "method": "3 crossed transparent tree views + top canopy view"
+        }
+      ]
+    },
+    {
+      "variant": "v1",
+      "height_m": 4.556740760803223,
+      "width_m": 4.292477130889893,
+      "original_leaf_components": 30250,
+      "source": "tree_small_02",
+      "levels": [
+        {
+          "object": "v1_near",
+          "triangles": 72499,
+          "leaf_cards": 30250
+        },
+        {
+          "object": "v1_mid",
+          "triangles": 12084,
+          "leaf_cards": 5042
+        },
+        {
+          "object": "v1_far",
+          "triangles": 8,
+          "method": "3 crossed transparent tree views + top canopy view"
+        }
+      ]
+    }
+  ],
+  "file_bytes": 31583008,
+  "illustrative": true,
+  "cc0": true,
+  "sources": [
+    "https://polyhaven.com/a/island_tree_01",
+    "https://polyhaven.com/a/tree_small_02"
+  ],
+  "algorithm": "Original leaf components -> UV-fitted leaf cards; woody geometry simplified separately; transparent front/top impostors for far",
+  "alpha_mode": "MASK .42, double sided",
+  "coordinates": "glTF Y up, same centered origin and ground Y=0 for all LODs",
+  "qa_render": "production/maquete/floresta-lods-close.png",
+  "texture_upgrade": {
+    "method": "Image-only GLB rewrite; all geometry/UV/index bytes SHA256 preserved",
+    "geometry_sha256": "54b6aeaf5ec1f9a0391e02a4dee4cd7992f0b1249e801e969b83bd89b61fa5e4",
+    "trunk_maps": "4096px diffuse + normal",
+    "branch_and_leaf_maps": "2048px diffuse + normal; leaves retain official alpha",
+    "far_material": "KHR_materials_unlit; baked-lighting impostors; MASK 0.42",
+    "images": [
+      {
+        "name": "island_tree_01_leaves_nor_gl_2k",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 151716,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_leaves_nor_gl_2k.jpg",
+        "md5_source": "b7d1e6306288a64119e1d17dae3c272d"
+      },
+      {
+        "name": "island_tree_01_leaves_diff_2k-alpha",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 89428,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_leaves_diff_2k.jpg",
+        "md5_source": "9898a7bf79fe6214f7ca8c3b139c4116"
+      },
+      {
+        "name": "island_tree_01_nor_gl_4k",
+        "dimensions": [
+          4096,
+          4096
+        ],
+        "bytes": 3967878,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/island_tree_01/island_tree_01_nor_gl_4k.jpg",
+        "md5_source": "0e8d5fcf56dd3690af26132a2ebdd706"
+      },
+      {
+        "name": "island_tree_01_diff_4k",
+        "dimensions": [
+          4096,
+          4096
+        ],
+        "bytes": 2586250,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/island_tree_01/island_tree_01_diff_4k.jpg",
+        "md5_source": "3b382879815d63cbf23d707ebf96782b"
+      },
+      {
+        "name": "island_tree_01_branches_nor_gl_2k",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 398856,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_branches_nor_gl_2k.jpg",
+        "md5_source": "0b598c975ce1515ea0d51fb0d5696ea3"
+      },
+      {
+        "name": "island_tree_01_branches_diff_2k",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 275388,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/island_tree_01/island_tree_01_branches_diff_2k.jpg",
+        "md5_source": "3210126439a8423b3caba28de0f3c25f"
+      },
+      {
+        "name": "tree_small_02_leaves_nor_gl_2k",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 304618,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_leaves_nor_gl_2k.jpg",
+        "md5_source": "ab509e55b5d763f68195e0eb257bb5e3"
+      },
+      {
+        "name": "tree_small_02_leaves_diff_2k-alpha",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 196530,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_leaves_diff_2k.jpg",
+        "md5_source": "021ddc0cf1d94b99716a106cede576c7"
+      },
+      {
+        "name": "tree_small_02_branch_nor_gl_2k",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 266492,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_branch_nor_gl_2k.jpg",
+        "md5_source": "12286d5b329b4fb4203fc155a01b0a04"
+      },
+      {
+        "name": "tree_small_02_branch_diff_2k",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 228876,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/2k/tree_small_02/tree_small_02_branch_diff_2k.jpg",
+        "md5_source": "5ba327fc166360fcbb44f2eb04fbd8d8"
+      },
+      {
+        "name": "tree_small_02_nor_gl_4k",
+        "dimensions": [
+          4096,
+          4096
+        ],
+        "bytes": 3631478,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/tree_small_02/tree_small_02_nor_gl_4k.jpg",
+        "md5_source": "b7adc5b5cf6719c83572d2bcc839e2e0"
+      },
+      {
+        "name": "tree_small_02_diff_4k",
+        "dimensions": [
+          4096,
+          4096
+        ],
+        "bytes": 2546332,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/tree_small_02/tree_small_02_diff_4k.jpg",
+        "md5_source": "7578d0971281c3ebca5c81a3fb1f3f06"
+      }
+    ],
+    "license": "CC0; original Poly Haven sources above"
+  },
+  "mobile": {
+    "asset": "assets/maquete/floresta-lods-mobile.glb",
+    "file_bytes": 20420288,
+    "geometry_sha256": "54b6aeaf5ec1f9a0391e02a4dee4cd7992f0b1249e801e969b83bd89b61fa5e4",
+    "geometry_identical_to_desktop": true,
+    "maps": "trunk diffuse 2048px; all other maps <=1024px",
+    "images": [
+      {
+        "name": "v0-impostor-front",
+        "dimensions": [
+          768,
+          768
+        ],
+        "bytes": 141908
+      },
+      {
+        "name": "v0-impostor-top",
+        "dimensions": [
+          768,
+          768
+        ],
+        "bytes": 175716
+      },
+      {
+        "name": "island_tree_01_leaves_nor_gl_2k",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 53256
+      },
+      {
+        "name": "island_tree_01_leaves_diff_2k-alpha",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 67690
+      },
+      {
+        "name": "island_tree_01_nor_gl_4k",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 432444
+      },
+      {
+        "name": "island_tree_01_diff_4k",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 831612
+      },
+      {
+        "name": "island_tree_01_branches_nor_gl_2k",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 196132
+      },
+      {
+        "name": "island_tree_01_branches_diff_2k",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 118298
+      },
+      {
+        "name": "v1-impostor-front",
+        "dimensions": [
+          768,
+          768
+        ],
+        "bytes": 85938
+      },
+      {
+        "name": "v1-impostor-top",
+        "dimensions": [
+          768,
+          768
+        ],
+        "bytes": 120170
+      },
+      {
+        "name": "tree_small_02_leaves_nor_gl_2k",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 115904
+      },
+      {
+        "name": "tree_small_02_leaves_diff_2k-alpha",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 156594
+      },
+      {
+        "name": "tree_small_02_branch_nor_gl_2k",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 127580
+      },
+      {
+        "name": "tree_small_02_branch_diff_2k",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 86102
+      },
+      {
+        "name": "tree_small_02_nor_gl_4k",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "bytes": 443412
+      },
+      {
+        "name": "tree_small_02_diff_4k",
+        "dimensions": [
+          2048,
+          2048
+        ],
+        "bytes": 908918
+      }
+    ]
+  }
+}

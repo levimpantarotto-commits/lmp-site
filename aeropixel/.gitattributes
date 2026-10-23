@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.pdf binary
+*.glb binary
+*.f32 binary
+*.zip binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.hdr binary

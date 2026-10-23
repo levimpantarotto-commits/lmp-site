@@ -1,0 +1,6 @@
+(()=>{'use strict';const frame=document.querySelector('#real-terrain-frame'),link=document.querySelector('.open-terrain');if(!frame)return;const full=new URLSearchParams(location.search).get('motion')==='full';
+const scenes={terrain:{entry:'terrain.html?embed=1',full:'terrain.html',title:'Terreno real: ortofoto, altitude e amostras do MDT'},valley:{entry:'vale/index.html?embed=1',full:'vale/index.html',title:'Vale 3D completo: experiência com terreno real e detalhes cenográficos'}};
+function choose(mode){const scene=scenes[mode];if(!scene)return;frame.src=scene.entry+(full?'&motion=full':'');frame.title=scene.title;link.href=scene.full+(full?'?motion=full':'');link.textContent=mode==='valley'?'Explorar o vale em tela cheia ↗':'Explorar o terreno 3D ↗';document.querySelectorAll('[data-scene-choice]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.sceneChoice===mode)));}
+document.querySelectorAll('[data-scene-choice]').forEach(button=>button.addEventListener('click',()=>choose(button.dataset.sceneChoice)));
+frame.addEventListener('load',()=>{const box=frame.getBoundingClientRect();const active=!document.hidden&&box.bottom>0&&box.top<innerHeight&&box.right>0&&box.left<innerWidth;frame.contentWindow?.postMessage({terrainActive:active,valeActive:active},location.origin);});
+})();

@@ -1,4 +1,23 @@
 {
-  "rewrites": [{"source":"/3D","destination":"/3D/index.html"}],
-  "headers": [{"source":"/3D/(.*)","headers":[{"key":"X-Content-Type-Options","value":"nosniff"}]}]
+  "rewrites": [
+    {
+      "source": "/3D",
+      "destination": "/3D/index.html"
+    },
+    {
+      "source": "/aeropixel",
+      "destination": "/aeropixel/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/3D/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ]
 }

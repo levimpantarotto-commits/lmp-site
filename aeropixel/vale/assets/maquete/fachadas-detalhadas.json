@@ -1,0 +1,258 @@
+{
+  "asset": "assets/maquete/fachadas-detalhadas.glb",
+  "license": "CC0",
+  "source": "https://polyhaven.com/a/modular_factory_facade",
+  "author": "James Ray Cock",
+  "illustrative": true,
+  "source_geometry": "swissBUILDINGS3D 2021: facade plane fitted from actual triangles; no footprint movement",
+  "textures": "Original Poly Haven diffuse / normal / ARM maps embedded, maximum 2048px",
+  "planes": [
+    {
+      "normal": [
+        0.2059112936258316,
+        0,
+        -0.9785706400871277
+      ],
+      "tangent": [
+        -0.9785706400871277,
+        0,
+        -0.2059112936258316
+      ],
+      "distance": 274.78186867977786,
+      "left": -135.7840696097012,
+      "right": -124.52682813638899,
+      "bottom": 10.002055435180663,
+      "top": 13.73799991607666,
+      "base_center": [
+        183.94699096679688,
+        10.002055435180663,
+        -242.09300231933594
+      ],
+      "width": 11.257241473312206,
+      "height": 3.7359444808959967,
+      "survey_bottom": 5.760000228881836,
+      "finish_kind": "industrial_entrance",
+      "adjacent_obstruction": false,
+      "world_floor_dem": {
+        "min": 9.857556343078613,
+        "max": 9.972055435180664,
+        "threshold": 10.002055435180663,
+        "source": "vale-ground.f32, 33 samples along facade"
+      },
+      "overlay_offset_m": 0.46,
+      "hide_legacy_depth_m": [
+        -0.2,
+        0.65
+      ]
+    },
+    {
+      "normal": [
+        -0.20019219815731049,
+        0,
+        0.9797566533088684
+      ],
+      "tangent": [
+        0.9797566533088684,
+        0,
+        0.20019219815731049
+      ],
+      "distance": -319.6539968430852,
+      "left": 113.94034260999706,
+      "right": 126.10041576699723,
+      "bottom": 11.452574996948242,
+      "top": 17.68199920654297,
+      "base_center": [
+        181.89566040039062,
+        11.452574996948242,
+        -289.09222412109375
+      ],
+      "width": 12.16007315700017,
+      "height": 6.229424209594727,
+      "survey_bottom": 8.380000114440918,
+      "finish_kind": "industrial_entrance",
+      "adjacent_obstruction": false,
+      "world_floor_dem": {
+        "min": 11.142821311950684,
+        "max": 11.422574996948242,
+        "threshold": 11.452574996948242,
+        "source": "vale-ground.f32, 33 samples along facade"
+      },
+      "overlay_offset_m": 0.46,
+      "hide_legacy_depth_m": [
+        -0.2,
+        0.65
+      ]
+    },
+    {
+      "normal": [
+        -0.9785661101341248,
+        0,
+        -0.2059328854084015
+      ],
+      "tangent": [
+        -0.2059328854084015,
+        0,
+        0.9785661101341248
+      ],
+      "distance": -124.5207748413086,
+      "left": -274.78461837768555,
+      "right": -250.08726501464844,
+      "bottom": 9.873883514404296,
+      "top": 13.73799991607666,
+      "base_center": [
+        175.89599609375,
+        9.873883514404296,
+        -231.16799926757812
+      ],
+      "width": 24.697359072084975,
+      "height": 3.864116401672364,
+      "survey_bottom": 5.760000228881836,
+      "finish_kind": "window_wall",
+      "adjacent_obstruction": false,
+      "world_floor_dem": {
+        "min": 9.681472778320312,
+        "max": 9.843883514404297,
+        "threshold": 9.873883514404296,
+        "source": "vale-ground.f32, 33 samples along facade"
+      },
+      "overlay_offset_m": 0.46,
+      "hide_legacy_depth_m": [
+        -0.2,
+        0.65
+      ]
+    },
+    {
+      "normal": [
+        0.9785667061805725,
+        0,
+        0.2059297114610672
+      ],
+      "tangent": [
+        0.2059297114610672,
+        0,
+        -0.9785667061805725
+      ],
+      "distance": 135.77889251708984,
+      "left": 246.00762176513672,
+      "right": 274.7844047546387,
+      "bottom": 10.013936309814452,
+      "top": 13.73799991607666,
+      "base_center": [
+        186.49200439453125,
+        10.013936309814452,
+        -226.85400390625
+      ],
+      "width": 28.776782224398016,
+      "height": 3.7240636062622077,
+      "survey_bottom": 5.760000228881836,
+      "finish_kind": "window_wall",
+      "adjacent_obstruction": false,
+      "world_floor_dem": {
+        "min": 7.992093086242676,
+        "max": 9.983936309814453,
+        "threshold": 10.013936309814452,
+        "source": "vale-ground.f32, 33 samples along facade"
+      },
+      "overlay_offset_m": 0.46,
+      "hide_legacy_depth_m": [
+        -0.2,
+        0.65
+      ]
+    },
+    {
+      "normal": [
+        -0.20732848346233368,
+        0,
+        0.9782713651657104
+      ],
+      "tangent": [
+        0.9782713651657104,
+        0,
+        0.20732848346233368
+      ],
+      "distance": -246.20149993896484,
+      "left": 134.74216079711914,
+      "right": 135.42705535888672,
+      "bottom": 13.279999732971191,
+      "top": 13.73799991607666,
+      "base_center": [
+        183.19400024414062,
+        13.279999732971191,
+        -212.84500122070312
+      ],
+      "width": 0.6848952465030684,
+      "height": 0.45800018310546875,
+      "survey_bottom": 13.279999732971191,
+      "finish_kind": "solid_wall",
+      "adjacent_obstruction": false,
+      "world_floor_dem": {
+        "min": 8.958584785461426,
+        "max": 9.075605392456055,
+        "threshold": 13.279999732971191,
+        "source": "vale-ground.f32, 33 samples along facade"
+      },
+      "overlay_offset_m": 0.46,
+      "hide_legacy_depth_m": [
+        -0.2,
+        0.65
+      ]
+    }
+  ],
+  "placed_module_count": 137,
+  "file_bytes": 16632932,
+  "legacy_detail_policy": "Remove only old window/frame/sill/door/gutter triangles near these planes. Keep measured building shell and roofs.",
+  "complete_wing": {
+    "front_center": [
+      183.947,
+      10.002,
+      -242.093
+    ],
+    "original_roof_triangles": 4,
+    "roof_boundary_vertices": [
+      [
+        173.35299682617188,
+        13.73799991607666,
+        -219.08399963378906
+      ],
+      [
+        183.7010040283203,
+        13.73799991607666,
+        -216.9080047607422
+      ],
+      [
+        189.4550018310547,
+        13.73799991607666,
+        -240.9340057373047
+      ],
+      [
+        178.43899536132812,
+        13.73799991607666,
+        -243.2519989013672
+      ],
+      [
+        183.5290069580078,
+        13.737899780273438,
+        -212.7740020751953
+      ],
+      [
+        182.85899353027344,
+        13.73799991607666,
+        -212.91600036621094
+      ]
+    ],
+    "roof_finish": "Original TIN + 45mm weathered metal skin using official garage metal PBR atlas, folded edge flashing",
+    "rear_condition": "Low wing physically joins the taller measured industrial volume; no independent rear ground-level wall or doorway invented",
+    "scope": "Complete exterior skin of the low wing, not the surrounding valley or neighboring structures"
+  },
+  "qa": {
+    "meshes": 1,
+    "primitives": 6,
+    "images": 15,
+    "textures": 18,
+    "uv_primitives": 6,
+    "normal_maps": 6,
+    "arm_maps": 6,
+    "render": "production/maquete/fachadas-obliqua.png",
+    "rear_context_render": "production/maquete/fachadas-traseira.png"
+  }
+}

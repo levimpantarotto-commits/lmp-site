@@ -1,0 +1,13 @@
+Car Concept — modelo e texturas
+Artista: Eric Chadwick, 2024
+Titular: Darmstadt Graphics Group GmbH
+Distribuição: Khronos Group / glTF-Sample-Assets
+Fonte: https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept
+Metadados oficiais: https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CarConcept/metadata.json
+Licença: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/legalcode
+
+Adaptações desta maquete: conversão/exportação, orientação, escala, agrupamento,
+níveis de detalhe e variações de materiais. Objetos e posicionamento ilustrativos.
+Marcas/logotipos Khronos e 3D Commerce estão excluídos da licença CC-BY do modelo;
+não há alegação de apoio, afiliação ou licença de marca.
