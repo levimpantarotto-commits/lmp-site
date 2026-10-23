@@ -12,7 +12,8 @@ import {secondaryRoofs,roofPlanes} from './roof-layout.js?v=scale-r1';
 import {proportionStudy,planX,planZ,derivative,terrace,buildStudyStructure} from './proportion-study.js';
 import {addPottedPlants} from './plant-detail.js?v=scale-r1';
 import {buildExterior,addReferenceTrees} from './exterior.js?v=scale-r1';
-import {addGrassClusters} from './grass-detail.js?v=scale-r1';
+import {addGrassClusters,buildGrassDetail} from './grass-detail.js?v=scale-r1';
+import {exteriorReference} from './exterior-reference.js';
 import {HDRLoader} from './vendor/HDRLoader.js';
 import {createFootsteps} from './footsteps.js';
 import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=scale-r1';
@@ -33,6 +34,7 @@ async function startScene(){
  const random=n=>{const v=Math.sin(n*97.13+11.5)*43958.27;return v-Math.floor(v);};
  const started=performance.now(),M=await createMaterials(THREE,renderer,{mobile});M.wood.normalScale.set(.35,.35);M.deck.normalScale.set(.35,.35);M.stone.normalScale.set(.65,.65);
  M.grass.normalScale.set(.12,.12); // grama curta: relevo sutil, não solo ondulado
+ if(proportionStudy){M.roof.map.repeat.set(.26,.65);M.roof.normalMap.repeat.set(.26,.65);M.roof.normalScale.set(.40,.40);M.grass.color.set(0xc4ccae);}
  M.plaster.color.set(0xeadfc9);M.plaster.normalScale.set(.16,.16);M.tile.normalScale.set(.22,.22);M.tile.roughness=.58;M.woodDark.map=M.wood.map;M.woodDark.normalMap=M.wood.normalMap;M.woodDark.normalScale.set(.25,.25);M.woodDark.roughness=.8;
  // HDR da base do Vale para reflexos. O bake guarda luz indireta em mapas
  // separados do albedo; as fotos do imóvel continuam sendo referência.
@@ -107,13 +109,15 @@ async function startScene(){
  const vegetationBefore=new Set(scene.children);
  const vegetationStats=await addReferenceTrees(THREE,scene,{mobile});
  const grassStats=await addGrassClusters(THREE,scene,{mobile});vegetationStats.grassTriangles=grassStats.triangles;vegetationStats.grass=grassStats;
+ if(proportionStudy){const near=buildGrassDetail(THREE,scene,M,{mobile});vegetationStats.grassNear={instances:near.placements.length,triangles:near.triangles};vegetationStats.grassTriangles+=near.triangles;}
  const plantStats=await addPottedPlants(THREE,scene,M);vegetationStats.potted=plantStats;
  for(const node of scene.children)if(!vegetationBefore.has(node))calibrateNode(node,planScale);
  const visualRoot=new THREE.Group();for(const child of [...scene.children])visualRoot.add(child);visualRoot.scale.x=-1;visualRoot.position.x=planX(facadeAxis)*planScale;scene.add(visualRoot);
  let doorMessageId=null;
- let state={x:11,z:-14,y:0},yaw=2.69,pitch=.035,walking=false,drag=false,lastX=0,lastY=0,lastTime=0,activeRoom=null;
+ const arrival=proportionStudy?exteriorReference.arrival:{x:11,z:-14,y:0,yaw:2.69,pitch:.035};
+ let state={x:arrival.x,z:arrival.z,y:0},yaw=arrival.yaw,pitch=arrival.pitch,walking=false,drag=false,lastX=0,lastY=0,lastTime=0,activeRoom=null;
  function movement(angle,forward,side){const d=baseMovement(angle,forward,side);return{x:d.x/derivative('x',state.x),z:d.z/derivative('z',state.z)};}
- if(proportionStudy){document.querySelector('.prototype').textContent='TESTE 01 · PROPORÇÕES E NÍVEIS ESTIMADOS';document.querySelector('footer small').textContent='Hipótese de 120 m² · terraço elevado 1,80 m estimados. Ambiente das fotos 23–26 ainda sem ligação definida.';}
+ if(proportionStudy){document.querySelector('.prototype').textContent='REVISÃO 3D · IMPLANTAÇÃO ESTIMADA';document.querySelector('footer small').textContent='Hipótese de 120 m² · cotas, limites e ligações estimados. Fotos 23–26 ainda sem localização confirmada.';}
  const keys=new Set(),keyMap={KeyW:'forward',ArrowUp:'forward',KeyS:'back',ArrowDown:'back',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right'};
  const stairRoom={id:'escada',name:'Escada',note:'Ligação observada; altura e inclinação estimadas.',kind:'CONEXÃO ENTRE PAVIMENTOS',photo:11};
  function syncRoom(){const r=roomAt(state.x,state.z,state.y)||((state.y>.15&&state.y<2.85)?stairRoom:rooms.find(r=>r.id==='jardim'))||rooms[0];if(r!==activeRoom){activeRoom=r;$('room').textContent=r.name;$('roomNote').textContent=r.note||'Ligação e proporção estimadas a partir das fotos.';$('kind').textContent=r.kind;document.querySelectorAll('#places button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.id===r.id)));}const marker=$('you');marker.setAttribute('cx',String((worldX(state.x)+11)*5));marker.setAttribute('cy',String((state.z+19)*5));marker.setAttribute('fill',state.y>1.5?'#edaf74':'#fff');}
@@ -122,7 +126,7 @@ async function startScene(){
  $('door-toggle').onclick=toggleDoor;
  addEventListener('keydown',e=>{if(e.code==='KeyE'&&!e.repeat&&walking&&!$('photoDialog').open&&$('cover').hidden){e.preventDefault();toggleDoor();}});
  function render(){camera.position.set((planX(facadeAxis)-planX(state.x))*planScale,state.y+1.65,planZ(state.z)*planScale);camera.rotation.set(pitch,worldYaw(yaw),0);syncRoom();updateDoorControl();mirrorSystem.update(state);renderer.render(scene,camera);}
- function footSurface(){if(state.y>.15&&state.y<2.85)return 'wood';const a=floorAreas.find(a=>Math.abs(a.level-state.y)<.2&&state.x>a.rect[0]&&state.x<a.rect[2]&&state.z>a.rect[1]&&state.z<a.rect[3]);if(a?.material==='grass'&&state.z<0){const p=[[-6,0],[-6,-8.4],[-.8,-7],[5.5,-3.9],[10.3,-3.9],[10.3,0]];let inside=false;for(let i=0,j=p.length-1;i<p.length;j=i++){if((p[i][1]>state.z)!==(p[j][1]>state.z)&&state.x<(p[j][0]-p[i][0])*(state.z-p[i][1])/(p[j][1]-p[i][1])+p[i][0])inside=!inside;}if(inside)return 'stone';}return a?.material||'stone';}
+ function footSurface(){if(state.y>.15&&state.y<2.85)return proportionStudy&&state.x<0?'stone':'wood';const a=floorAreas.find(a=>Math.abs(a.level-state.y)<.2&&state.x>a.rect[0]&&state.x<a.rect[2]&&state.z>a.rect[1]&&state.z<a.rect[3]);if(a?.material==='grass'&&state.z<0){const p=proportionStudy?exteriorReference.patio:[[-6,0],[-6,-8.4],[-.8,-7],[5.5,-3.9],[10.3,-3.9],[10.3,0]];let inside=false;for(let i=0,j=p.length-1;i<p.length;j=i++){if((p[i][1]>state.z)!==(p[j][1]>state.z)&&state.x<(p[j][0]-p[i][0])*(state.z-p[i][1])/(p[j][1]-p[i][1])+p[i][0])inside=!inside;}if(inside)return 'stone';}return a?.material||'stone';}
  function tick(t){frame=0;if(stopped)return;const dt=Math.min(.04,(t-(lastTime||t))/1000);lastTime=t;if(walking&&keys.size&&!$('photoDialog').open){let f=(keys.has('forward')?1:0)-(keys.has('back')?1:0),s=(keys.has('right')?1:0)-(keys.has('left')?1:0),n=Math.hypot(f,s)||1;f/=n;s/=n;const delta=movement(yaw,f,s),before=state;state=move(state,delta.x*dt*2.3/planScale,delta.z*dt*2.3/planScale);footsteps.moved(metricPosition(before,planScale),metricPosition(state,planScale),footSurface());}if(!$('photoDialog').open)doorSystem.advance(dt,state);render();if((walking&&keys.size&&!$('photoDialog').open)||(doorSystem.isAnimating()&&!$('photoDialog').open))frame=requestAnimationFrame(tick);else{lastTime=0;void footsteps.stop();}}
  function requestRender(){if(!stopped&&!frame)frame=requestAnimationFrame(tick);}
  function stopMoving(){keys.clear();drag=false;lastTime=0;footsteps.stop();requestRender();}
@@ -140,5 +144,5 @@ async function startScene(){
  function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();requestRender();}addEventListener('resize',resize);
  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();fallback('O navegador interrompeu o 3D. Você pode tentar novamente ou consultar as fotos.');});$('retry').onclick=()=>location.reload();
  const map=$('map-shapes');rooms.filter(r=>r.level===0).forEach(r=>{const node=document.createElementNS('http://www.w3.org/2000/svg','rect');for(const [k,v]of Object.entries({x:(worldX(r.rect[2])+11)*5,y:(r.rect[1]+19)*5,width:(r.rect[2]-r.rect[0])*5,height:(r.rect[3]-r.rect[1])*5,fill:r.estimate?'#8d68424d':'#dbd2b22e',stroke:'#d8c8aa','stroke-width':.6}))node.setAttribute(k,String(v));map.append(node);});
- const readyMs=Math.round(performance.now()-started);window.__igorWalk={exportBake:()=>bakeSnapshot,getState:()=>({...state,metric:metricPosition(state,planScale),area:calibration,yaw,pitch,walking,room:activeRoom?.id,idle:!frame,baked:bakedStats,triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,vegetation:vegetationStats,interior:{triangles:interiorStats.triangles,withinBudget:interiorStats.withinBudget,byId:interiorStats.byId},mobile,readyMs,pixelRatio:renderer.getPixelRatio(),memory:{...renderer.info.memory},sound:footsteps.diagnostics(),doors:doorSystem.snapshot()}),jumpTo:id=>{const r=rooms.find(r=>r.id===id);if(r)jump(r);},reset:()=>{state={x:11,z:-14,y:0};yaw=2.69;pitch=.035;stopMoving();},step:(dx,dz)=>{state=move(state,dx,dz);requestRender();},inspectPose:p=>{if(isWalkable(p.x,p.z,p.y)){stopMoving();state={x:p.x,y:p.y,z:p.z};yaw=p.yaw??yaw;pitch=p.pitch??0;requestRender();return true;}return false;},isWalkable};resize();
+ const readyMs=Math.round(performance.now()-started);window.__igorWalk={exportBake:()=>bakeSnapshot,getState:()=>({...state,metric:metricPosition(state,planScale),area:calibration,yaw,pitch,walking,room:activeRoom?.id,idle:!frame,baked:bakedStats,triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,vegetation:vegetationStats,interior:{triangles:interiorStats.triangles,withinBudget:interiorStats.withinBudget,byId:interiorStats.byId},mobile,readyMs,pixelRatio:renderer.getPixelRatio(),memory:{...renderer.info.memory},sound:footsteps.diagnostics(),doors:doorSystem.snapshot()}),jumpTo:id=>{const r=rooms.find(r=>r.id===id);if(r)jump(r);},reset:()=>{state={x:arrival.x,z:arrival.z,y:0};yaw=arrival.yaw;pitch=arrival.pitch;stopMoving();requestRender();},step:(dx,dz)=>{state=move(state,dx,dz);requestRender();},inspectPose:p=>{if(isWalkable(p.x,p.z,p.y)){stopMoving();state={x:p.x,y:p.y,z:p.z};yaw=p.yaw??yaw;pitch=p.pitch??0;requestRender();return true;}return false;},isWalkable};resize();
 }

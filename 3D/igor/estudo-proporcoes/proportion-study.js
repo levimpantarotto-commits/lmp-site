@@ -1,6 +1,7 @@
 // Alternativa isolada: nunca ativa sem ?study=proportion-v2.
 // Relações extraídas das fotos, não levantamento. Mantém o total de120m²,
 // redistribuindo-o: núcleo social mais largo; ligações posteriores compactas.
+import {exteriorReference as exterior} from './exterior-reference.js';
 export const proportionStudy=true; // Rota isolada do estudo, nunca a visita publicada.
 const piece=(v,knots)=>{for(let i=1;i<knots.length;i++)if(v<knots[i][0]){const[a,b]=knots[i-1],[c,d]=knots[i];return b+(v-a)*(d-b)/(c-a);}const[a,b]=knots.at(-2),[c,d]=knots.at(-1);return d+(v-c)*(d-b)/(c-a);};
 // A largura adicional está no corredor/social, não na profundidade da pia.
@@ -13,6 +14,10 @@ export const derivative=(axis,value)=>proportionStudy?((axis==='x'?planX:planZ)(
 export const terrace={level:1.8,rect:[-4,2.5,0,11.5],stairs:{rect:[-2.3,-1.7,-.35,2.5],from:0,to:1.8}};
 export function applyProportionStudy(rooms,floors,walls,furniture){
  if(!proportionStudy)return;
+ walls[0].openings.find(o=>o.type==='door').style='porch-glass';
+ Object.assign(rooms.find(r=>r.id==='jardim'),{rect:[...exterior.garden],spawn:[exterior.arrival.x,0,exterior.arrival.z],yaw:exterior.arrival.yaw});
+ Object.assign(rooms.find(r=>r.id==='quintalDireito'),{rect:[...exterior.side],spawn:[10.45,0,4],note:'Faixa junto à cerca verde observada; largura estimada.'});
+ for(const f of floors.filter(f=>f.material==='grass'))f.rect=[...(f.rect[1]<0?exterior.garden:exterior.side)];
  const deck=rooms.find(r=>r.id==='deck');Object.assign(deck,{name:'Terraço lateral',rect:[...terrace.rect],level:terrace.level,spawn:[-2,terrace.level,6.5],note:'Escada lateral → terraço: relação visível nas fotos 04/19–22. Desnível de 1,80 m é hipótese, não cota.'});
  const deckFloor=floors.find(f=>f.material==='deck');Object.assign(deckFloor,{rect:[...terrace.rect],level:terrace.level});
  for(const w of walls.filter(w=>w.a[0]<0&&w.b[0]<=0)){w.base=terrace.level;w.a[1]+=2.5;w.b[1]+=2.5;}
@@ -51,7 +56,8 @@ export function buildStudyStructure(THREE,scene,M,walls,roofPlanes,box){
  }
  // Onze degraus na lateral, observados na foto04. Altura é estimada.
  const s=terrace.stairs,[a,b,c,d]=s.rect,count=11;
- for(let i=0;i<count;i++){const h=s.to*(i+1)/count,z=b+(i+.5)*(d-b)/count;box((a+c)/2,h/2,z,c-a,h,(d-b)/count+.015,M.stone);}
+ const stairStone=(M.basinStone||M.stone).clone();stairStone.color.set(0xbcb8a5);stairStone.roughness=.95;stairStone.normalScale?.set(.28,.28);
+ for(let i=0;i<count;i++){const h=s.to*(i+1)/count,z=b+(i+.5)*(d-b)/count;box((a+c)/2,h/2,z,c-a,h,(d-b)/count+.015,stairStone);}
  // Fechamento sob o terraço elevado; não acrescentar uma casa avulsa.
  box(-3.92,.9,7,.16,1.8,9,M.stone);box(-2,.9,11.48,4,1.8,.16,M.stone);
 }

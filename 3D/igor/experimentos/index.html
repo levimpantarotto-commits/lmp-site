@@ -4,46 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Igor — estudos de leitura espacial</title>
+  <title>Casa no Rosa · revisão 3D</title>
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <main class="study-shell">
-    <header class="topbar">
-      <a class="brand" href="../" aria-label="Voltar à visita fotográfica"><strong>IGOR</strong><span>IMOBILIÁRIA PRAIA DO ROSA</span></a>
-      <p class="eyebrow">ESTUDO COMPARATIVO · NÃO É MATERIAL DE VENDA</p>
-      <a class="back" href="../">Fotos originais ↗</a>
-    </header>
-
-    <section class="intro" aria-labelledby="title">
+  <main>
+    <header>
       <div>
-        <p class="eyebrow">TRÊS LEITURAS DO MESMO ACERVO</p>
-        <h1 id="title">Forma, foto e pontos.</h1>
-        <p>Compare sem misturar os limites: o modelo permite caminhar; a foto preserva a aparência num ponto de vista; os pontos mostram somente o que foi triangulado entre fotos que se sobrepõem.</p>
+        <h1>Casa no Rosa · revisão 3D</h1>
+        <p>Implantação e fachada em revisão; medidas estimadas.</p>
       </div>
-      <aside class="assumption"><b>Hipótese em revisão</b><span>120 m² é área informada na ficha, não uma medição. As imagens comerciais têm cerca de 800 × 500 px e não mostram todas as ligações.</span></aside>
-    </section>
-
-    <nav class="tabs" role="tablist" aria-label="Escolha o teste">
-      <button class="tab" id="tab-model" role="tab" data-mode="model" aria-controls="viewport" aria-selected="true"><span>01</span> Modelo proporcional</button>
-      <button class="tab" id="tab-photo" role="tab" data-mode="photo" aria-controls="viewport" aria-selected="false"><span>02</span> Projeção da foto</button>
-      <button class="tab" id="tab-points" role="tab" data-mode="points" aria-controls="viewport" aria-selected="false"><span>03</span> Pontos triangulados</button>
-    </nav>
-
-    <section class="stage" id="viewport" role="tabpanel" aria-live="polite">
-      <div class="loading">Abrindo o teste…</div>
-    </section>
-
-    <section class="notes" aria-live="polite">
-      <div id="method-note"><b>01 · Modelo proporcional</b><span>Caminhada no modelo com a nova hipótese de dimensão e circulação. A forma continua estimada onde as fotos não revelam medida ou ligação.</span></div>
-      <button class="original" id="open-original" type="button" hidden>Ver foto original</button>
-      <a class="standalone" id="open-test" href="../estudo-proporcoes/?study=proportion-v2" target="_blank" rel="noopener">Abrir teste em tela inteira ↗</a>
-    </section>
-
-    <dialog id="photo-dialog"><button class="dialog-close" aria-label="Fechar">×</button><img alt="Fotografia original selecionada"><p></p></dialog>
+      <nav aria-label="Links da revisão">
+        <a href="../">Fotos originais</a>
+        <a href="../estudo-proporcoes/?study=proportion-v2" target="_blank" rel="noopener">Abrir em tela inteira ↗</a>
+      </nav>
+    </header>
+    <iframe id="revisao-3d" title="Revisão 3D da Casa no Rosa" src="../estudo-proporcoes/?study=proportion-v2"></iframe>
   </main>
-  <!-- Direção: o pedido já definiu três rotas comparáveis — modelo, aparência da foto e profundidade observável.
-       A página privilegia inspeção e incerteza explícita; não apresenta nenhuma rota como reprodução ou anúncio. -->
   <script type="module" src="./app.js"></script>
 </body>
 </html>

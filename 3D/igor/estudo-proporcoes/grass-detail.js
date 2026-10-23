@@ -1,7 +1,9 @@
 // Detalhe ilustrativo: a referência 03 mostra grama curta, irregular e pouco saturada.
 // As coordenadas são do estudo, não uma medição georreferenciada do lote.
-export const grassField={minX:-6,maxX:14,minZ:-18,maxZ:0};
-export const patioPolygon=[[-6,0],[-6,-8.4],[-.8,-7],[5.5,-3.9],[10.3,-3.9],[10.3,0]];
+import {proportionStudy,planX,planZ} from './proportion-study.js';
+import {exteriorReference} from './exterior-reference.js';
+export const grassField=proportionStudy?{minX:-2.55,maxX:11.05,minZ:-18,maxZ:0}:{minX:-6,maxX:14,minZ:-18,maxZ:0};
+export const patioPolygon=proportionStudy?exteriorReference.patio:[[-6,0],[-6,-8.4],[-.8,-7],[5.5,-3.9],[10.3,-3.9],[10.3,0]];
 export const grassBudgets={desktop:{instances:5200,triangles:41600},mobile:{instances:1700,triangles:13600}};
 
 const paths=Array.from({length:12},(_,i)=>({x:2.2-i*.18,z:-16+i*.83,halfX:.39,halfZ:.215}));
@@ -11,6 +13,7 @@ const inPolygon=(x,z,polygon)=>{let inside=false;for(let i=0,j=polygon.length-1;
 export function isGrassPlacementAllowed(x,z){
  // Respiro junto aos muros e pátio; evita lâminas atravessando pedra ou placas.
  if(x<-5.70||x>13.64||z<-17.72||z>-.18||inPolygon(x,z,patioPolygon))return false;
+ if(proportionStudy&&(x< -2.45||x>10.88))return false;
  return !paths.some(path=>Math.abs(x-path.x)<=path.halfX+.10&&Math.abs(z-path.z)<=path.halfZ+.10);
 }
 
@@ -60,7 +63,7 @@ export function buildGrassDetail(THREE,scene,M,{mobile=false}={}){
  material.customProgramCacheKey=()=> 'grass-nearfield-v2';
  const grass=new THREE.InstancedMesh(geometry,material,placements.length),matrix=new THREE.Matrix4(),position=new THREE.Vector3(),scale=new THREE.Vector3(),quaternion=new THREE.Quaternion(),euler=new THREE.Euler(),dark=new THREE.Color(0x52643d),light=new THREE.Color(0x758759),color=new THREE.Color();
  placements.forEach((blade,i)=>{
-  position.set(blade.x,.004,blade.z);euler.set(blade.leanX,blade.rotation,blade.leanZ,'YXZ');quaternion.setFromEuler(euler);scale.set(.020+blade.tone*.009,blade.height,.020+blade.tone*.009);matrix.compose(position,quaternion,scale);grass.setMatrixAt(i,matrix);
+  position.set(proportionStudy?planX(blade.x):blade.x,.004,proportionStudy?planZ(blade.z):blade.z);euler.set(blade.leanX,blade.rotation,blade.leanZ,'YXZ');quaternion.setFromEuler(euler);scale.set(.020+blade.tone*.009,blade.height,.020+blade.tone*.009);matrix.compose(position,quaternion,scale);grass.setMatrixAt(i,matrix);
   color.lerpColors(dark,light,blade.tone);grass.setColorAt(i,color);
  });
  grass.name='front-lawn-short-grass';grass.castShadow=false;grass.receiveShadow=true;grass.instanceMatrix.needsUpdate=true;if(grass.instanceColor)grass.instanceColor.needsUpdate=true;scene.add(grass);
@@ -82,6 +85,6 @@ export async function addGrassClusters(THREE,scene,{mobile=false}={}){
    vec3 clusterWorld=(modelMatrix*instanceMatrix*vec4(position,1.0)).xyz;
    transformed.y *= 1.0-smoothstep(5.0,9.0,distance(cameraPosition.xz,clusterWorld.xz));`);shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_begin>',THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;','normal *= 1.0;'));};material.customProgramCacheKey=()=> 'grass-clusters-nearfield-v2';
   const chosen=positions.filter((_,i)=>i%variants.length===index),mesh=new THREE.InstancedMesh(geometry,material,chosen.length),m=new THREE.Matrix4(),q=new THREE.Quaternion();
-  chosen.forEach((p,i)=>{q.setFromAxisAngle(new THREE.Vector3(0,1,0),p.rotation);const s=.80+p.tone*.4;m.compose(new THREE.Vector3(p.x,.002,p.z),q,new THREE.Vector3(s,s,s));mesh.setMatrixAt(i,m);});mesh.receiveShadow=true;mesh.castShadow=false;scene.add(mesh);stats.triangles+=(geometry.index?.count||geometry.attributes.position.count)/3*chosen.length;
+  chosen.forEach((p,i)=>{q.setFromAxisAngle(new THREE.Vector3(0,1,0),p.rotation);const s=.80+p.tone*.4;m.compose(new THREE.Vector3(proportionStudy?planX(p.x):p.x,.002,proportionStudy?planZ(p.z):p.z),q,new THREE.Vector3(s,s,s));mesh.setMatrixAt(i,m);});mesh.receiveShadow=true;mesh.castShadow=false;scene.add(mesh);stats.triangles+=(geometry.index?.count||geometry.attributes.position.count)/3*chosen.length;
  });return stats;
 }

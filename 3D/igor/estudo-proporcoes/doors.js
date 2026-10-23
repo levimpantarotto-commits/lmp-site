@@ -62,7 +62,12 @@ export function buildDoorMeshes(THREE,parent,materials={},specs=[],setRefresh){
  const root=THREE.Group?new THREE.Group():new THREE.Object3D();parent?.add?.(root);const entries=[];
  for(const spec of specs)for(const leaf of spec.leaves){const pivot=THREE.Group?new THREE.Group():new THREE.Object3D(),wood=materials.door||materials.wood||materials.woodDark,metal=materials.metal||materials.woodDark;
   root.add(pivot);const mesh=(geometry,material,name)=>{const node=new THREE.Mesh(geometry,material);node.name=name||'';node.castShadow=node.receiveShadow=true;const uv=geometry.attributes?.uv,n=geometry.attributes?.normal,p=geometry.parameters;if(uv&&n&&p?.width){for(let i=0;i<uv.count;i++){const nx=Math.abs(n.getX(i)),ny=Math.abs(n.getY(i));uv.setXY(i,uv.getX(i)*(nx>.5?p.depth:p.width)/2,uv.getY(i)*(ny>.5?p.depth:p.height)/2);}uv.needsUpdate=true;}return node;};
-  if(['glazed-timber','leaded-glass'].includes(spec.opening.style)){
+  if(spec.opening.style==='porch-glass'){
+   const frame=materials.woodDark||wood,rail=.075;
+   for(const x of[rail/2,leaf.length-rail/2]){const n=mesh(new THREE.BoxGeometry(rail,leaf.height,THICK),frame,'porch-door-stile');n.position.set(x,leaf.base+leaf.height/2,0);pivot.add(n);}
+   for(const y of[.07,leaf.height-.07]){const n=mesh(new THREE.BoxGeometry(leaf.length-rail*2,.14,THICK),frame,'porch-door-rail');n.position.set(leaf.length/2,leaf.base+y,0);pivot.add(n);}
+   const pane=mesh(new THREE.BoxGeometry(leaf.length-rail*2,leaf.height-.28,.018),materials.glass||frame,'porch-door-glass');pane.position.set(leaf.length/2,leaf.base+leaf.height/2,0);pivot.add(pane);
+  }else if(['glazed-timber','leaded-glass'].includes(spec.opening.style)){
    // Foto 05 inspira a divisão; dimensões e número de faixas são derivados para o estudo.
    const frame=materials.woodDark||wood,glass=materials.glass||frame,rail=.09,inside=Math.max(.04,leaf.length-rail*2),addFrame=(width,height,x,y,name='door-glazed-frame')=>{const part=mesh(new THREE.BoxGeometry(width,height,THICK),frame,name);part.position.set(x,y,0);pivot.add(part);};
    addFrame(rail,leaf.height,rail/2,leaf.base+leaf.height/2);addFrame(rail,leaf.height,leaf.length-rail/2,leaf.base+leaf.height/2);
