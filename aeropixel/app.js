@@ -9,4 +9,5 @@ document.querySelector('#play').addEventListener('click',()=>{if(document.body.c
 addEventListener('keydown',e=>{if(['ArrowRight','ArrowLeft'].includes(e.key)&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();stop();const p=scrollY/(document.documentElement.scrollHeight-innerHeight)*5;go(Math.max(0,Math.min(5,Math.round(p)+(e.key==='ArrowRight'?1:-1))));}});addEventListener('wheel',stop,{passive:true});addEventListener('touchstart',stop,{passive:true});addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(render);ticking=true;}},{passive:true});addEventListener('resize',render);
 function reset(){stop();const root=document.documentElement;root.style.scrollBehavior='auto';scrollTo(0,0);render();requestAnimationFrame(()=>{scrollTo(0,0);render();root.style.scrollBehavior='';});}
 addEventListener('pageshow',reset);reset();
+document.querySelector('.brand')?.addEventListener('click',event=>{event.preventDefault();stop();go(0);});
 window.AeropixelPresentation={sections:nodes.length,source:'public_swisstopo_terrain',price:12000,entry:4000,balance:8000,go};})();
