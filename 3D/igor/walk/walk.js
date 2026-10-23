@@ -1,11 +1,12 @@
 import * as THREE from './vendor/three.module.js';
 import {createMaterials} from './materials.js';
-import {buildExterior,addReferenceTrees} from './exterior.js';
+import {buildExterior,addReferenceTrees} from './exterior.js?v=facade-r3';
+import {buildGrassDetail} from './grass-detail.js?v=facade-r5';
 import {HDRLoader} from './vendor/HDRLoader.js';
 import {createFootsteps} from './footsteps.js';
-import {exportBakeSource,applyBakedLighting} from './baked-lighting.js';
+import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=facade-r3';
 import {facadeAxis,worldX,worldYaw,movement} from './view-transform.js';
-import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem} from './nav.js';
+import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem} from './nav.js?v=facade-r3';
 const $=id=>document.getElementById(id),canvas=$('cena'),mobile=matchMedia('(pointer:coarse)').matches;
 let renderer,stopped=false,frame=0;
 const footsteps=createFootsteps();
@@ -20,6 +21,7 @@ async function startScene(){
  const sun=new THREE.DirectionalLight(0xffefd9,3.15);sun.position.set(-9,18,-12);sun.target.position.set(4,0,5);sun.castShadow=true;sun.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);Object.assign(sun.shadow.camera,{left:-20,right:20,top:20,bottom:-20,near:1,far:55});sun.shadow.normalBias=.025;sun.shadow.bias=-.0002;scene.add(sun,sun.target);
  const random=n=>{const v=Math.sin(n*97.13+11.5)*43958.27;return v-Math.floor(v);};
  const started=performance.now(),M=await createMaterials(THREE,renderer,{mobile});M.wood.normalScale.set(.35,.35);M.deck.normalScale.set(.35,.35);M.stone.normalScale.set(.65,.65);
+ M.grass.normalScale.set(.12,.12); // grama curta: relevo sutil, não solo ondulado
  M.plaster.color.set(0xeadfc9);M.plaster.normalScale.set(.16,.16);M.tile.normalScale.set(.22,.22);M.tile.roughness=.58;M.woodDark.map=M.wood.map;M.woodDark.normalMap=M.wood.normalMap;M.woodDark.normalScale.set(.25,.25);M.woodDark.roughness=.8;
  // HDR da base do Vale para reflexos. O bake guarda luz indireta em mapas
  // separados do albedo; as fotos do imóvel continuam sendo referência.
@@ -32,9 +34,9 @@ async function startScene(){
  function softBox(x,y,z,w,h,d,mat=M.linen){const r=Math.min(.09,w*.1,h*.2),s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);const geo=new THREE.ExtrudeGeometry(s,{depth:d,steps:1,bevelEnabled:true,bevelSegments:2,bevelSize:.025,bevelThickness:.025,curveSegments:3});geo.translate(0,0,-d/2);const mesh=new THREE.Mesh(geo,mat);mesh.position.set(x,y,z);mesh.castShadow=mesh.receiveShadow=true;scene.add(mesh);return mesh;}
  // Pisos e vãos: geometria e colisão compartilham a mesma fonte.
  floorAreas.forEach(f=>{const holes=f.holes||[],xs=[f.rect[0],f.rect[2],...holes.flatMap(h=>[h[0],h[2]])].sort((a,b)=>a-b),zs=[f.rect[1],f.rect[3],...holes.flatMap(h=>[h[1],h[3]])].sort((a,b)=>a-b);for(let i=1;i<xs.length;i++)for(let j=1;j<zs.length;j++){const x=(xs[i-1]+xs[i])/2,z=(zs[j-1]+zs[j])/2;if(xs[i]-xs[i-1]<.001||zs[j]-zs[j-1]<.001||holes.some(h=>x>h[0]&&x<h[2]&&z>h[1]&&z<h[3]))continue;box(x,f.level-.08,z,xs[i]-xs[i-1],.16,zs[j]-zs[j-1],M[f.material]||M.wood);}});
- walls.forEach(w=>{const dx=w.b[0]-w.a[0],dz=w.b[1]-w.a[1],length=Math.hypot(dx,dz),rot=-Math.atan2(dz,dx),nx=dx/length,nz=dz/length,open=w.openings||[],xs=[0,length,...open.flatMap(o=>[o.from,o.to])].sort((a,b)=>a-b),ys=[0,w.height,...open.flatMap(o=>[o.bottom,o.top])].sort((a,b)=>a-b),place=(u,v,width,height,depth,mat)=>box(w.a[0]+nx*u,w.base+v,w.a[1]+nz*u,width,height,depth,mat,rot);
-  for(let i=1;i<xs.length;i++)for(let j=1;j<ys.length;j++){const u=(xs[i-1]+xs[i])/2,v=(ys[j-1]+ys[j])/2;if(xs[i]-xs[i-1]<.001||ys[j]-ys[j-1]<.001||open.some(o=>u>o.from&&u<o.to&&v>o.bottom&&v<o.top))continue;place(u,v,xs[i]-xs[i-1],ys[j]-ys[j-1],.18,M[w.material]||M.plaster);}
-  for(const o of open){const width=o.to-o.from,h=o.top-o.bottom,mid=(o.from+o.to)/2,cy=(o.top+o.bottom)/2;place(o.from,cy,.055,h+.08,.22,M.woodDark);place(o.to,cy,.055,h+.08,.22,M.woodDark);place(mid,o.top,width,.06,.22,M.woodDark);if(o.type==='window'){place(mid,o.bottom,width,.06,.24,M.woodDark);place(mid,cy,width-.07,h-.07,.026,M.glass);if(width>1.2)place(mid,cy,.035,h,.09,M.woodDark);}else place(mid,.02,width,.04,.25,M.wood);}
+ walls.forEach(w=>{const dx=w.b[0]-w.a[0],dz=w.b[1]-w.a[1],length=Math.hypot(dx,dz),rot=-Math.atan2(dz,dx),nx=dx/length,nz=dz/length,open=w.openings||[],xs=[0,length,...open.flatMap(o=>[o.from,o.to]),...(w.materialRanges||[]).flatMap(r=>[r.from,r.to])].sort((a,b)=>a-b),ys=[0,w.height,...open.flatMap(o=>[o.bottom,o.top])].sort((a,b)=>a-b),place=(u,v,width,height,depth,mat)=>box(w.a[0]+nx*u,w.base+v,w.a[1]+nz*u,width,height,depth,mat,rot);
+  for(let i=1;i<xs.length;i++)for(let j=1;j<ys.length;j++){const u=(xs[i-1]+xs[i])/2,v=(ys[j-1]+ys[j])/2;if(xs[i]-xs[i-1]<.001||ys[j]-ys[j-1]<.001||open.some(o=>u>o.from&&u<o.to&&v>o.bottom&&v<o.top))continue;const range=(w.materialRanges||[]).find(r=>u>=r.from&&u<=r.to);place(u,v,xs[i]-xs[i-1],ys[j]-ys[j-1],.18,M[range?.material||w.material]||M.plaster);}
+  for(const o of open){const width=o.to-o.from,h=o.top-o.bottom,mid=(o.from+o.to)/2,cy=(o.top+o.bottom)/2,frame=o.frameWidth||.055;place(o.from,cy,frame,h+.08,.22,M.woodDark);place(o.to,cy,frame,h+.08,.22,M.woodDark);place(mid,o.top,width,frame,.22,M.woodDark);if(o.type==='window'){place(mid,o.bottom,width,frame,.24,M.woodDark);const panels=o.panels??(width>1.2?2:1);for(let p=0;p<panels;p++){place(o.from+(p+.5)*width/panels,cy,width/panels-frame,h-frame,.026,M.glass);if(p>0)place(o.from+p*width/panels,cy,frame,h,.13,M.woodDark);}}else place(mid,.02,width,.04,.25,M.wood);}
  });
  // Juntas finas do porcelanato observado nas fotos06/11, sem alterar colisão.
  const grout=material(0xb8b2a5,.92);
@@ -85,6 +87,7 @@ async function startScene(){
  doorSystem.build(THREE,scene,M);
  const bakeSnapshot=new URLSearchParams(location.search).has('bake-export')?exportBake():null;
  const vegetationStats=await addReferenceTrees(THREE,scene,{mobile});
+ const grassStats=buildGrassDetail(THREE,scene,M,{mobile});vegetationStats.grassTriangles=grassStats.triangles;
  const visualRoot=new THREE.Group();for(const child of [...scene.children])visualRoot.add(child);visualRoot.scale.x=-1;visualRoot.position.x=facadeAxis;scene.add(visualRoot);
  let state={x:11,z:-14,y:0},yaw=2.69,pitch=.035,walking=false,drag=false,lastX=0,lastY=0,lastTime=0,activeRoom=null;
  const keys=new Set(),keyMap={KeyW:'forward',ArrowUp:'forward',KeyS:'back',ArrowDown:'back',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right'};

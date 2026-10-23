@@ -5,7 +5,8 @@ import {buildDiningSet} from './interior-detail.js';
 export const roofPlanes=[
  {id:'cobertura-principal',x:2.9,z:4.5,w:7.0,d:10.1,front:5.95,back:6.55},
  {id:'alpendre-frontal',x:2.9,z:-.55,w:7.0,d:2.9,front:2.72,back:3.65},
- {id:'ala-direita',x:8.0,z:3.8,w:4.8,d:8.8,front:3.05,back:4.45},
+ {id:'ala-direita',x:8.0,z:1.5,w:4.8,d:4.2,front:3.05,back:4.45},
+ {id:'ala-direita-retorno',x:8.0,z:5.9,w:4.8,d:4.6,front:4.45,back:3.05},
  {id:'ala-posterior',x:2.9,z:11,w:6.3,d:4.4,front:6.55,back:6.15}
 ];
 export const treePlacements=[
@@ -23,17 +24,33 @@ export function buildExterior(THREE,scene,M,box,cylinder){
   for(let i=0;i<n;i++){const tile=new THREE.Mesh(geo,M.roof);tile.position.set(r.x-r.w/2+(i+.5)*r.w/n,r.front+.045,r.z-r.d/2+.07);tile.rotation.x=angle;tile.castShadow=true;tile.receiveShadow=true;scene.add(tile);}
  }
  roofPlanes.forEach(slope);
+ // Fechamento sob as duas águas: não deixar um vão aberto acima da parede.
+ const gable=new THREE.Shape();gable.moveTo(0,3);gable.lineTo(0,3.25);gable.lineTo(3.6,4.45);gable.lineTo(8,3.11);gable.lineTo(8,3);gable.closePath();
+ const gg=new THREE.ExtrudeGeometry(gable,{depth:.18,bevelEnabled:false,steps:1}),guv=gg.attributes.uv;for(let i=0;i<guv.count;i++)guv.setXY(i,guv.getX(i)/2,guv.getY(i)/2);
+ const gableMesh=new THREE.Mesh(gg,M.wood);gableMesh.rotation.y=-Math.PI/2;gableMesh.position.x=9.89;gableMesh.castShadow=gableMesh.receiveShadow=true;scene.add(gableMesh);
  // Pilares finos e vigas do alpendre, porta à direita e banco visível na foto04.
  for(const x of[-.1,5.82]){box(x,1.37,-1.7,.10,2.74,.10,M.plaster);box(x,2.79,-.45,.12,.12,2.6,M.woodDark);}
- box(1.8,.45,-.82,1.2,.10,.5,M.wood);box(1.8,.80,-.60,1.2,.56,.06,M.wood);
- for(const x of[1.3,2.3])for(const z of[-1.0,-.64])box(x,.22,z,.055,.44,.055,M.woodDark);
+ // Banco ripado, braços e pés observados na foto04, não uma placa maciça.
+ for(let i=0;i<5;i++)box(1.8,.45,-1.02+i*.095,1.2,.045,.078,M.wood);
+ for(let i=0;i<8;i++)box(1.28+i*.15,.75,-.60,.055,.55,.045,M.wood);
+ box(1.8,1.03,-.60,1.24,.065,.065,M.wood);
+ for(const x of[1.25,2.35]){for(const z of[-1.0,-.64])box(x,.23,z,.065,.46,.065,M.woodDark);box(x,.67,-.81,.065,.06,.5,M.wood);box(x,.55,-1.0,.05,.25,.05,M.wood);}
+ // Janela alta lateral e condensadora da foto05; escala apenas estimada.
+ box(5.99,3.85,.65,.35,.55,.48,M.white);
+ for(let j=0;j<7;j++)box(6.175,3.62+j*.067,.65,.012,.018,.43,M.metal);
+ for(const z of[.47,.83])box(6.01,3.51,z,.4,.035,.035,M.metal);
+ // Armário baixo sob a janela lateral, sem ocupar o vão da entrada recuada.
+ box(6.10,.49,.52,.50,.98,.75,M.plaster);
+ for(const z of[.34,.70]){box(6.36,.46,z,.04,.84,.32,M.wood);box(6.39,.58,z,.02,.11,.025,M.metal);}
+ // Pendentes pequenos dos dois lados da porta lateral; não inventar cômodo.
+ for(const x of[6.27,9.30]){cylinder(x,2.66,1.15,.018,.26,M.woodDark,8);const shade=new THREE.Mesh(new THREE.ConeGeometry(.15,.16,20,1,true),M.wood);shade.position.set(x,2.49,1.15);shade.castShadow=shade.receiveShadow=true;scene.add(shade);}
  // Mesa redonda e cadeiras da cozinha; formas reconhecíveis nas fotos06/11.
  buildDiningSet(THREE,scene,M);
  // Pavimentação da chegada em pedra, gramado separado e caminho de placas.
  const patio=new THREE.Shape([[-6,0],[-6,8.4],[-.8,7.0],[5.5,3.9],[10.3,3.9],[10.3,0]].map(([x,z])=>new THREE.Vector2(x,z)));
  const pg=new THREE.ShapeGeometry(patio),pos=pg.attributes.position,uv=pg.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,pos.getX(i)/3,pos.getY(i)/3);
  const pavement=new THREE.Mesh(pg,M.paving);pavement.rotation.x=-Math.PI/2;pavement.position.y=.015;pavement.receiveShadow=true;scene.add(pavement);
- for(let i=0;i<12;i++)box(2.2-i*.18,.025,-16+i*.83,.78,.045,.43,M.paving);
+ for(let i=0;i<12;i++)box(2.2-i*.18,.003,-16+i*.83,.78,.012,.43,M.paving);
  // Muros laterais e vegetação do entorno: nenhum segundo imóvel inventado.
  box(-6.15,.85,-5.5,.30,1.7,25,M.stone);box(14,.88,-4,.26,1.76,28,M.stone);
  for(let i=0;i<10;i++)box(13.8,1.06,-16+i*2.7,.14,2.12,.14,M.plaster);

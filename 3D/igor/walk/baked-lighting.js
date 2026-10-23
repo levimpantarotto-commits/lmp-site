@@ -18,14 +18,14 @@ export function exportBakeSource(scene,M){
 }
 export async function applyBakedLighting(THREE,scene,{mobile=false,enabled=true}={}){
  if(!enabled)return {enabled:false,reason:'comparison-baseline'};
- const base=new URL('./assets/baked/',import.meta.url),response=await fetch(new URL('atlas.json',base));
+ const base=new URL('./assets/baked/',import.meta.url),asset=name=>new URL(`${name}?v=facade-r3`,base),response=await fetch(asset('atlas.json'));
  if(!response.ok)return{enabled:false,reason:'atlas-unavailable'};
  const atlas=await response.json(),meshes=scene.children.filter(o=>o.isMesh&&!o.material.transparent),expectedIndices=atlas.eligibleMeshIndices;
  if(atlas.version!==2||!Array.isArray(atlas.meshes)||!atlas.meshes.length||!Number.isFinite(atlas.indirectScale)||atlas.indirectScale<=0||!Number.isInteger(atlas.resolution)||atlas.resolution<1||atlas.resolution>2048||!Number.isInteger(atlas.mobileResolution)||atlas.mobileResolution<1||atlas.mobileResolution>1024||!Number.isInteger(atlas.sceneMeshCount)||atlas.sceneMeshCount!==meshes.length||typeof atlas.geometrySourceKey!=='string'||atlas.geometrySourceKey!==sourceGeometryKey(meshes)||!Array.isArray(expectedIndices)||expectedIndices.length!==atlas.meshes.length||new Set(expectedIndices).size!==expectedIndices.length||new Set(atlas.meshes.map(e=>e.index)).size!==atlas.meshes.length||expectedIndices.some(index=>!Number.isInteger(index)||index<0||index>=meshes.length)||atlas.meshes.some((entry,index)=>entry.index!==expectedIndices[index]))throw Error('Atlas inválido');
  for(const entry of atlas.meshes){const mesh=meshes[entry.index];if(!mesh||geometryKey(mesh.geometry)!==entry.key||entry.uv.length!==mesh.geometry.attributes.position.count*2||entry.uv.some(v=>!Number.isFinite(v)||v<0||v>1))throw Error('Atlas e geometria divergentes');}
- const loader=new THREE.TextureLoader(),ao=await loader.loadAsync(new URL(mobile?'ao-mobile.jpg':'ao.jpg',base).href);
+ const loader=new THREE.TextureLoader(),ao=await loader.loadAsync(asset(mobile?'ao-mobile.jpg':'ao.jpg').href);
  ao.colorSpace=THREE.NoColorSpace;ao.channel=1;ao.anisotropy=2;
- let light;try{light=await loader.loadAsync(new URL(mobile?'indirect-mobile.png':'indirect.png',base).href);}catch(error){ao.dispose();throw error;}
+ let light;try{light=await loader.loadAsync(asset(mobile?'indirect-mobile.png':'indirect.png').href);}catch(error){ao.dispose();throw error;}
  light.colorSpace=THREE.SRGBColorSpace;light.channel=1;light.anisotropy=2;
  for(const entry of atlas.meshes){const mesh=meshes[entry.index];mesh.geometry.setAttribute('uv1',new THREE.Float32BufferAttribute(entry.uv,2));const m=mesh.material.clone();m.aoMap=ao;m.aoMapIntensity=.85;m.lightMap=light;m.lightMapIntensity=atlas.indirectScale*Math.PI;m.envMapIntensity=.18;mesh.material=m;}
  return{enabled:true,meshes:atlas.meshes.length,resolution:mobile?atlas.mobileResolution:atlas.resolution,extraTextureMiB:(mobile?atlas.mobileResolution:atlas.resolution)**2*4*2*4/3/1024/1024};

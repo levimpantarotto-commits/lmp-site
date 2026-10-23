@@ -31,13 +31,15 @@ export function createDoors(walls=[],furniture=[],exteriorObstacles=[]){
    // Escolhe a abertura de 90° com varredura livre; se ambas falharem, mantém
    // a alternativa menos surpreendente e deixa a porta fechada (segura).
    const spec={id,wallIndex,opening:{...opening},base,height,width,leaves,open:false,status:'fechada'};
-   for(const leaf of leaves){const candidates=[1,-1];const usable=candidates.find(direction=>{leaf.direction=direction;return !sweepBlocked(leaf,0,1,null,walls,furniture,exteriorObstacles,wallIndex);});if(usable===undefined){leaf.direction=1;spec.status='bloqueada';}else leaf.direction=usable;}
-   if(spec.status==='bloqueada')spec.open=false;else{spec.open=true;spec.status='aberta';}
+   for(const [li,leaf] of leaves.entries()){const candidates=opening.style==='glazed-timber'&&li===1?[-1,1]:[1,-1];const usable=candidates.find(direction=>{leaf.direction=direction;return !sweepBlocked(leaf,0,1,null,walls,furniture,exteriorObstacles,wallIndex);});if(usable===undefined){leaf.direction=1;spec.status='bloqueada';}else leaf.direction=usable;}
+   if(spec.status==='bloqueada')spec.open=false;
+   else if(opening.initialOpen===false){spec.open=false;spec.status='fechada';}
+   else{spec.open=true;spec.status='aberta';}
    specs.push(spec);
   });
  });
  const collides=(x,z,y=0)=>specs.some(spec=>spec.leaves.some(leaf=>y>=leaf.base-EPS&&y<=leaf.base+leaf.height+EPS&&distanceToSegment(x,z,...Object.values(leafSegment(leaf,spec.open)))<R));
- const snapshot=()=>specs.map(spec=>({id:spec.id,wallIndex:spec.wallIndex,open:spec.open,status:spec.status,width:spec.width,leaves:spec.leaves.map(leaf=>({hinge:{...leaf.hinge},length:leaf.length,direction:leaf.direction}))}));
+ const snapshot=()=>specs.map(spec=>({id:spec.id,wallIndex:spec.wallIndex,opening:{...spec.opening},open:spec.open,status:spec.status,width:spec.width,leaves:spec.leaves.map(leaf=>({hinge:{...leaf.hinge},length:leaf.length,direction:leaf.direction}))}));
  const nearest=player=>{if(!finitePlayer(player))return null;let found=null;for(const spec of specs){if(Math.abs(player.y-spec.base)>.35)continue;const middle=spec.opening.from+spec.width/2,wall=walls[spec.wallIndex],angle=Math.atan2(wall.b[1]-wall.a[1],wall.b[0]-wall.a[0]),x=wall.a[0]+Math.cos(angle)*middle,z=wall.a[1]+Math.sin(angle)*middle,distance=Math.hypot(player.x-x,player.z-z);if((!found||distance<found.distance)&&distance<=1.6)found={id:spec.id,distance,open:spec.open,status:spec.status};}return found;};
  const toggle=(id,player)=>{const spec=specs.find(door=>door.id===id);if(!spec)return{ok:false,status:'porta_inexistente',id};if(!finitePlayer(player))return{ok:false,status:'jogador_invalido',id};
   if(Math.abs(player.y-spec.base)>.35)return{ok:false,status:'andar_incorreto',id,open:spec.open};const wall=walls[spec.wallIndex],length=Math.hypot(wall.b[0]-wall.a[0],wall.b[1]-wall.a[1]),u=(spec.opening.from+spec.opening.to)/2,cx=wall.a[0]+u*(wall.b[0]-wall.a[0])/length,cz=wall.a[1]+u*(wall.b[1]-wall.a[1])/length;if(Math.hypot(player.x-cx,player.z-cz)>1.6)return{ok:false,status:'fora_de_alcance',id,open:spec.open};
@@ -53,8 +55,22 @@ export function createDoors(walls=[],furniture=[],exteriorObstacles=[]){
 export function buildDoorMeshes(THREE,parent,materials={},specs=[],setRefresh){
  const root=THREE.Group?new THREE.Group():new THREE.Object3D();parent?.add?.(root);const entries=[];
  for(const spec of specs)for(const leaf of spec.leaves){const pivot=THREE.Group?new THREE.Group():new THREE.Object3D(),wood=materials.door||materials.wood||materials.woodDark,metal=materials.metal||materials.woodDark;
-  root.add(pivot);const mesh=(geometry,material)=>{const node=new THREE.Mesh(geometry,material);node.castShadow=node.receiveShadow=true;const uv=geometry.attributes?.uv,n=geometry.attributes?.normal,p=geometry.parameters;if(uv&&n&&p?.width){for(let i=0;i<uv.count;i++){const nx=Math.abs(n.getX(i)),ny=Math.abs(n.getY(i));uv.setXY(i,uv.getX(i)*(nx>.5?p.depth:p.width)/2,uv.getY(i)*(ny>.5?p.depth:p.height)/2);}uv.needsUpdate=true;}return node;},slab=mesh(new THREE.BoxGeometry(leaf.length,leaf.height,THICK),wood);slab.position.set(leaf.length/2,leaf.base+leaf.height/2,0);pivot.add(slab);
-  for(const side of[-1,1]){const panel=mesh(new THREE.BoxGeometry(Math.max(.04,leaf.length-.16),Math.max(.04,leaf.height-.32),.018),materials.doorPanel||wood);panel.position.set(leaf.length/2,leaf.base+leaf.height/2,side*(THICK/2+.012));pivot.add(panel);const handle=mesh(new THREE.CylinderGeometry(.027,.027,.12,8),metal);handle.rotation.z=Math.PI/2;handle.position.set(Math.max(.13,leaf.length-.16),leaf.base+leaf.height*.48,side*(THICK/2+.04));pivot.add(handle);}
+  root.add(pivot);const mesh=(geometry,material,name)=>{const node=new THREE.Mesh(geometry,material);node.name=name||'';node.castShadow=node.receiveShadow=true;const uv=geometry.attributes?.uv,n=geometry.attributes?.normal,p=geometry.parameters;if(uv&&n&&p?.width){for(let i=0;i<uv.count;i++){const nx=Math.abs(n.getX(i)),ny=Math.abs(n.getY(i));uv.setXY(i,uv.getX(i)*(nx>.5?p.depth:p.width)/2,uv.getY(i)*(ny>.5?p.depth:p.height)/2);}uv.needsUpdate=true;}return node;};
+  if(spec.opening.style==='glazed-timber'){
+   // Foto 05 inspira a divisão; dimensões e número de faixas são derivados para o estudo.
+   const frame=materials.woodDark||wood,glass=materials.glass||frame,rail=.09,inside=Math.max(.04,leaf.length-rail*2),addFrame=(width,height,x,y,name='door-glazed-frame')=>{const part=mesh(new THREE.BoxGeometry(width,height,THICK),frame,name);part.position.set(x,y,0);pivot.add(part);};
+   addFrame(rail,leaf.height,rail/2,leaf.base+leaf.height/2);addFrame(rail,leaf.height,leaf.length-rail/2,leaf.base+leaf.height/2);
+   addFrame(inside,.10,leaf.length/2,leaf.base+leaf.height-.05);addFrame(inside,.10,leaf.length/2,leaf.base+.05);
+   // Faixa baixa de madeira e soleira deixam o vidro começar a 65 cm do piso.
+   addFrame(inside,.45,leaf.length/2,leaf.base+.325,'door-glazed-lower-band');addFrame(inside,.10,leaf.length/2,leaf.base+.60);
+   const paneBottom=leaf.base+.65,paneTop=Math.min(leaf.base+2.10,leaf.base+leaf.height-.12),gap=.055,paneHeight=Math.max(.04,(paneTop-paneBottom-gap*3)/4);
+   const upperBand=leaf.base+leaf.height-.10-paneTop;if(upperBand>0)addFrame(inside,upperBand,leaf.length/2,paneTop+upperBand/2,'door-glazed-upper-band');
+   for(let i=0;i<4;i++){const pane=mesh(new THREE.BoxGeometry(inside-.025,paneHeight,.018),glass,'door-glazed-pane');pane.position.set(leaf.length/2,paneBottom+paneHeight/2+i*(paneHeight+gap),0);pivot.add(pane);if(i<3)addFrame(inside,.055,leaf.length/2,paneBottom+paneHeight+i*(paneHeight+gap));}
+  }else{
+   const slab=mesh(new THREE.BoxGeometry(leaf.length,leaf.height,THICK),wood,'door-leaf-slab');slab.position.set(leaf.length/2,leaf.base+leaf.height/2,0);pivot.add(slab);
+   for(const side of[-1,1]){const panel=mesh(new THREE.BoxGeometry(Math.max(.04,leaf.length-.16),Math.max(.04,leaf.height-.32),.018),materials.doorPanel||wood,'door-panel');panel.position.set(leaf.length/2,leaf.base+leaf.height/2,side*(THICK/2+.012));pivot.add(panel);}
+  }
+  for(const side of[-1,1]){const handle=mesh(new THREE.CylinderGeometry(.027,.027,.12,8),metal,'door-handle');handle.rotation.z=Math.PI/2;handle.position.set(Math.max(.13,leaf.length-.16),leaf.base+leaf.height*.48,side*(THICK/2+.04));pivot.add(handle);}
   for(const fraction of[.2,.8]){const hinge=mesh(new THREE.CylinderGeometry(.018,.018,.12,8),metal);hinge.position.set(.03,leaf.base+leaf.height*fraction,0);pivot.add(hinge);}entries.push({spec,leaf,pivot});
  }
  const update=()=>entries.forEach(({spec,leaf,pivot})=>{pivot.position.set(leaf.hinge.x,0,leaf.hinge.z);pivot.rotation.y=-(leaf.closedAngle+(spec.open?leaf.direction*Math.PI/2:0));});update();
