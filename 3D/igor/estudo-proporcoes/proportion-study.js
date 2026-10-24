@@ -29,8 +29,13 @@ export function applyProportionStudy(rooms,floors,walls,furniture){
  // Fotos00/01: parapeitos claros sob os vidros, não lambris de madeira.
  walls[21].material='plaster';walls[22].material='plaster';
  walls[22].openings=[{from:.15,to:3.65,bottom:.72,top:2.65,type:'window',panels:3},{from:4.45,to:8.7,bottom:1.9,top:2.65,type:'window',panels:3}];
- // Meia-parede junto ao banco não invade o corredor da porta frontal.
- const divider=walls.at(-1);if(divider.height===1.48)divider.b[1]=3.0;
+ // Foto10: o banco fica abaixo das duas janelas; altura é hipótese visual, não cota.
+ for(const wall of walls.slice(0,2)){
+  const window=wall.openings.find(o=>o.type==='window'&&o.from===.2&&o.to===3.3&&o.top===2.85);
+  if(window)window.bottom=1.85;
+ }
+ // A divisória acompanha o peitoril e não invade o corredor da porta frontal.
+ const divider=walls.at(-1);if(divider.height===1.48){divider.height=1.85;divider.b[1]=3.0;}
  Object.assign(rooms.find(r=>r.id==='cozinha'),{rect:[1.8,4.4,5.8,9],spawn:[4.2,0,5.45],note:'Cozinha integrada ampliada pela redistribuição do plano. Fotos 06/07/08/11; sem cotas medidas.'});
  Object.assign(rooms.find(r=>r.id==='hall'),{photo:6,note:'Ligação posterior ainda estimada. A foto12 é banheiro, não evidência de um hall.'});
  // Destinos voltados para o ambiente, não para a porta/parede atrás do usuário.

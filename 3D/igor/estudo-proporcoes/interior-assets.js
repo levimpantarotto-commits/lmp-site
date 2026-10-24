@@ -7,7 +7,7 @@ import {drapedSheet} from './draped-sheet.js';
 export function buildInteriorAssets(THREE,scene,M,furniture,{mobile=false}={}){
  // A malha é deliberadamente a mesma nos dois perfis: mobile só recebe materiais/texturas do chamador.
  const detail=16,meshes=[],byId={};
- const material=(name,fallback='white')=>M[name]||M[fallback]||M.white;
+ const material=(name,fallback='white')=>(name==='wood'?M.furnitureWood:null)||M[name]||M[fallback]||M.white;
  const add=(geometry,mat,x,y,z,rotation=0,part='')=>{if(!geometry.attributes.normal)geometry.computeVertexNormals();const node=new THREE.Mesh(geometry,mat);node.position.set(x,y,z);node.rotation.y=rotation;node.castShadow=node.receiveShadow=true;if(part)node.userData.interiorPart=part;scene.add(node);meshes.push(node);return node;};
  // Caixa arredondada por projeção analítica do cubo subdividido: bordas compartilham a mesma normal,
  // diferentemente de ExtrudeGeometry, cujas tampas e bevels deixam junções facetadas.
@@ -48,8 +48,15 @@ export function buildInteriorAssets(THREE,scene,M,furniture,{mobile=false}={}){
    // Foto01: pés e travessas visíveis; não é um bloco fechado até o chão.
    c.round(c.w/2,.245,c.d/2,c.w-.06,.105,c.d-.06,wood,.018,'sofa-frame');
    for(const u of[.12,c.w-.12])for(const v of[.11,c.d-.11])c.round(u,.12,v,.075,.24,.075,wood,.012,'futon-leg');
-  }else c.round(c.w/2,.18,c.d/2,c.w-.06,.34,c.d-.06,material('plaster'),.024,'sofa-frame');
-  c.puffy(c.w/2,mezanino?.37:.415,c.d*.46,c.w-.10,mezanino?.20:.14,c.d*.67,cloth,.075,'seat-cushion',mezanino?.4:0);
+  }else{
+   // Banco contínuo de alvenaria, não três caixotes separados por frestas.
+   c.round(c.w/2,.18,c.d/2,c.w,.34,c.d-.02,material('plaster'),.012,'sofa-frame');
+   // Rodapé de madeira visível nas fotos10/11, abaixo da frente do banco.
+   c.round(c.w/2,.047,.016,c.w-.025,.065,.022,wood,.003,'bank-wood-plinth');
+  }
+  // Foto10: assento chega próximo da borda de alvenaria; o recuo anterior
+  // deixava uma prateleira larga e fazia a espuma parecer rasa.
+  c.puffy(c.w/2,mezanino?.37:.415,c.d*(mezanino?.46:.45),c.w-(mezanino?.10:.045),mezanino?.20:.14,c.d*(mezanino?.67:.81),cloth,.075,'seat-cushion',mezanino?.4:0);
   // A costura e as dobras estão integradas na malha do assento; nenhum tubo risca o tecido.
   // Banco da sala é alvenaria contínua atrás das almofadas; elimina a leitura de encosto flutuante.
   if(!mezanino)c.round(c.w/2,.30,c.d-.065,c.w-.06,.60,.10,material('plaster'),.025,'sofa-back-support');
@@ -57,7 +64,7 @@ export function buildInteriorAssets(THREE,scene,M,furniture,{mobile=false}={}){
   const count=mezanino?2:Math.max(2,Math.round(c.w/.68));
   for(let i=0;i<count;i++){
    const u=(i+.5)*c.w/count,ww=mezanino?Math.min(.55,c.w*.3):c.w/count-.025;
-   const cushion=c.pillow(u,mezanino?.66:.715+.009*Math.sin(i*2.3),c.d-(mezanino?.24:.21),ww,mezanino?.38:.52,.23,mezanino?pale:cloth,'back-cushion',i*.7);
+   const cushion=c.pillow(u,mezanino?.66:.715+.009*Math.sin(i*2.3),c.d-(mezanino?.24:.21),ww,mezanino?.38:.52,mezanino?.23:.30,mezanino?pale:cloth,'back-cushion',i*.7);
    cushion.rotateX(mezanino?[-.075,-.11][i]:(-.085+(i%3)*.018));
    if(!mezanino)cushion.rotateZ(.016*Math.sin(i*2.7+.4));
   }

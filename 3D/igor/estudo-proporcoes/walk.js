@@ -19,6 +19,7 @@ import {createFootsteps} from './footsteps.js';
 import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=scale-r1';
 import {facadeAxis,worldX,worldYaw,movement as baseMovement} from './view-transform.js';
 import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem,calibration} from './nav.js?v=scale-r1';
+import {buildTileFloor} from './tile-floor-reference.js';
 const $=id=>document.getElementById(id),canvas=$('cena'),mobile=matchMedia('(pointer:coarse)').matches;
 let renderer,stopped=false,frame=0;
 const footsteps=createFootsteps();
@@ -30,18 +31,20 @@ async function startScene(){
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile?1:1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
  const scene=new THREE.Scene();scene.background=new THREE.Color('#a3cae8');scene.fog=new THREE.Fog('#c8d9d2',55,130);
  const camera=new THREE.PerspectiveCamera(mobile?78:60,1,.05,120);camera.rotation.order='YXZ';const ambientFill=new THREE.HemisphereLight(0xd8e8ff,0x8b805c,1.55);scene.add(ambientFill);
- const sun=new THREE.DirectionalLight(0xffefd9,3.15);sun.position.set(-9,18,-12);sun.target.position.set(4,0,5);sun.castShadow=true;sun.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);Object.assign(sun.shadow.camera,{left:-20,right:20,top:20,bottom:-20,near:1,far:55});sun.shadow.normalBias=proportionStudy?.005:.025;sun.shadow.bias=-.0002;scene.add(sun,sun.target);
+ const sun=new THREE.DirectionalLight(0xffefd9,proportionStudy?.8:3.15);sun.position.set(-9,18,-12);sun.target.position.set(4,0,5);sun.castShadow=true;sun.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);Object.assign(sun.shadow.camera,{left:-20,right:20,top:20,bottom:-20,near:1,far:55});sun.shadow.normalBias=proportionStudy?.005:.025;sun.shadow.bias=-.0002;scene.add(sun,sun.target);
  const random=n=>{const v=Math.sin(n*97.13+11.5)*43958.27;return v-Math.floor(v);};
  const started=performance.now(),M=await createMaterials(THREE,renderer,{mobile});M.wood.normalScale.set(.35,.35);M.deck.normalScale.set(.35,.35);M.stone.normalScale.set(.65,.65);
  M.grass.normalScale.set(.12,.12); // grama curta: relevo sutil, não solo ondulado
  if(proportionStudy){M.roof.map.repeat.set(.26,.65);M.roof.normalMap.repeat.set(.26,.65);M.roof.normalScale.set(.40,.40);M.grass.color.set(0xc4ccae);M.glass.color.set(0xc4d0ce);M.glass.opacity=.22;M.glass.metalness=.03;}
- M.plaster.color.set(0xeadfc9);M.plaster.normalScale.set(.16,.16);M.tile.normalScale.set(.22,.22);M.tile.roughness=.58;M.woodDark.map=M.wood.map;M.woodDark.normalMap=M.wood.normalMap;M.woodDark.normalScale.set(.25,.25);M.woodDark.roughness=.8;
+ M.plaster.color.set(0xeadfc9);M.plaster.normalScale.set(.16,.16);M.tile.normalScale.set(.15,.15);M.tile.roughness=.48;M.woodDark.normalScale.set(.25,.25);M.woodDark.color.set(0x9b7860);M.woodDark.roughness=.8;
  // Fotos01/11 distinguem vigas de madeira mel e esquadrias escuras. Usar o
  // mesmo marrom quase preto em ambas apagava o veio e alterava essa leitura.
- M.timber=M.wood.clone();M.timber.color.set(0xc7aa87);M.timber.roughness=.70;
- // HDR da base do Vale para reflexos. O bake guarda luz indireta em mapas
- // separados do albedo; as fotos do imóvel continuam sendo referência.
- const hdr=await new HDRLoader().loadAsync(new URL('./assets/ceu.hdr',import.meta.url).href);
+ M.timber.roughness=.70;
+ // Luz difusa de floresta no estudo: a referência10 não tem o facho solar
+ // duro do antigo HDR. Fonte CC0 registrada; não é captura deste imóvel.
+ const environmentName=proportionStudy?'ceu-difuso.hdr':'ceu.hdr';
+ scene.userData.environmentFile='dist/walk/assets/'+environmentName;
+ const hdr=await new HDRLoader().loadAsync(new URL('./assets/'+environmentName,import.meta.url).href);
  const pmrem=new THREE.PMREMGenerator(renderer),environment=pmrem.fromEquirectangular(hdr);
  scene.environment=environment.texture;scene.environmentIntensity=.55;hdr.dispose();pmrem.dispose();
  const material=(color,roughness=.8,extra={})=>new THREE.MeshStandardMaterial({color,roughness,...extra});
@@ -51,22 +54,29 @@ async function startScene(){
  function box(x,y,z,w,h,d,mat=M.plaster,rotation=0){const geo=new THREE.BoxGeometry(w,h,d),uv=geo.attributes.uv,norm=geo.attributes.normal;for(let i=0;i<uv.count;i++){const nx=Math.abs(norm.getX(i)),ny=Math.abs(norm.getY(i));uv.setXY(i,uv.getX(i)*(nx>.5?d:w)/2,uv.getY(i)*(ny>.5?d:h)/2);}const mesh=new THREE.Mesh(geo,mat);mesh.position.set(x,y,z);mesh.rotation.y=rotation;mesh.castShadow=mesh.receiveShadow=true;scene.add(mesh);return mesh;}
  function cylinder(x,y,z,r,h,mat,segments=18){const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,segments),mat);mesh.position.set(x,y,z);mesh.castShadow=mesh.receiveShadow=true;scene.add(mesh);return mesh;}
  // Pisos e vãos: geometria e colisão compartilham a mesma fonte.
- floorAreas.forEach(f=>{const holes=f.holes||[],xs=[f.rect[0],f.rect[2],...holes.flatMap(h=>[h[0],h[2]])].sort((a,b)=>a-b),zs=[f.rect[1],f.rect[3],...holes.flatMap(h=>[h[1],h[3]])].sort((a,b)=>a-b);for(let i=1;i<xs.length;i++)for(let j=1;j<zs.length;j++){const x=(xs[i-1]+xs[i])/2,z=(zs[j-1]+zs[j])/2;if(xs[i]-xs[i-1]<.001||zs[j]-zs[j-1]<.001||holes.some(h=>x>h[0]&&x<h[2]&&z>h[1]&&z<h[3]))continue;box(x,f.level-(f.material==='floorGlass'?.0175:.08),z,xs[i]-xs[i-1],f.material==='floorGlass'?.035:.16,zs[j]-zs[j-1],M[f.material]||M.wood);}});
+ const grout=M.tile.clone();grout.map=grout.normalMap=grout.roughnessMap=null;grout.color.set(0x9d9b8f);grout.roughness=.88;
+ floorAreas.forEach(f=>{const holes=f.holes||[],xs=[f.rect[0],f.rect[2],...holes.flatMap(h=>[h[0],h[2]])].sort((a,b)=>a-b),zs=[f.rect[1],f.rect[3],...holes.flatMap(h=>[h[1],h[3]])].sort((a,b)=>a-b);for(let i=1;i<xs.length;i++)for(let j=1;j<zs.length;j++){const x=(xs[i-1]+xs[i])/2,z=(zs[j-1]+zs[j])/2;if(xs[i]-xs[i-1]<.001||zs[j]-zs[j-1]<.001||holes.some(h=>x>h[0]&&x<h[2]&&z>h[1]&&z<h[3]))continue;box(x,f.level-(f.material==='floorGlass'?.0175:.08),z,xs[i]-xs[i-1],f.material==='floorGlass'?.035:.16,zs[j]-zs[j-1],proportionStudy&&f.material==='tile'?grout:M[f.material]||M.wood);}});
+ if(proportionStudy)buildTileFloor(THREE,scene,M,floorAreas,planScale);
  walls.forEach(w=>{const dx=w.b[0]-w.a[0],dz=w.b[1]-w.a[1],length=Math.hypot(dx,dz),rot=-Math.atan2(dz,dx),nx=dx/length,nz=dz/length,open=w.openings||[],xs=[0,length,...open.flatMap(o=>[o.from,o.to]),...(w.materialRanges||[]).flatMap(r=>[r.from,r.to])].sort((a,b)=>a-b),ys=[0,w.height,...open.flatMap(o=>[o.bottom,o.top])].sort((a,b)=>a-b),place=(u,v,width,height,depth,mat)=>box(w.a[0]+nx*u,w.base+v,w.a[1]+nz*u,width,height,depth,mat,rot);
   for(let i=1;i<xs.length;i++)for(let j=1;j<ys.length;j++){const u=(xs[i-1]+xs[i])/2,v=(ys[j-1]+ys[j])/2;if(xs[i]-xs[i-1]<.001||ys[j]-ys[j-1]<.001||open.some(o=>u>o.from&&u<o.to&&v>o.bottom&&v<o.top))continue;const range=(w.materialRanges||[]).find(r=>u>=r.from&&u<=r.to);place(u,v,xs[i]-xs[i-1],ys[j]-ys[j-1],.18,M[range?.material||w.material]||M.plaster);}
   for(const o of open){const width=o.to-o.from,h=o.top-o.bottom,mid=(o.from+o.to)/2,cy=(o.top+o.bottom)/2,frame=o.frameWidth||.055;place(o.from,cy,frame,h+.08,.22,M.woodDark);place(o.to,cy,frame,h+.08,.22,M.woodDark);place(mid,o.top,width,frame,.22,M.woodDark);if(o.type==='window'){place(mid,o.bottom,width,frame,.24,M.woodDark);const panels=o.panels??(width>1.2?2:1);for(let p=0;p<panels;p++){place(o.from+(p+.5)*width/panels,cy,width/panels-frame,h-frame,.026,M.glass);if(p>0)place(o.from+p*width/panels,cy,frame,h,.13,M.woodDark);}}else place(mid,.02,width,.04,.25,M.wood);}
  });
- // Juntas finas do porcelanato observado nas fotos06/11, sem alterar colisão.
- const grout=material(0xb8b2a5,.92);
- for(const f of floorAreas.filter(f=>f.material==='tile'&&f.level===0)){const[a,b,c,d]=f.rect;for(let x=a+.6;x<c-.01;x+=.6)box(x,.002,(b+d)/2,.004,.003,d-b,grout).castShadow=false;for(let z=b+.6;z<d-.01;z+=.6)box((a+c)/2,.002,z,c-a,.003,.004,grout).castShadow=false;}
+ // A cerâmica do estudo amostra só o miolo do PBR; as juntas finas são físicas,
+ // evitando a grade escura larga da captura original sobreposta ao piso.
  const masonryStats=buildMasonryReference(THREE,scene,M,walls);
  const count=18,[sx,sz,ex,ez]=stairs.rect,run=(ez-sz)/count,rise=(stairs.to-stairs.from)/count;
- for(let i=0;i<count;i++)box((sx+ex)/2,stairs.from+(i+1)*rise-.035,sz+(i+.5)*run,ex-sx,.07,run+.015,M.wood);
- for(const x of[sx+.04,ex-.04]){const railWood=proportionStudy?M.wood:M.woodDark;for(let i=1;i<count;i+=3)box(x,(i+1)*rise+.45,sz+(i+.5)*run,proportionStudy?.065:.035,.9,proportionStudy?.065:.035,railWood);const rail=box(x,1.5+.9,(sz+ez)/2,.045,.045,Math.hypot(ez-sz,stairs.to),railWood);rail.rotation.x=-Math.atan2(stairs.to,ez-sz);if(proportionStudy){const stringer=box(x,1.50,(sz+ez)/2,.10,.22,Math.hypot(ez-sz,stairs.to),M.wood);stringer.rotation.x=rail.rotation.x;}}
+ // Fotos06/11: degraus abertos entre duas longarinas, sem corrimãos nem
+ // postinhos seriados. O estudo ganha apenas um micro-bevel físico nas quinas.
+ const studyStep=i=>{const b=.008,w=ex-sx-b*2,h=.07-b*2,d=run+.015-b*2,s=new THREE.Shape();s.moveTo(-w/2,-h/2);s.lineTo(w/2,-h/2);s.lineTo(w/2,h/2);s.lineTo(-w/2,h/2);s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth:d,bevelEnabled:true,bevelThickness:b,bevelSize:b,bevelSegments:1,curveSegments:1});g.translate(0,0,-d/2);
+ // Mesma escala física de madeira das caixas: UV em metros/2, também nas bordas.
+ const p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv;for(let j=0;j<u.count;j++)u.setXY(j,(Math.abs(n.getX(j))>.5?p.getZ(j):p.getX(j))/2,(Math.abs(n.getY(j))>.5?p.getZ(j):p.getY(j))/2);
+ const step=new THREE.Mesh(g,M.furnitureWood);step.position.set((sx+ex)/2,stairs.from+(i+1)*rise-.035,sz+(i+.5)*run);step.castShadow=step.receiveShadow=true;step.userData.stairPart='beveled-open-tread';scene.add(step);};
+ for(let i=0;i<count;i++)proportionStudy?studyStep(i):box((sx+ex)/2,stairs.from+(i+1)*rise-.035,sz+(i+.5)*run,ex-sx,.07,run+.015,M.furnitureWood);
+ if(proportionStudy){const slope=-Math.atan2(stairs.to,ez-sz);for(const x of[sx+.04,ex-.04]){const stringer=box(x,1.50,(sz+ez)/2,.10,.22,Math.hypot(ez-sz,stairs.to),M.furnitureWood);stringer.rotation.x=slope;stringer.userData.stairPart='open-stair-stringer';}const support=box(ex-.06,1.50,sz+.14,.13,3,.13,M.furnitureWood);support.userData.stairPart='visible-side-structural-post';}else for(const x of[sx+.04,ex-.04]){for(let i=1;i<count;i+=3)box(x,(i+1)*rise+.45,sz+(i+.5)*run,.035,.9,.035,M.woodDark);const rail=box(x,2.4,(sz+ez)/2,.045,.045,Math.hypot(ez-sz,stairs.to),M.woodDark);rail.rotation.x=-Math.atan2(stairs.to,ez-sz);}
  // Guarda-corpo de madeira das fotos01/02, não uma placa de vidro inventada.
- for(const z of[3.9,5.25,6.6,8.0])box(1.85,3.48,z,.075,.96,.075,M.wood);
- for(const y of[3.28,3.58,3.93]){box(1.85,y,5.95,.065,.075,4.1,M.wood);box(.9,y,3.85,1.85,.075,.065,M.wood);}
- for(const x of[.04,.9])box(x,3.48,3.85,.075,.96,.075,M.wood);
+ for(const z of[3.9,5.25,6.6,8.0])box(1.85,3.48,z,.075,.96,.075,M.furnitureWood);
+ for(const y of[3.28,3.58,3.93]){box(1.85,y,5.95,.065,.075,4.1,M.furnitureWood);box(.9,y,3.85,1.85,.075,.065,M.furnitureWood);}
+ for(const x of[.04,.9])box(x,3.48,3.85,.075,.96,.075,M.furnitureWood);
  // Moldura do painel de vidro fotografado, separada do vão da escada.
  for(const x of[2.45,3.95])box(x,2.96,4.825,.07,.10,1.52,M.woodDark);
  for(const z of[4.1,5.55])box(3.20,2.96,z,1.57,.10,.07,M.woodDark);
@@ -98,7 +108,7 @@ async function startScene(){
  for(const mesh of scene.children.filter(n=>n.isMesh&&!n.material.transparent))for(const attr of ['position','normal','uv'])if(!mesh.geometry.attributes[attr])throw Error(`Atributo ${attr} ausente: ${mesh.name||JSON.stringify(mesh.userData)}`);
  for(const mesh of [...scene.children]){if(!mesh.isMesh||mesh.material.transparent)continue;const key=`${mesh.material.uuid}:${mesh.castShadow}:${mesh.receiveShadow}`;if(!batches.has(key))batches.set(key,{material:mesh.material,cast:mesh.castShadow,receive:mesh.receiveShadow,items:[]});const clone=mesh.geometry.clone().applyMatrix4(mesh.matrixWorld),flat=clone.index?clone.toNonIndexed():clone;batches.get(key).items.push(flat);if(flat!==clone)clone.dispose();scene.remove(mesh);mesh.geometry.dispose();}
  for(const batch of batches.values()){const geometry=new THREE.BufferGeometry();for(const name of ['position','normal','uv']){const size=batch.items[0].attributes[name].itemSize,length=batch.items.reduce((n,g)=>n+g.attributes[name].array.length,0),values=new Float32Array(length);let offset=0;for(const g of batch.items){values.set(g.attributes[name].array,offset);offset+=g.attributes[name].array.length;}geometry.setAttribute(name,new THREE.BufferAttribute(values,size));}geometry.computeBoundingSphere();const mesh=new THREE.Mesh(geometry,batch.material);mesh.castShadow=batch.cast;mesh.receiveShadow=batch.receive;scene.add(mesh);batch.items.forEach(g=>g.dispose());}
- const exportBake=()=>({...exportBakeSource(scene,M),planScale,areaCalibration:calibration,study:proportionStudy,lightPositions:[[2.5,2.2,2.38],[4.1,7.1,2.65],[2.9,2.2,5.18]].map(([x,z,y])=>[planX(x)*planScale,y-.12,planZ(z)*planScale])});
+ const exportBake=()=>({...exportBakeSource(scene,M),planScale,areaCalibration:calibration,study:proportionStudy,lighting:{environmentFile:scene.userData.environmentFile,environmentIntensity:scene.environmentIntensity,lights:scene.children.filter(o=>o.isDirectionalLight||o.isPointLight).map(o=>({type:o.type,color:o.color.toArray(),intensity:o.intensity,position:o.position.toArray(),target:o.target?.position.toArray()}))},lightPositions:[[2.5,2.2,2.38],[4.1,7.1,2.65],[2.9,2.2,5.18]].map(([x,z,y])=>[planX(x)*planScale,y-.12,planZ(z)*planScale])});
  let bakedStats={enabled:false};
  const lightQuery=new URLSearchParams(location.search);
  if(lightQuery.get('lighting')!=='baseline'&&!lightQuery.has('bake-export'))bakedStats=await applyBakedLighting(THREE,scene,{mobile,basePath:proportionStudy?'./assets/baked-study/':'./assets/baked/'}).catch(error=>({enabled:false,reason:error.message}));

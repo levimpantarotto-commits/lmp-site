@@ -51,6 +51,10 @@ walls[13].openings=[{from:.55,to:1.75,bottom:0,top:2.5,type:'door'}];
 walls[3].openings[1]={from:2.85,to:3.95,bottom:0,top:2.5,type:'door'};
 walls[9].openings[0]={from:1,to:2.1,bottom:0,top:2.5,type:'door'};
 walls[15].openings[0]={from:1,to:2.2,bottom:0,top:2.5,type:'door'};
+// Fotos10/11: janela alta contínua sobre o banco em U no estudo ativo.
+// A base histórica ainda tem uma porta estimada que cruza z3.10..3.30;
+// não somar vãos sobrepostos nessa alternativa antiga.
+if(proportionStudy)walls[1].openings.push({from:.20,to:3.30,bottom:2.15,top:2.85,type:'window',panels:2});
 Object.assign(rooms.find(r=>r.id==='cozinha'),{spawn:[4.20,0,5.45],yaw:Math.PI});
 for(const id of['bancada','geladeira']){const i=furniture.findIndex(f=>f.id===id);if(i>=0)furniture.splice(i,1);}
 for(const item of kitchenObstacles)furniture.push({id:item.id,rect:[...item.rect],level:0,kind:'kitchen-footprint'});

@@ -1,0 +1,27 @@
+{
+  "source": "https://polyhaven.com/a/interior_tiles",
+  "license": "CC0",
+  "sourceWidthMeters": 1.9,
+  "appliedWidthMeters": 2.6,
+  "reason": "Placas cerâmicas de interior, sem veios de mármore. Escala ampliada pela proporção visual das fotos06/11, não medida.",
+  "files": [
+    {
+      "file": "concreto-diff.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/interior_tiles/interior_tiles_diff_1k.jpg",
+      "sha256": "f267c4357e629f5ca2ab86f30da4fb0ae8c655a566cec6d81278df8d78dcca4a",
+      "bytes": 694562
+    },
+    {
+      "file": "concreto-normal.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/interior_tiles/interior_tiles_nor_gl_1k.jpg",
+      "sha256": "fdfb9fe192d438176508290fe873e181d88c5e6444a43bbab2ec156c9a78aa33",
+      "bytes": 414639
+    },
+    {
+      "file": "concreto-rough.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/interior_tiles/interior_tiles_rough_1k.jpg",
+      "sha256": "478b5cad03a064b9b25369223f8334d26c1bdc2cba08e3398c16234a4b2a1aaf",
+      "bytes": 521038
+    }
+  ]
+}

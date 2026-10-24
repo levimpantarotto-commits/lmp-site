@@ -17,10 +17,10 @@ https://polyhaven.com/license. Os créditos e manifestos completos da origem
 permanecem no acervo interno de produção. Nenhum material representa levantamento ou textura
 extraída da casa fotografada.
 
-Celular: versões mecânicas de 512px dos mesmos 24 mapas, em mobile/.
+Celular: versões mecânicas de 512px dos mesmos 31 mapas, em mobile/.
 Mantêm cores, função PBR e licença. Não são materiais simplificados desenhados.
 
-Telha, prado, reboco, cascalho e concreto: pares diffuse/normal derivados em
+Telha, prado, reboco e cascalho: pares diffuse/normal derivados em
 1024×1024 dos JPEGs 2048×2048 da mesma base local, sem desenho ou geração de
 textura. O manifesto interno registra a origem, dimensões e SHA-256 das fontes.
 
@@ -42,3 +42,13 @@ https://polyhaven.com/a/granite_wall. Albedo desaturado para aproximação crom�
 normalGL, rugosidade e height da mesma captura. Não é digitalização da casa.
 GRANITO-FONTE.json registra fontes e hashes. Relevo da malha deriva do height
 128px; mapas visuais 1024/512. Modulação estimada pela referência, não medida.
+
+24/10/2026: marcenaria e vigas separadas do piso. Poly Haven oak_veneer_01
+e lacquered_cherry_wood, CC0; material contínuo sem juntas/crop esticado.
+MATERIAL-ESPECIFICO-24.json registra URLs, hashes e escala física das capturas.
+Piso concreto-* substituído por Poly Haven interior_tiles, CC0,
+https://polyhaven.com/a/interior_tiles; diffuse, normalGL e roughness.
+PISO-FONTE-24.json é a fonte vigente destes arquivos, substituindo as entradas
+históricas de concreto em FONTES.json. Cor/escala aproximam fotos06/11, não medição.
+Novos estofados: modelagem original gerada/autorada no Blender, sem scan e sem
+simulação de tecido alegada; mestre editável e fonte em tools/author-upholstery-24.py.

@@ -77,10 +77,13 @@ export function buildDoorMeshes(THREE,parent,materials={},specs=[],setRefresh){
    const paneBottom=leaf.base+.65,paneTop=Math.min(leaf.base+2.10,leaf.base+leaf.height-.12),gap=.055,paneHeight=Math.max(.04,(paneTop-paneBottom-gap*3)/4);
    const upperBand=leaf.base+leaf.height-.10-paneTop;if(upperBand>0)addFrame(inside,upperBand,leaf.length/2,paneTop+upperBand/2,'door-glazed-upper-band');
    for(let i=0;i<4;i++){const pane=mesh(new THREE.BoxGeometry(inside-.025,paneHeight,.018),glass,'door-glazed-pane');pane.position.set(leaf.length/2,paneBottom+paneHeight/2+i*(paneHeight+gap),0);pivot.add(pane);if(i<3)addFrame(inside,.055,leaf.length/2,paneBottom+paneHeight+i*(paneHeight+gap));}
-   if(spec.opening.style==='leaded-glass')for(let i=0;i<5;i++){
-    const cy=leaf.base+.65+(i+.5)*(leaf.height-.8)/5,rx=inside*.43,ry=(leaf.height-.8)/10,pts=[];
-    for(let j=0;j<=32;j++){const a=j/32*Math.PI*2;pts.push(new THREE.Vector3(leaf.length/2+Math.cos(a)*rx,cy+Math.sin(a)*ry,.035));}
-    const wire=mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,true),40,.008,5,true),metal,'door-leaded-scroll');pivot.add(wire);
+   if(spec.opening.style==='leaded-glass'){
+    // Foto06 sugere S finos de ferro que tocam as divisões de cada painel. A
+    // resolução não revela o padrão exato; mantemos a aproximação simétrica,
+    // mas agora em tubos físicos visíveis dos dois lados, não fitas FrontSide.
+    const vertices=[],normals=[],uv=[],appendTube=points=>{const tube=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),16,.004,4,false).toNonIndexed(),p=tube.getAttribute('position'),n=tube.getAttribute('normal'),t=tube.getAttribute('uv');for(let i=0;i<p.count;i++){vertices.push(p.getX(i),p.getY(i),p.getZ(i));normals.push(n.getX(i),n.getY(i),n.getZ(i));uv.push(t.getX(i),t.getY(i));}tube.dispose();};
+    for(let panel=0;panel<4;panel++){const y0=paneBottom+panel*(paneHeight+gap)+.012,y1=y0+paneHeight-.024,cy=(y0+y1)/2;for(const sign of[-1,1]){const points=[];for(let i=0;i<=4;i++){const t=i/4,y=y0+(y1-y0)*t,x=leaf.length/2+sign*inside*.27*Math.sin(t*Math.PI*2);points.push(new THREE.Vector3(x,y,.035));}appendTube(points);}}
+    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geometry.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geometry.computeBoundingSphere();const wire=mesh(geometry,metal,'door-leaded-ornament');pivot.add(wire);
    }
   }else{
    const slab=mesh(new THREE.BoxGeometry(leaf.length,leaf.height,THICK),wood,'door-leaf-slab');slab.position.set(leaf.length/2,leaf.base+leaf.height/2,0);pivot.add(slab);

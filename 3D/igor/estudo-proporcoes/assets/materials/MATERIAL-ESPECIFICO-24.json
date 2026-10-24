@@ -1,0 +1,143 @@
+{
+  "license": "CC0",
+  "observed": "Aproximações de tonalidade pelas fotos 01, 06 e 10; não são material medido nem digitalização da casa.",
+  "uvConvention": "UV das caixas é metro/2; repeat = 2 / dimensão física (x e y) em metros.",
+  "materials": {
+    "furnitureWood": {
+      "source": "https://polyhaven.com/a/oak_veneer_01",
+      "sourceDimensionsMillimeters": [
+        1830.0000429153442,
+        1830.0000429153442
+      ],
+      "physicalSizeMeters": {
+        "x": 1.8300000429153442,
+        "y": 1.8300000429153442
+      },
+      "files": [
+        {
+          "file": "movel-madeira-diff.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/oak_veneer_01/oak_veneer_01_diff_1k.jpg",
+          "sourceSha256": "c14681f72f59f17bff568cae7a837641443b607b899f0c279cd64a5638f877a7",
+          "sha256": "c14681f72f59f17bff568cae7a837641443b607b899f0c279cd64a5638f877a7",
+          "bytes": 641756,
+          "dimensions": "1024x1024"
+        },
+        {
+          "file": "movel-madeira-normal.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/oak_veneer_01/oak_veneer_01_nor_gl_1k.jpg",
+          "sourceSha256": "1297acf7b4476d5ccd83cc8b27be96aa6110f7a9c3a40be0bd767bf81b17db01",
+          "sha256": "1297acf7b4476d5ccd83cc8b27be96aa6110f7a9c3a40be0bd767bf81b17db01",
+          "bytes": 484844,
+          "dimensions": "1024x1024"
+        },
+        {
+          "file": "movel-madeira-rough.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/oak_veneer_01/oak_veneer_01_rough_1k.jpg",
+          "sourceSha256": "ca2af5649b628ef05f196793d68cdca874c12ceb6e9ae566976546d9dd5a2604",
+          "sha256": "ca2af5649b628ef05f196793d68cdca874c12ceb6e9ae566976546d9dd5a2604",
+          "bytes": 865194,
+          "dimensions": "1024x1024"
+        }
+      ],
+      "materialColor": "0xfff5e8",
+      "reference": "Marcenaria e escada: castanho médio, sem juntas de piso.",
+      "processing": "PBR tileable original, sem crop nem estiramento de grão."
+    },
+    "timber": {
+      "source": "https://polyhaven.com/a/lacquered_cherry_wood",
+      "sourceDimensionsMillimeters": [
+        1000,
+        1000
+      ],
+      "physicalSizeMeters": {
+        "x": 1,
+        "y": 1
+      },
+      "files": [
+        {
+          "file": "viga-madeira-diff.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/lacquered_cherry_wood/lacquered_cherry_wood_diff_1k.jpg",
+          "sourceSha256": "781a173cfbe1b11a00d2f73a7736b7db6f908e47bbad8eaaf9d59c36490ab857",
+          "sha256": "781a173cfbe1b11a00d2f73a7736b7db6f908e47bbad8eaaf9d59c36490ab857",
+          "bytes": 618034,
+          "dimensions": "1024x1024"
+        },
+        {
+          "file": "viga-madeira-normal.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/lacquered_cherry_wood/lacquered_cherry_wood_nor_gl_1k.jpg",
+          "sourceSha256": "69ff5072f14469c391b5af28185cb3835b85858eff57e2d2902e1fbc9d882b68",
+          "sha256": "69ff5072f14469c391b5af28185cb3835b85858eff57e2d2902e1fbc9d882b68",
+          "bytes": 66478,
+          "dimensions": "1024x1024"
+        },
+        {
+          "file": "viga-madeira-rough.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/lacquered_cherry_wood/lacquered_cherry_wood_rough_1k.jpg",
+          "sourceSha256": "50d8e159b648fa2a08c4e31d2979116ebf4f86648a1a442c7160aafca8009b56",
+          "sha256": "50d8e159b648fa2a08c4e31d2979116ebf4f86648a1a442c7160aafca8009b56",
+          "bytes": 578380,
+          "dimensions": "1024x1024"
+        }
+      ],
+      "materialColor": "0xffede0",
+      "reference": "Vigas internas: madeira quente mais escura, sem juntas de pranchas.",
+      "processing": "PBR tileable original, sem crop nem estiramento de grão."
+    }
+  },
+  "files": [
+    {
+      "material": "furnitureWood",
+      "file": "movel-madeira-diff.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/oak_veneer_01/oak_veneer_01_diff_1k.jpg",
+      "sourceSha256": "c14681f72f59f17bff568cae7a837641443b607b899f0c279cd64a5638f877a7",
+      "sha256": "c14681f72f59f17bff568cae7a837641443b607b899f0c279cd64a5638f877a7",
+      "bytes": 641756,
+      "dimensions": "1024x1024"
+    },
+    {
+      "material": "furnitureWood",
+      "file": "movel-madeira-normal.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/oak_veneer_01/oak_veneer_01_nor_gl_1k.jpg",
+      "sourceSha256": "1297acf7b4476d5ccd83cc8b27be96aa6110f7a9c3a40be0bd767bf81b17db01",
+      "sha256": "1297acf7b4476d5ccd83cc8b27be96aa6110f7a9c3a40be0bd767bf81b17db01",
+      "bytes": 484844,
+      "dimensions": "1024x1024"
+    },
+    {
+      "material": "furnitureWood",
+      "file": "movel-madeira-rough.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/oak_veneer_01/oak_veneer_01_rough_1k.jpg",
+      "sourceSha256": "ca2af5649b628ef05f196793d68cdca874c12ceb6e9ae566976546d9dd5a2604",
+      "sha256": "ca2af5649b628ef05f196793d68cdca874c12ceb6e9ae566976546d9dd5a2604",
+      "bytes": 865194,
+      "dimensions": "1024x1024"
+    },
+    {
+      "material": "timber",
+      "file": "viga-madeira-diff.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/lacquered_cherry_wood/lacquered_cherry_wood_diff_1k.jpg",
+      "sourceSha256": "781a173cfbe1b11a00d2f73a7736b7db6f908e47bbad8eaaf9d59c36490ab857",
+      "sha256": "781a173cfbe1b11a00d2f73a7736b7db6f908e47bbad8eaaf9d59c36490ab857",
+      "bytes": 618034,
+      "dimensions": "1024x1024"
+    },
+    {
+      "material": "timber",
+      "file": "viga-madeira-normal.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/lacquered_cherry_wood/lacquered_cherry_wood_nor_gl_1k.jpg",
+      "sourceSha256": "69ff5072f14469c391b5af28185cb3835b85858eff57e2d2902e1fbc9d882b68",
+      "sha256": "69ff5072f14469c391b5af28185cb3835b85858eff57e2d2902e1fbc9d882b68",
+      "bytes": 66478,
+      "dimensions": "1024x1024"
+    },
+    {
+      "material": "timber",
+      "file": "viga-madeira-rough.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/lacquered_cherry_wood/lacquered_cherry_wood_rough_1k.jpg",
+      "sourceSha256": "50d8e159b648fa2a08c4e31d2979116ebf4f86648a1a442c7160aafca8009b56",
+      "sha256": "50d8e159b648fa2a08c4e31d2979116ebf4f86648a1a442c7160aafca8009b56",
+      "bytes": 578380,
+      "dimensions": "1024x1024"
+    }
+  ]
+}

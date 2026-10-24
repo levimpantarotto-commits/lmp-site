@@ -11,8 +11,8 @@ export function geometryKey(geometry){
 const sourceGeometryKey=meshes=>{let h=2166136261;for(const mesh of meshes)h=update(h,textBytes(`${geometryKey(mesh.geometry)}:`));return finish(h);};
 export function exportBakeSource(scene,M){
  const names=new Map(Object.entries(M).map(([name,m])=>[m,name])),sourceMeshes=scene.children.filter(o=>o.isMesh&&!o.material.transparent),meshes=sourceMeshes.map((mesh,index)=>{
-  const g=mesh.geometry,m=mesh.material,name=names.get(m)||'detail',bakeEligible=!excludedBakeMaterials.has(name),map=t=>t?{url:t.image?.currentSrc||t.image?.src||'',repeat:t.repeat.toArray()}:null;
-  return {index,key:geometryKey(g),bakeEligible,position:Array.from(g.attributes.position.array),normal:Array.from(g.attributes.normal.array),uv:Array.from(g.attributes.uv.array),material:{name,color:m.color.toArray(),roughness:m.roughness,metalness:m.metalness,emissive:m.emissive?.toArray(),emissiveIntensity:m.emissiveIntensity,map:map(m.map),normalMap:map(m.normalMap),roughnessMap:map(m.roughnessMap)}};
+  const g=mesh.geometry,m=mesh.material,name=names.get(m)||'detail',bakeEligible=!excludedBakeMaterials.has(name),map=t=>t?{url:t.image?.currentSrc||t.image?.src||'',repeat:t.repeat.toArray(),rotation:t.rotation||0}:null;
+  return {index,key:geometryKey(g),bakeEligible,position:Array.from(g.attributes.position.array),normal:Array.from(g.attributes.normal.array),uv:Array.from(g.attributes.uv.array),material:{name,color:m.color.toArray(),roughness:m.roughness,metalness:m.metalness,normalScale:m.normalScale?.toArray()||[1,1],sheen:m.sheen||0,sheenColor:m.sheenColor?.toArray(),emissive:m.emissive?.toArray(),emissiveIntensity:m.emissiveIntensity,map:map(m.map),normalMap:map(m.normalMap),roughnessMap:map(m.roughnessMap)}};
  });
  return {version:2,coordinateSystem:'three-y-up-before-facade-reflection',sceneMeshCount:sourceMeshes.length,geometrySourceKey:sourceGeometryKey(sourceMeshes),eligibleMeshIndices:meshes.filter(mesh=>mesh.bakeEligible).map(mesh=>mesh.index),meshes};
 }

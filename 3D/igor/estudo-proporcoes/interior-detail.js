@@ -2,8 +2,8 @@
 // As peças entram diretamente na scene para o static batcher, sem carregar assets adicionais.
 export function buildDiningSet(THREE,scene,M){
  const meshes=[];
- const chairWood=M.wood.clone?.()||M.wood;
- if(chairWood!==M.wood&&chairWood.color)chairWood.color.set(0xb8a18a);
+ const solidWood=M.furnitureWood||M.wood,chairWood=solidWood.clone?.()||solidWood;
+ if(chairWood!==solidWood&&chairWood.color)chairWood.color.set(0xd4c4b2);
  const add=(geometry,material,x,y,z,rotationY=0,name='dining-detail')=>{
   // Geometrias Three nativas já possuem UVs; esta guarda torna a exigência explícita para o batcher.
   if(!geometry.attributes.position||!geometry.attributes.normal||!geometry.attributes.uv)throw new Error(`Geometria sem atributos PNU: ${name}`);
@@ -33,18 +33,18 @@ export function buildDiningSet(THREE,scene,M){
  // cabe no raio do colisor existente, que continua sendo a fonte de navegação.
  const oval=new THREE.Shape(),tableRx=.64,tableRz=.57;
  for(let i=0;i<=28;i++){const a=i/28*Math.PI*2,x=Math.cos(a)*tableRx,z=Math.sin(a)*tableRz;i?oval.lineTo(x,z):oval.moveTo(x,z);}
- const tabletop=new THREE.ExtrudeGeometry(oval,{depth:.095,bevelEnabled:true,bevelThickness:.012,bevelSize:.012,bevelSegments:2,curveSegments:14});
- tabletop.rotateX(Math.PI/2);tabletop.translate(0,.0475,0);
+ const tabletop=new THREE.ExtrudeGeometry(oval,{depth:.04,bevelEnabled:true,bevelThickness:.006,bevelSize:.006,bevelSegments:2,curveSegments:14});
+ tabletop.rotateX(Math.PI/2);tabletop.translate(0,.02,0);
  // O extrude possui duas leituras: tampo com projeção planar e cinta lateral
  // por arco. Projetar a lateral em X/Z colapsava sua altura numa faixa vertical.
  const tablePosition=tabletop.attributes.position,tableNormal=tabletop.attributes.normal,tableUV=tabletop.attributes.uv;
  for(let i=0;i<tableUV.count;i++){const x=tablePosition.getX(i),y=tablePosition.getY(i),z=tablePosition.getZ(i),ny=tableNormal.getY(i);if(Math.abs(ny)>.7)tableUV.setXY(i,x/2,z/2);else{let a=Math.atan2(z/tableRz,x/tableRx);if(a<0)a+=Math.PI*2;tableUV.setXY(i,a*(tableRx+tableRz)/4,y/2);}}tableUV.needsUpdate=true;
- add(tabletop,M.wood,3.6,.7375,6.7,0,'dining-tabletop');
+ add(tabletop,solidWood,3.6,.77,6.7,0,'dining-tabletop');
  // Juntas rasas sugerem as tábuas longitudinais sem separar o tampo em peças flutuantes.
- const plankSeam=x=>new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(x,0,-.49),new THREE.Vector3(x*.985,0,0),new THREE.Vector3(x,0,.49)]),8,.0018,4,false);
- for(const x of[-.23,0,.23])add(plankSeam(x),M.woodDark,3.6,.786,6.7,0,'dining-table-plank-seam');
+ const plankSeam=x=>new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(x,0,-.49),new THREE.Vector3(x*.985,0,0),new THREE.Vector3(x,0,.49)]),8,.0012,4,false);
+ for(const x of[-.23,0,.23])add(plankSeam(x),M.woodDark,3.6,.7961,6.7,0,'dining-table-plank-seam');
  // Saia discreta e quatro pés torneados esbeltos, afastados do centro como na mesa fotografada.
- add(cylindricalUV(lathe([new THREE.Vector2(.24,-.028),new THREE.Vector2(.27,-.014),new THREE.Vector2(.27,.014),new THREE.Vector2(.24,.028)],18)),chairWood,3.6,.695,6.7,0,'dining-apron');
+ add(cylindricalUV(lathe([new THREE.Vector2(.24,-.028),new THREE.Vector2(.27,-.014),new THREE.Vector2(.27,.014),new THREE.Vector2(.24,.028)],18)),chairWood,3.6,.727,6.7,0,'dining-apron');
  const legProfile=[new THREE.Vector2(.058,-.37),new THREE.Vector2(.068,-.34),new THREE.Vector2(.046,-.17),new THREE.Vector2(.061,-.08),new THREE.Vector2(.044,.05),new THREE.Vector2(.052,.24),new THREE.Vector2(.038,.31),new THREE.Vector2(.047,.38)];
  for(const[a,b]of[[-.27,-.25],[.27,-.25],[-.27,.25],[.27,.25]])add(cylindricalUV(lathe(legProfile,8)),chairWood,3.6+a,.365,6.7+b,0,'dining-table-leg');
  // Foto06/11: cadeira com painel vertical largo e curvado, estreito embaixo;

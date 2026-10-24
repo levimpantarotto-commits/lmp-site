@@ -1,6 +1,22 @@
 // Foto10/11: duas capas unidas na borda, volume do enchimento e pregas
-// localizadas. Modelagem paramétrica estática, NÃO escaneamento/simulação.
+// localizadas. Encostos são derivados estáticos do Cloth aprovado; não há solver
+// nem simulação no runtime. Os assentos preservam o catálogo anterior.
+import {upholsteryData,upholsteryProvenance} from './authored-upholstery-data.js';
+// Derivados Blender fechados, subdivididos/simplificados offline. Compartilhados
+// por desktop/mobile; UV0 é métrico, UV1 vem apenas do bake da casa.
 export function sewnCushion(T,w,h,d,{seed=0,seat=false}={}){
+ const names=seat?['seatA','seatB']:['backA','backB','backC'];
+ const name=names[Math.abs(Math.round(seed*7))%names.length],a=upholsteryData[name];
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(a.position,3));g.setAttribute('normal',new T.Float32BufferAttribute(a.normal,3));g.setAttribute('uv',new T.Float32BufferAttribute(a.uv,2));g.setIndex(a.index);
+ const p=g.attributes.position,n=g.attributes.normal,uv=g.attributes.uv;
+ for(let i=0;i<p.count;i++){
+  const axis=a.uvAxis[i];
+  uv.setXY(i,uv.getX(i)*(axis===0?h:w)/2,uv.getY(i)*(axis===2?h:d)/2);
+ }
+ g.scale(w,h,d);g.userData={source:seat?'catálogo Blender anterior':'Frozen Cloth estático aprovado',variant:name,photoReference:seat?'10/11':'10/11',runtimeSolver:false,provenance:upholsteryProvenance};return g;
+}
+// Retained construction reference, not used by the active scene.
+function legacyCushion(T,w,h,d,{seed=0,seat=false}={}){
  if(seat)return gussetSeat(T,w,h,d,seed);
  const nx=40,ny=30,p=[],uv=[],indices=[],front=[],back=[],hx=w/2,hy=h/2,hz=d/2;
  const gauss=(v,s)=>Math.exp(-(v*v)/(s*s));

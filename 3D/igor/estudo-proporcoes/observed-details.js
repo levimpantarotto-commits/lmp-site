@@ -10,7 +10,7 @@ export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  const bevel=(x,y,z,w,h,d,m,name,r=.012)=>{const g=new T.BoxGeometry(w,h,d,6,6,6),p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv,q=Math.min(r,w*.22,h*.22,d*.22),half=[w/2,h/2,d/2];for(let i=0;i<p.count;i++){const v=[p.getX(i),p.getY(i),p.getZ(i)],inset=v.map((v,k)=>Math.max(-half[k]+q,Math.min(half[k]-q,v))),vnorm=new T.Vector3(...v.map((v,k)=>v-inset[k])).normalize();p.setXYZ(i,...inset.map((v,k)=>v+vnorm.getComponent(k)*q));n.setXYZ(i,vnorm.x,vnorm.y,vnorm.z);u.setXY(i,(Math.abs(vnorm.x)>.5?v[2]:v[0])/2,(Math.abs(vnorm.y)>.5?v[2]:v[1])/2);}return add(g,m,x,y,z,name);};
  const cyl=(x,y,z,r,h,m,name,seg=20)=>add(new T.CylinderGeometry(r,r,h,seg),m,x,y,z,name);
  const tube=(points,r,m,name,seg=18)=>add(new T.TubeGeometry(new T.CatmullRomCurve3(points.map(v=>new T.Vector3(...v))),seg,r,5,false),m,0,0,0,name);
- const steel=M.stainless||M.metal,black=M.black,wood=M.wood,dark=M.woodDark;
+ const steel=M.stainless||M.metal,black=M.black,wood=M.furnitureWood||M.wood,dark=M.woodDark;
  // Referência antiga preservada apenas para comparação; a cozinha integrada
  // vigente é kitchen-reference.js, nunca desenhar os dois conjuntos juntos.
  if(includeLegacyKitchen){
@@ -47,7 +47,7 @@ export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  // folhas/ramagens da foto, não uma foto projetada no ambiente.
  const paper=(M.plaster||M.white).clone();paper.color.set(0xddd5bd);paper.roughness=.94;
  const print=(M.woodDark||wood).clone();print.color.set(0x645842);print.roughness=.88;
- const upper=(M.wood||wood).clone();upper.color.set(0x795235);
+ const upper=wood.clone();upper.color.set(0xb08e70);
  box(8.57,1.58,6.705,1.60,1.34,.035,paper,'bedroom14-patterned-niche-back');
  // Pequenos ramos escuros, alternados, conservam a escala de uma estampa sem
  // inventar um painel liso ou textura genérica de tecido.
@@ -74,13 +74,19 @@ export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  const towel=M.fabricWhite||M.white;
  for(const [x,y,z,r,l]of[[7.50,.61,11.10,.075,.30],[7.50,.75,11.12,.065,.27]]){const roll=cyl(x,y,z,r,l,towel,'bed-towel-roll',24);roll.rotation.z=Math.PI/2;const coil=new T.TorusGeometry(r*.82,.008,5,24),end=add(coil,towel,x+l/2+.002,y,z,'towel-edge');end.rotation.y=Math.PI/2;}
  box(5.99,1.75,11.05,.20,.07,.75,wood,'bedroom-shelf');cyl(6.015,1.87,11.05,.055,.17,M.basinStone||M.stone,'bedroom-vase');
- // Cúpulas de fibras: estrutura curva vazada, interior iluminado e fios reais.
- const fiber=(M.linen||wood).clone();fiber.color.set(0x8f774e);fiber.side=T.DoubleSide;
+ // Foto10: cestas escuras, trançadas e com franja irregular; medidas são estimadas.
+ const fiber=(M.linen||wood).clone();fiber.color.set(0x4a3520);fiber.side=T.DoubleSide;
  for(const [x,y,z,r]of[[2.5,2.38,2.2,.32],[2.9,5.18,2.2,.34]]){
+  const wovenTube=(points,radius,name,segments,closed=false)=>add(new T.TubeGeometry(new T.CatmullRomCurve3(points.map(v=>new T.Vector3(...v)),closed),segments,radius,3,closed),fiber,0,0,0,name);
   const profile=[[.10,.26],[.17,.22],[r*.85,.06],[r,-.16]];
-  for(let i=0;i<28;i++){const a=i*Math.PI/14;tube(profile.map(([rr,yy])=>[x+Math.cos(a)*rr,y+yy,z+Math.sin(a)*rr]),.006,fiber,'woven-pendant-rib',10);}
-  for(let j=0;j<9;j++){const h=.22-j*.045,rr=.17+(r-.17)*j/8;const ring=add(new T.TorusGeometry(rr,.0045,4,32),fiber,x,y+h,z,'woven-pendant-ring');ring.rotation.x=Math.PI/2;}
-  const bulb=add(new T.SphereGeometry(.045,12,8),M.light,x,y-.07,z,'pendant-bulb');bulb.scale.y=1.25;
+  for(let i=0;i<52;i++){const a=i*Math.PI/26;wovenTube(profile.map(([rr,yy])=>[x+Math.cos(a)*rr,y+yy,z+Math.sin(a)*rr]),.005,'woven-pendant-rib',6);}
+  for(let j=0;j<24;j++){
+   const h=.22-j*.016+(j%3-1)*.006,rr=.17+(r-.17)*j/23+(j%2?.008:-.006),points=[];
+   for(let i=0;i<12;i++){const a=i*Math.PI/6,warp=1+Math.sin(a*3+j)*.035;points.push([x+Math.cos(a)*rr*warp,y+h,z+Math.sin(a)*rr*warp]);}
+   wovenTube(points,.0045,'woven-pendant-weft',24,true);
+  }
+  for(let i=0;i<36;i++){const a=i*Math.PI/18,fringe=.058+(i*7%8)*.01,rr=r*(.92+(i%3)*.03);wovenTube([[x+Math.cos(a)*rr,y-.14,z+Math.sin(a)*rr],[x+Math.cos(a+.08)*rr*1.02,y-.14-fringe*.35,z+Math.sin(a+.08)*rr*1.02],[x+Math.cos(a+.13)*rr*.98,y-.14-fringe,z+Math.sin(a+.13)*rr*.98]],.005,'woven-pendant-fringe',4);}
+  const bulb=add(new T.SphereGeometry(.045,12,8),M.light,x,y-.17,z,'pendant-bulb');bulb.scale.y=1.25;
   cyl(x,y+.43,z,.007,.34,black,'pendant-cable',8);
  }
  const triangles=meshes.reduce((n,m)=>n+(m.geometry.index?.count||m.geometry.attributes.position.count)/3,0);

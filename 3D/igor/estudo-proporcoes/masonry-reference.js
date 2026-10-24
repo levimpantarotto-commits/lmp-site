@@ -17,7 +17,7 @@ export function buildMasonryReference(T,scene,M,walls=[]){
  // Deslocamento estático amostrado da MESMA captura do albedo/normal: juntas
  // não são inventadas por ruído e o relevo continua alinhado no WebGL e Cycles.
  const heightAt=(x,y)=>{const fract=v=>v-Math.floor(v),xx=fract(x/2.8)*graniteHeightSize,yy=fract(-y/2.8)*graniteHeightSize,ix=Math.floor(xx),iy=Math.floor(yy),tx=xx-ix,ty=yy-iy,n=graniteHeightSize,get=(a,b)=>graniteHeights[((b+n)%n)*n+(a+n)%n]/255;return (get(ix,iy)*(1-tx)+get(ix+1,iy)*tx)*(1-ty)+(get(ix,iy+1)*(1-tx)+get(ix+1,iy+1)*tx)*ty;};
- const displacedPlane=(a,b,c,d)=>{const g=new T.PlaneGeometry(c-a,d-b,Math.max(1,Math.ceil((c-a)/.08)),Math.max(1,Math.ceil((d-b)/.08))),p=g.attributes.position,uv=g.attributes.uv;for(let i=0;i<p.count;i++){const x=a+uv.getX(i)*(c-a),y=b+uv.getY(i)*(d-b);uv.setXY(i,x/2,y/2);p.setZ(i,.002+.032*heightAt(x,y));}g.computeVertexNormals();return g;};
+ const displacedPlane=(a,b,c,d)=>{const g=new T.PlaneGeometry(c-a,d-b,Math.max(1,Math.ceil((c-a)/.08)),Math.max(1,Math.ceil((d-b)/.08))),p=g.attributes.position,uv=g.attributes.uv;for(let i=0;i<p.count;i++){const x=a+uv.getX(i)*(c-a),y=b+uv.getY(i)*(d-b);uv.setXY(i,x/2,y/2);p.setZ(i,.002+.018*heightAt(x,y));}g.computeVertexNormals();return g;};
  // Retângulo arredondado extrudado: arestas discretamente quebradas e relevo
  // real de 2--4,5 cm, sem usar a textura sandstone (que já traz juntas).
  const blockGeometry=(width,height,depth,seed)=>{const j=n=>((Math.sin(seed*91.17+n*17.3)*.5+.5)*.014+.002),l=-width/2,r=width/2,b=-height/2,t=height/2,bevel=Math.min(.010,depth*.35,width*.06,height*.08);const shape=new T.Shape();shape.moveTo(l+j(1),b+j(2));shape.lineTo(r-j(3),b+j(4));shape.lineTo(r-j(5),t-j(6));shape.lineTo(l+j(7),t-j(8));shape.closePath();const geometry=new T.ExtrudeGeometry(shape,{depth,bevelEnabled:true,bevelThickness:bevel,bevelSize:bevel,bevelSegments:1,curveSegments:1}),uv=geometry.getAttribute('uv'),p=geometry.getAttribute('position');for(let i=0;i<uv.count;i++)uv.setXY(i,p.getX(i)*3.2,p.getY(i)*3.2);uv.needsUpdate=true;return geometry;};
@@ -32,7 +32,10 @@ export function buildMasonryReference(T,scene,M,walls=[]){
    u+=width;col++;}y+=h;row++;}
  };
  // Apenas as faces voltadas para dentro: wall[0] (+z) e wall[1] (+x).
- buildFace(walls[0],'z');buildFace(walls[1],'x');
+ // Foto10: a pedra interna chega até a divisória do banco. A divisão entre
+ // pedra/reboco da fachada exterior não define o acabamento do lado interno.
+ const interiorFront=proportionStudy?{...walls[0],materialRanges:[{from:0,to:3.52,material:'stone'},{from:3.52,to:5.8,material:'plaster'}]}:walls[0];
+ buildFace(interiorFront,'z');buildFace(walls[1],'x');
  const box=(x,y,z,w,h,d,material,piece,photo=11)=>add(new T.BoxGeometry(w,h,d),material,x,y,z,piece,photo);
  // Cabideiro da foto 11, na pedra à esquerda, sem acrescentar mobiliário não observado.
  box(.121,1.95,2.55,.032,.09,1.55,dark,'coat-rack-rail');

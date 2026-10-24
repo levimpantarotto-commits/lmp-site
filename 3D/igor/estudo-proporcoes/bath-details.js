@@ -12,7 +12,7 @@ export function buildBathDetails(THREE,scene,M){
  const cyl=(x,y,z,r,h,m,id,photo)=>add(new THREE.CylinderGeometry(r,r,h,12),m,x,y,z,id,photo);
  const tube=(x,y,z,points,r,m,id,photo)=>add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)),false,'centripetal'),28,r,6,false),m,x,y,z,id,photo);
  const glass=()=>{const g=(mat('glass','white').clone?.()||mat('glass','white'));g.transparent=true;g.opacity=.22;g.depthWrite=false;return g;};
- const cloth=mat('fabricWhite','linen'),wood=mat('wood'),dark=mat('black','metal'),ceramic=mat('ceramic','white');
+ const cloth=mat('fabricWhite','linen'),wood=mat('furnitureWood','wood'),dark=mat('black','metal'),ceramic=mat('ceramic','white');
  const panel=(x,z,w,d,h,id,photo)=>box(x,h/2,z,w,h,d,glass(),id,photo);
  // Fotos 12/16/17: vidro fixo tem perfis pretos delgados, não uma caixa opaca.
  const glassProfile=(x,z,h,photo)=>box(x,h/2,z,.022,h,.022,dark,'shower-glass-profile',photo);
