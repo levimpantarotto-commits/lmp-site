@@ -62,11 +62,18 @@ export function buildInteriorAssets(THREE,scene,M,furniture,{mobile=false}={}){
   if(!mezanino)c.round(c.w/2,.30,c.d-.065,c.w-.06,.60,.10,material('plaster'),.025,'sofa-back-support');
   else{const back=c.pillow(c.w/2,.68,c.d-.10,c.w-.10,.58,.15,fabric,'futon-grey-back',1.8);back.rotateX(-.035);}
   const count=mezanino?2:Math.max(2,Math.round(c.w/.68));
+  // Foto10/11: as capas não repetem um módulo perfeito. Mantemos as malhas
+  // Cloth congeladas, mas variamos discretamente larguras, altura e inclinação
+  // em cada trecho, com a soma fechando no banco (sem alargar o footprint).
+  const weights=mezanino?[1,1]:Array.from({length:count},(_,i)=>[.94,1.06,1,.97,1.04][i%5]);
+  const total=weights.reduce((sum,value)=>sum+value,0);let cursor=0;
   for(let i=0;i<count;i++){
-   const u=(i+.5)*c.w/count,ww=mezanino?Math.min(.55,c.w*.3):c.w/count-.025;
-   const cushion=c.pillow(u,mezanino?.66:.715+.009*Math.sin(i*2.3),c.d-(mezanino?.24:.21),ww,mezanino?.38:.52,mezanino?.23:.30,mezanino?pale:cloth,'back-cushion',i*.7);
-   cushion.rotateX(mezanino?[-.075,-.11][i]:(-.085+(i%3)*.018));
-   if(!mezanino)cushion.rotateZ(.016*Math.sin(i*2.7+.4));
+   const span=c.w*weights[i]/total,ww=mezanino?Math.min(.55,c.w*.3):span-.025,u=cursor+span/2;
+   const squeeze=mezanino?0:[-.012,.006,-.004,.010,-.007][i%5];
+   const cushion=c.pillow(u,mezanino?.66:.707+squeeze,c.d-(mezanino?.24:.21),ww,mezanino?.38:.52+squeeze*.55,mezanino?.23:.30+squeeze*.35,mezanino?pale:cloth,'back-cushion',i*.7);
+   cushion.rotateX(mezanino?[-.075,-.11][i]:(-.092+(i%3)*.015));
+   if(!mezanino)cushion.rotateZ(.020*Math.sin(i*2.7+.4));
+   cursor+=span;
   }
  }
  function bed(c,low=false){

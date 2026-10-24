@@ -9,10 +9,11 @@ import {calibrateNode,metricPosition} from './spatial-calibration.js?v=scale-r1'
 import {buildBathDetails} from './bath-details.js';
 import {takeMirrorSurfaces,buildMirrors} from './mirror-detail.js';
 import {secondaryRoofs,roofPlanes} from './roof-layout.js?v=scale-r1';
-import {proportionStudy,planX,planZ,derivative,terrace,buildStudyStructure} from './proportion-study.js';
+import {proportionStudy,planX,planZ,derivative,terrace,upperWidth,buildStudyStructure} from './proportion-study.js';
 import {addPottedPlants} from './plant-detail.js?v=scale-r1';
 import {buildExterior,addReferenceTrees} from './exterior.js?v=scale-r1';
 import {addGrassClusters,buildGrassDetail} from './grass-detail.js?v=scale-r1';
+import {buildNaturalGrass} from './exterior-natural.js';
 import {exteriorReference} from './exterior-reference.js';
 import {HDRLoader} from './vendor/HDRLoader.js';
 import {createFootsteps} from './footsteps.js';
@@ -82,7 +83,7 @@ async function startScene(){
  for(const z of[4.1,5.55])box(3.20,2.96,z,1.57,.10,.07,M.woodDark);
  // Tapete claro visível na foto01; escala/posição dentro do estudo estimadas.
  box(3.15,3.006,3.12,1.9,.012,1.45,M.fabricWhite).castShadow=false;
- for(let z=.6;z<9;z+=1.35)box(2.9,5.65,z,6.3,.16,.17,proportionStudy?M.timber:M.woodDark);
+ for(let z=.6;z<9;z+=1.35)box(upperWidth/2,5.65,z,upperWidth+.5,.16,.17,proportionStudy?M.timber:M.woodDark);
  buildExterior(THREE,scene,M,box,cylinder,walls);
  for(const r of rooms.filter(r=>['banheiro1','banheiro2','hall','quarto15'].includes(r.id))){const[a,b,c,d]=r.rect;box((a+c)/2,2.88,(b+d)/2,c-a,.08,d-b,M.wood);}
  for(const r of secondaryRoofs(rooms,floorAreas)){const roof=box(r.x,(r.front+r.back)/2,r.z,r.w,.12,Math.hypot(r.d,r.back-r.front),M.roof);roof.rotation.x=-Math.atan2(r.back-r.front,r.d);}
@@ -122,8 +123,7 @@ async function startScene(){
  window.__igorDetails={stats:()=>({area:calibration,kitchen:{triangles:kitchenStats.triangles,budget:kitchenStats.budget},masonry:{triangles:masonryStats.triangles,budget:masonryStats.budget},deck:{triangles:deckStats.triangles,budget:deckStats.budget},bath:{triangles:bathStats.triangles,budget:bathStats.budget},observed:{triangles:observedStats.triangles,budget:observedStats.budget},mirrors:mirrorSystem.diagnostics()})};
  const vegetationBefore=new Set(scene.children);
  const vegetationStats=await addReferenceTrees(THREE,scene,{mobile});
- const grassStats=await addGrassClusters(THREE,scene,{mobile});vegetationStats.grassTriangles=grassStats.triangles;vegetationStats.grass=grassStats;
- if(proportionStudy){const near=buildGrassDetail(THREE,scene,M,{mobile});vegetationStats.grassNear={instances:near.placements.length,triangles:near.triangles};vegetationStats.grassTriangles+=near.triangles;}
+ const grassStats=proportionStudy?buildNaturalGrass(THREE,scene,M,{mobile}):await addGrassClusters(THREE,scene,{mobile});vegetationStats.grassTriangles=grassStats.triangles;vegetationStats.grass={instances:grassStats.instances,triangles:grassStats.triangles,drawCalls:grassStats.drawCalls,budget:grassStats.budget};
  const plantStats=await addPottedPlants(THREE,scene,M);vegetationStats.potted=plantStats;
  for(const node of scene.children)if(!vegetationBefore.has(node))calibrateNode(node,planScale);
  const visualRoot=new THREE.Group();for(const child of [...scene.children])visualRoot.add(child);visualRoot.scale.x=-1;visualRoot.position.x=planX(facadeAxis)*planScale;scene.add(visualRoot);
@@ -131,7 +131,7 @@ async function startScene(){
  const arrival=proportionStudy?exteriorReference.arrival:{x:11,z:-14,y:0,yaw:2.69,pitch:.035};
  let state={x:arrival.x,z:arrival.z,y:0},yaw=arrival.yaw,pitch=arrival.pitch,walking=false,drag=false,lastX=0,lastY=0,lastTime=0,activeRoom=null;
  function movement(angle,forward,side){const d=baseMovement(angle,forward,side);return{x:d.x/derivative('x',state.x),z:d.z/derivative('z',state.z)};}
- if(proportionStudy){document.querySelector('.prototype').textContent='REVISÃO 3D · IMPLANTAÇÃO ESTIMADA';document.querySelector('footer small').textContent='Hipótese de 120 m² · cotas, limites e ligações estimados. Fotos 23–26 ainda sem localização confirmada.';}
+ if(proportionStudy){document.querySelector('.prototype').textContent='REVISÃO 3D · 120 m² INTERNOS ESTIMADOS';document.querySelector('#cover .limit').textContent='Estudo solicitado: 120 m² internos, sem paredes, vazio da escada, deck ou jardim. O anúncio informa área construída; a distribuição interna é estimada pelas fotos, não medida. Não é reprodução fiel do imóvel.';document.querySelector('footer small').textContent='120 m² internos no modelo · térreo 80,6 + superior 39,4 m². Cotas e ligações estimadas; fotos 23–26 sem localização confirmada.';}
  const keys=new Set(),keyMap={KeyW:'forward',ArrowUp:'forward',KeyS:'back',ArrowDown:'back',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right'};
  const stairRoom={id:'escada',name:'Escada',note:'Ligação observada; altura e inclinação estimadas.',kind:'CONEXÃO ENTRE PAVIMENTOS',photo:11};
  function syncRoom(){const r=roomAt(state.x,state.z,state.y)||((state.y>.15&&state.y<2.85)?stairRoom:rooms.find(r=>r.id==='jardim'))||rooms[0];if(r!==activeRoom){activeRoom=r;$('room').textContent=r.name;$('roomNote').textContent=r.note||'Ligação e proporção estimadas a partir das fotos.';$('kind').textContent=r.kind;document.querySelectorAll('#places button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.id===r.id)));}const marker=$('you');marker.setAttribute('cx',String((worldX(state.x)+11)*5));marker.setAttribute('cy',String((state.z+19)*5));marker.setAttribute('fill',state.y>1.5?'#edaf74':'#fff');}

@@ -1,11 +1,13 @@
 // Única lista de planos, incluindo as coberturas baixas. Não é levantamento.
+import {proportionStudy,upperWidth} from './proportion-study.js';
 export const roofPlanes=[
- {id:'cobertura-principal',x:2.9,z:4.5,w:7,d:10.1,front:5.95,back:6.55},
+ {id:'cobertura-principal',x:upperWidth/2,z:4.5,w:upperWidth+1.2,d:10.1,front:5.95,back:6.55},
  // O alpendre termina ANTES da parede frontal. Antes avançava .9m no mezanino.
  {id:'alpendre-frontal',x:2.9,z:-1.075,w:7,d:1.85,front:2.72,back:3.313},
  {id:'ala-direita',x:8,z:1.5,w:4.3,d:4.2,front:3.05,back:4.45},
  {id:'ala-direita-retorno',x:8,z:5.9,w:4.3,d:4.6,front:4.45,back:3.05},
- {id:'ala-posterior',x:2.9,z:11,w:6.3,d:4.4,front:6.55,back:6.15}
+ {id:'ala-posterior',x:upperWidth/2,z:11,w:upperWidth+.5,d:4.4,front:6.55,back:6.15},
+ ...(proportionStudy?[{id:'faixa-terrea-lateral',x:(upperWidth+5.8)/2,z:6.6,w:5.8-upperWidth,d:13.2,front:3.24,back:3.30}]:[])
 ];
 export const overlaps=(a,b)=>Math.min(a[2],b[2])-Math.max(a[0],b[0])>.001&&Math.min(a[3],b[3])-Math.max(a[1],b[1])>.001;
 export function secondaryRoofs(rooms,floors){

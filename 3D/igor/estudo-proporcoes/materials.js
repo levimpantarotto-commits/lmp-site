@@ -19,8 +19,8 @@ export async function createMaterials(THREE,renderer,{mobile=false}={}){
  const [clothMap,clothNormal]=await Promise.all([load('tecido-diff.jpg',{color:true,repeat:2/.2707}),load('tecido-normal.jpg',{repeat:2/.2707})]);
  const [basinMap,basinNormal]=await Promise.all([load('cuba-diff.jpg',{color:true,repeat:1}),load('cuba-normal.jpg',{repeat:1})]);
  const clothRough=await load('tecido-rough.jpg',{repeat:2/.2707});
- const [graniteMap,graniteNormal]=await Promise.all([load('granito-diff.jpg',{color:true,repeat:2/2.8}),load('granito-normal.jpg',{repeat:2/2.8})]);
- const graniteRough=await load('granito-rough.jpg',{repeat:2/2.8});
+ const [graniteMap,graniteNormal]=await Promise.all([load('granito-diff.jpg',{color:true,repeat:2/3.8}),load('granito-normal.jpg',{repeat:2/3.8})]);
+ const graniteRough=await load('granito-rough.jpg',{repeat:2/3.8});
  // PBRs contínuos de madeira maciça. UV das caixas é metro/2, portanto 2/m.
  const [furnitureMap,furnitureNormal]=await Promise.all([load('movel-madeira-diff.jpg',{color:true,repeat:2/1.83}),load('movel-madeira-normal.jpg',{repeat:2/1.83})]);
  const furnitureRough=await load('movel-madeira-rough.jpg',{repeat:2/1.83});

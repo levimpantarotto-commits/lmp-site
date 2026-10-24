@@ -57,6 +57,10 @@ export function buildKitchenReference(THREE,scene,M){
  // Tomadas com três furos e parafuso. Geladeira preserva puxador vertical visível no corredor.
  const outlet=(z,p)=>{box(5.686,1.18,z,.012,.115,.12,white,p);for(const[dy,dz]of[[.022,-.020],[-.022,-.020],[0,.024]]){const pin=cyl(5.677,1.18+dy,z+dz,.009,.008,black,'outlet-pin');pin.rotation.z=Math.PI/2;}const screw=cyl(5.676,1.225,z,.008,.008,metal,'outlet-screw');screw.rotation.z=Math.PI/2;};outlet(5.96,'wall-outlet-sink');outlet(8.08,'wall-outlet-microwave');
  bevel(5.275,1.05,4.415,.75,2.10,.80,metal,'fridge',.065);box(4.892,1.05,4.415,.016,1.94,.70,black,'fridge-door-seam');box(4.872,1.06,4.18,.020,1.64,.035,material('woodDark','wood'),'fridge-vertical-handle');
+ // Foto07: galão de água no canto direito do tampo, antes da geladeira — não
+ // sobre ela. Fica fora da cuba e continua dentro do L já existente.
+ const jug=add(new THREE.SphereGeometry(1,16,10),material('glass','white'),5.46,1.2175,5.15,'water-jug',7);jug.scale.set(.18,.29,.18);
+ cyl(5.46,1.525,5.15,.066,.045,material('glass','white'),'water-jug-neck',7,16);
  // Os vãos do estudo seguem a mesma prateleira baixa contínua: não elevar
  // canecas para uma divisão intermediária que não existe mais.
  if(proportionStudy)for(const m of meshes)if(m.userData.piece==='flat-cutting-board')m.position.y+=.0275;

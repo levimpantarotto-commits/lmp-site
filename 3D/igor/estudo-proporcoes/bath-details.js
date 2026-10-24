@@ -20,10 +20,15 @@ export function buildBathDetails(THREE,scene,M){
  panel(.50,9.32,.60,.018,1.92,'shower-glass-fixed',12);panel(.22,9.625,.018,.65,1.92,'shower-glass-fixed',12);
  glassProfile(.205,9.32,1.92,12);glassProfile(.795,9.32,1.92,12);glassProfile(.22,9.31,1.92,12);glassProfile(.22,9.94,1.92,12);
  box(.50,.035,9.95,.56,.07,1.25,ceramic,'shower-floor',12);box(.50,1.94,9.37,.14,.10,.08,ceramic,'electric-shower',12);cyl(.50,1.87,9.43,.075,.035,ceramic,'shower-head',12);tube(.50,1.84,9.43,[[0,0,0],[-.08,-.26,0],[-.05,-.62,.03],[-.13,-.92,.04]],.009,ceramic,'shower-hose',12);box(.50,.93,9.345,.28,.06,.045,dark,'shower-niche',12);cyl(.44,.99,9.31,.025,.09,mat('linen','white'),'soap-bottle',12);
+ // Fotos 12/16/17: o rack é um retângulo aberto de metal escuro dentro do box,
+ // não uma faixa pintada ou uma prateleira que fecharia o acesso.
+ const showerRack=(x,y,z,w,photo)=>{for(const [a,b]of[[[-w/2,0],[w/2,0]],[[-w/2,-.10],[w/2,-.10]],[[-w/2,0],[-w/2,-.10]],[[w/2,0],[w/2,-.10]]])tube(x,y,z,[[a[0],a[1],0],[b[0],b[1],0]],.009,dark,'shower-towel-rack',photo);};
+ showerRack(.50,1.28,9.302,.30,12);
  // Box 2: cabine mais larga; novamente só segmentos fixos, nunca um volume sólido que bloqueie entrada.
  panel(11.875,10.02,.85,.018,2.03,'shower-glass-fixed',16);panel(11.47,10.575,.018,1.15,2.03,'shower-glass-fixed',16);
  glassProfile(11.45,10.02,2.03,16);glassProfile(12.30,10.02,2.03,16);glassProfile(11.47,10.01,2.03,16);glassProfile(11.47,11.14,2.03,16);
  box(11.875,.035,10.90,.81,.07,1.72,ceramic,'shower-floor',16);box(11.875,2.05,10.08,.15,.10,.08,ceramic,'electric-shower',16);cyl(11.875,1.98,10.14,.078,.035,ceramic,'shower-head',16);tube(11.875,1.95,10.14,[[0,0,0],[.10,-.20,0],[.08,-.55,.04],[.15,-.90,.06]],.009,ceramic,'shower-hose',16);box(11.88,1.02,10.045,.34,.06,.045,dark,'shower-niche',16);cyl(11.80,1.08,10.01,.026,.10,mat('linen','white'),'soap-bottle',16);
+ showerRack(11.875,1.35,10.015,.34,16);
  const basket=(x,z,photo)=>{const basketMat=mat('woodDark','wood');cyl(x,.12,z,.105,.20,basketMat,'woven-basket',photo);for(let i=0;i<8;i++){const a=i*Math.PI/4;const n=cyl(x+Math.cos(a)*.105,.15,z+Math.sin(a)*.105,.009,.20,cloth,'basket-weave',photo);n.rotation.z=Math.cos(a)*.16;}};
  // Fotos 13, 16 e 17: toalhas são dobradas/roladas no vão aberto da bancada.
  const towels=(x,z,photo)=>{box(x,.16,z,.28,.10,.20,cloth,'folded-towel',photo);cyl(x+.12,.29,z,.055,.20,cloth,'rolled-towel',photo);box(x+.12,.29,z,.012,.028,.205,dark,'rolled-towel-band',photo);};

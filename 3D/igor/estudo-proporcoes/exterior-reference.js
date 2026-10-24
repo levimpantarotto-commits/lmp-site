@@ -10,6 +10,10 @@ export const exteriorReference={
  patio:[[-2.55,0],[-2.55,-7.1],[-.8,-6.5],[5.5,-3.9],[10.8,-3.9],[10.8,0]]
 };
 export const referenceBarriers=[[-2.90,-18,-2.60,2.5],[11.06,-18,11.34,7.8],[-.33,-1.65,-.10,2.5]];
+// Ambientação estimada para o horizonte das fotos 00/01; não reconstrói mata real.
+// O ativo disponível só expõe v1_mid com 12.084 triângulos: 3 desktop / 2 mobile.
+export const distantCanopyPlacements=[[-14,-28,0,6.4,1],[-1,-33,0,8.1,1],[14,-30,0,7.0,1]];
+export const distantCanopyBudget={desktop:{instances:3,triangles:36252},mobile:{instances:2,triangles:24168}};
 export function buildReferenceBoundary(T,scene,M,box,{planX=x=>x,planZ=z=>z}={}){
  const e=exteriorReference;
  const slopeWall=(x,z0,z1,h0,h1,w,material,bottom0=0,bottom1=0)=>{
@@ -43,14 +47,15 @@ export function addBoundaryFoliage(T,scene,gltf,{mobile=false,planX=x=>x,planZ=z
  const geometry=new T.PlaneGeometry(1,1,1,2),p=geometry.attributes.position;
  for(let i=0;i<p.count;i++)p.setZ(i,.1*(1-4*p.getY(i)*p.getY(i)));geometry.computeVertexNormals();
  const rand=n=>{const r=Math.sin(n*127.1+73.2)*43758.5453;return r-Math.floor(r);};
- const count=mobile?1000:2300,mesh=new T.InstancedMesh(geometry,material,count),m=new T.Matrix4(),q=new T.Quaternion(),e=new T.Euler(),color=new T.Color();
+ // Cartões menores e agrupados: a cerca tem folhagem, não folhas gigantes isoladas.
+ const count=mobile?1800:4200,mesh=new T.InstancedMesh(geometry,material,count),m=new T.Matrix4(),q=new T.Quaternion(),e=new T.Euler(),color=new T.Color();
  for(let i=0;i<count;i++){
   const right=i<count*.68,z=-18+rand(i*7+1)*25.7,y=.18+rand(i*7+2)*2.55;
   const x=right?11.25+(rand(i*7+3)-.3)*.38:-2.90-rand(i*7+3)*.50;
   const yy=right?y:1.25+Math.max(0,z+1.5)*.40+y*.72;
   e.set((rand(i*7+4)-.5)*.8,Math.PI/2+(rand(i*7+5)-.5)*.85,rand(i*7+6)*Math.PI*2);q.setFromEuler(e);
-  const s=(mobile?.55:.40)+rand(i*7+9)*.38;
-  m.compose(new T.Vector3(planX(x),yy,planZ(z)),q,new T.Vector3(s,s*.88,1));mesh.setMatrixAt(i,m);
+  const s=(mobile?.14:.16)+rand(i*7+9)*.14;
+  m.compose(new T.Vector3(planX(x),yy,planZ(z)),q,new T.Vector3(s,s*.86,1));mesh.setMatrixAt(i,m);
   color.setHSL(.23+rand(i*7+8)*.035,.18,.66+rand(i*7+10)*.21);mesh.setColorAt(i,color);
  }
  mesh.name='reference-boundary-foliage';mesh.castShadow=mesh.receiveShadow=true;scene.add(mesh);

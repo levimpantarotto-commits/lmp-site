@@ -2,14 +2,15 @@ import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {buildDiningSet} from './interior-detail.js';
 import {roofPlanes} from './roof-layout.js?v=details-r2';
 import {proportionStudy,planX,planZ} from './proportion-study.js';
-import {exteriorReference,buildReferenceBoundary,addBoundaryFoliage} from './exterior-reference.js';
+import {exteriorReference,buildReferenceBoundary,addBoundaryFoliage,distantCanopyPlacements,distantCanopyBudget} from './exterior-reference.js';
 export {roofPlanes} from './roof-layout.js?v=details-r2';
 
 // Formas observáveis nas fotos 03/04/05. Escala e profundidade permanecem estimadas.
 export const treePlacements=[
- [-8,-9,0,10,0],[-9,-2,0,12,1],[-7.5,5,0,10.5,0],[-8,12,0,13,1],
- [-3,17,0,11,0],[3,18,0,12,1],[10,18,0,10,0],[16,13,0,11,1],
- [-13,-5,0,13,0],[-12,7,0,12,1],[-12,17,0,12,0],[17,4,0,8,1]
+ // Copa alta recua do jardim; alturas/variação observadas, não cadastro arbóreo.
+ [-8.7,-10.2,0,10.4,0],[-10.1,-2.7,0,11.8,1],[-7.2,4.8,0,9.7,0],[-9.4,12.5,0,12.6,1],
+ [-3.6,17.8,0,10.3,0],[2.1,19.0,0,11.1,1],[10.7,18.7,0,9.4,0],[16.4,13.6,0,10.8,1],
+ [-13.4,-5.7,0,12.2,0],[-12.1,6.3,0,11.4,1],[-13.0,17.3,0,10.6,0],[17.7,3.8,0,7.5,1]
 ];
 export function buildExterior(THREE,scene,M,box,cylinder,walls=[]){
  function slope(r){const rise=r.back-r.front,len=Math.hypot(r.d,rise),angle=-Math.atan2(rise,r.d),mesh=box(r.x,(r.front+r.back)/2,r.z,r.w,.10,len,M.roof);mesh.rotation.x=angle;
@@ -63,10 +64,11 @@ export function buildExterior(THREE,scene,M,box,cylinder,walls=[]){
 }
 
 export async function addReferenceTrees(THREE,scene,{mobile=false}={}){
- const gltf=await new GLTFLoader().loadAsync(new URL(mobile?'./assets/trees-mobile.glb':'./assets/trees-real.glb',import.meta.url).href),stats={trees:treePlacements.length,triangles:0};
+ const gltf=await new GLTFLoader().loadAsync(new URL(mobile?'./assets/trees-mobile.glb':'./assets/trees-real.glb',import.meta.url).href),horizon=proportionStudy?distantCanopyPlacements.slice(0,mobile?2:3):[],pointsByVariant=[...treePlacements,...horizon],stats={trees:treePlacements.length,distantCanopy:{instances:horizon.length,triangles:0,classification:'ambientação estimada, não paisagem reconstruída'},triangles:0};
  if(proportionStudy){stats.boundary=addBoundaryFoliage(THREE,scene,gltf,{mobile,planX,planZ});stats.triangles+=stats.boundary.triangles;}
- for(const variant of[0,1]){const root=gltf.scene.getObjectByName(`v${variant}_mid`);if(!root)throw new Error('Árvore da base não encontrada');root.updateWorldMatrix(true,true);const bounds=new THREE.Box3().setFromObject(root),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3()),points=treePlacements.filter(p=>p[4]===variant);
-root.traverse(source=>{if(!source.isMesh)return;const geometry=source.geometry.clone().applyMatrix4(source.matrixWorld);geometry.translate(-center.x,-bounds.min.y,-center.z);geometry.scale(1/size.y,1/size.y,1/size.y);const material=source.material.clone();material.alphaTest=Math.max(material.alphaTest||0,.35);material.transparent=false;material.depthWrite=true;const instances=new THREE.InstancedMesh(geometry,material,points.length),matrix=new THREE.Matrix4(),q=new THREE.Quaternion();points.forEach(([x,z,y,height],i)=>{q.setFromAxisAngle(new THREE.Vector3(0,1,0),i*2.399);matrix.compose(new THREE.Vector3(proportionStudy?planX(x):x,y,proportionStudy?planZ(z):z),q,new THREE.Vector3(height*(.88+i%3*.07),height,height*(.9+i%2*.12)));instances.setMatrixAt(i,matrix);});instances.castShadow=instances.receiveShadow=true;scene.add(instances);stats.triangles+=(geometry.index?.count||geometry.attributes.position.count)/3*points.length;});
+ for(const variant of[0,1]){const root=gltf.scene.getObjectByName(`v${variant}_mid`);if(!root)throw new Error('Árvore da base não encontrada');root.updateWorldMatrix(true,true);const bounds=new THREE.Box3().setFromObject(root),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3()),points=pointsByVariant.filter(p=>p[4]===variant);
+root.traverse(source=>{if(!source.isMesh)return;const geometry=source.geometry.clone().applyMatrix4(source.matrixWorld);geometry.translate(-center.x,-bounds.min.y,-center.z);geometry.scale(1/size.y,1/size.y,1/size.y);const material=source.material.clone();material.alphaTest=Math.max(material.alphaTest||0,.35);material.transparent=false;material.depthWrite=true;material.color.multiplyScalar(1.10);const instances=new THREE.InstancedMesh(geometry,material,points.length),matrix=new THREE.Matrix4(),q=new THREE.Quaternion(),tone=new THREE.Color(),triangles=(geometry.index?.count||geometry.attributes.position.count)/3;points.forEach(([x,z,y,height],i)=>{q.setFromAxisAngle(new THREE.Vector3(0,1,0),i*2.399+.31*(i%2));matrix.compose(new THREE.Vector3(proportionStudy?planX(x):x,y,proportionStudy?planZ(z):z),q,new THREE.Vector3(height*(.84+(i*7%5)*.035),height,height*(.87+(i*11%5)*.032)));instances.setMatrixAt(i,matrix);tone.setHSL(.25+(i%3)*.012,.16,.76+(i%4)*.025);instances.setColorAt(i,tone);});instances.castShadow=instances.receiveShadow=true;scene.add(instances);stats.triangles+=triangles*points.length;if(variant===1)stats.distantCanopy.triangles+=triangles*horizon.length;});
  }
+ if(proportionStudy&&stats.distantCanopy.triangles>distantCanopyBudget[mobile?'mobile':'desktop'].triangles)throw Error('Orçamento da copa distante excedido');
  return stats;
 }

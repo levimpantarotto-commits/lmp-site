@@ -1,13 +1,13 @@
 // Referência informada no anúncio, não levantamento cadastral. O frame XZ
 // calibra uma hipótese fotográfica; Y, olhos, portas e alturas não são inflados.
 import {proportionStudy,planX,planZ,planRect,derivative} from './proportion-study.js';
-export const areaReference={target:120,unit:'m²',source:'https://imobiliariapraiadorosa.com.br/property/linda-casa-no-rosa-com-matricula~202',classification:'área construída informada; distribuição e cotas estimadas',wallThickness:.18};
+export const areaReference={target:120,unit:'m²',source:'https://imobiliariapraiadorosa.com.br/property/linda-casa-no-rosa-com-matricula~202',classification:proportionStudy?'120 m² internos: premissa solicitada por Levi; anúncio informa área construída, não útil':'área construída informada; distribuição e cotas estimadas',basis:proportionStudy?'internal':'gross',wallThickness:.18};
 const inside=(x,z,r)=>x>r[0]&&x<r[2]&&z>r[1]&&z<r[3];
-export function unionArea(areas,wallRects=[]){
- const rects=[...areas.flatMap(a=>[a.rect,...(a.holes||[])]),...wallRects];
+export function unionArea(areas,wallRects=[],subtract=[]){
+ const rects=[...areas.flatMap(a=>[a.rect,...(a.holes||[])]),...wallRects,...subtract];
  const xs=[...new Set(rects.flatMap(r=>[r[0],r[2]]))].sort((a,b)=>a-b),zs=[...new Set(rects.flatMap(r=>[r[1],r[3]]))].sort((a,b)=>a-b);let area=0;
  for(let i=1;i<xs.length;i++)for(let j=1;j<zs.length;j++){const x=(xs[i-1]+xs[i])/2,z=(zs[j-1]+zs[j])/2;
-  if(areas.some(a=>inside(x,z,a.rect)&&!(a.holes||[]).some(h=>inside(x,z,h)))||wallRects.some(r=>inside(x,z,r)))area+=(xs[i]-xs[i-1])*(zs[j]-zs[j-1]);
+  if((areas.some(a=>inside(x,z,a.rect)&&!(a.holes||[]).some(h=>inside(x,z,h)))||wallRects.some(r=>inside(x,z,r)))&&!subtract.some(r=>inside(x,z,r)))area+=(xs[i]-xs[i-1])*(zs[j]-zs[j-1]);
  }return area;
 }
 export function createPlanCalibration(floors,walls,target=areaReference.target){
@@ -16,11 +16,16 @@ export function createPlanCalibration(floors,walls,target=areaReference.target){
   const parts=internal.filter(f=>f.level===level),half=areaReference.wallThickness/2;
   // Muros/deck não integram o perímetro construído do estudo.
   const boundary=walls.filter(w=>w.base===level&&w.a[0]>=0&&w.b[0]>=0&&w.a[1]>=0&&w.b[1]>=0).map(w=>[Math.min(w.a[0],w.b[0])-half,Math.min(w.a[1],w.b[1])-half,Math.max(w.a[0],w.b[0])+half,Math.max(w.a[1],w.b[1])+half]);
-  return {level,netDesign:unionArea(parts),grossDesign:unionArea(parts,boundary.map(planRect))};
+  const solids=walls.filter(w=>w.base===level&&w.a[0]>=0&&w.b[0]>=0&&w.a[1]>=0&&w.b[1]>=0).flatMap(w=>{
+   const length=Math.hypot(w.b[0]-w.a[0],w.b[1]-w.a[1]),dx=(w.b[0]-w.a[0])/length,dz=(w.b[1]-w.a[1])/length;
+   const doors=(w.openings||[]).filter(o=>o.type==='door'&&o.bottom===0).sort((a,b)=>a.from-b.from),out=[];let start=0;
+   for(const o of [...doors,{from:length,to:length}]){if(o.from>start){const a=[w.a[0]+dx*start,w.a[1]+dz*start],b=[w.a[0]+dx*o.from,w.a[1]+dz*o.from];out.push([Math.min(a[0],b[0])-(dx===0?half:0),Math.min(a[1],b[1])-(dz===0?half:0),Math.max(a[0],b[0])+(dx===0?half:0),Math.max(a[1],b[1])+(dz===0?half:0)]);}start=Math.max(start,o.to);}return out.map(planRect);
+  });
+  return {level,netDesign:unionArea(parts,[],proportionStudy?solids:[]),floorDesign:unionArea(parts),grossDesign:unionArea(parts,boundary.map(planRect))};
  });
- const grossDesign=rows.reduce((n,r)=>n+r.grossDesign,0),scale=Math.sqrt(target/grossDesign);
+ const grossDesign=rows.reduce((n,r)=>n+r.grossDesign,0),netDesign=rows.reduce((n,r)=>n+r.netDesign,0),basis=areaReference.basis,scale=Math.sqrt(target/(basis==='internal'?netDesign:grossDesign));
  if(!Number.isFinite(scale)||scale<=0)throw Error('Área inválida para calibrar');
- return {scale,target,grossDesign,gross:grossDesign*scale*scale,net:rows.reduce((n,r)=>n+r.netDesign,0)*scale*scale,levels:rows.map(r=>({...r,net:r.netDesign*scale*scale,gross:r.grossDesign*scale*scale})),convention:'união dos pisos internos + projeção das paredes; vazio da escada descontado; deck/pátio/jardim excluídos',reference:areaReference};
+ return {scale,target,basis,grossDesign,netDesign,gross:grossDesign*scale*scale,net:netDesign*scale*scale,levels:rows.map(r=>({...r,net:r.netDesign*scale*scale,gross:r.grossDesign*scale*scale})),convention:basis==='internal'?'120 m² de piso interno livre de paredes; portas transitáveis incluídas; vão da escada, deck, pátio e jardim excluídos. Área construída bruta informada separadamente. Premissa do estudo, não levantamento.':'união dos pisos internos + projeção das paredes; vazio da escada descontado; deck/pátio/jardim excluídos',reference:areaReference};
 }
 export function calibrateNode(node,scale){
  if(node.userData?.metricFrameApplied)throw Error('Calibração repetida');

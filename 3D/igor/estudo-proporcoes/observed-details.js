@@ -1,4 +1,6 @@
 import {proportionStudy} from './proportion-study.js';
+import {drapedSheet} from './draped-sheet.js';
+export const detailBedRect=proportionStudy?[6.60,9.20,9.53,11.676]:[5.95,10.18,8.55,12.00];
 // Formas observadas nas fotos06/11/14/15. Dimensões/implantação são estimativas.
 // Sem criar cômodos ou esconder vãos para encaixar a decoração.
 // Cada base ocupa um retângulo próprio: a navegação não deve atravessar móveis
@@ -75,9 +77,27 @@ export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  // à frente da nova parede transversal; padrão mantém a implantação vigente.
  for(const mesh of meshes.filter(m=>m.name.startsWith('bedroom14-')))mesh.position.z+=proportionStudy?.70:1.20;
  const ac=bevel(5.98,2.40,11.05,.95,.29,.25,M.ceramic||M.white,'bedroom-ac',.035);ac.rotation.y=Math.PI/2;for(let i=0;i<4;i++)box(6.114,2.29+i*.021,11.05,.014,.008,.81,M.metal,'ac-vent');
- // Toalhas sobre a cama, enroladas e apoiadas. Sem mudar o volume da cama.
+ // Foto15: toalhas e colcha acompanham o retângulo ATUAL da cama; nunca ficam
+ // atrás do travesseiro se a revisão de escala redistribuir o quarto.
+ // Referência de implantação atual (nav.js): [6.60,9.20,9.53,11.676],
+ // rotação PI/2. O lençol de interior-assets parte de y=.47 e seu topo local
+ // é ~.035: apoio útil em .505. Mantida explícita para não criar
+ // dependência circular com nav.js, que já registra os obstáculos deste módulo.
+ const [bedMinX,bedMinZ,bedMaxX,bedMaxZ]=detailBedRect,bedDepth=bedMaxX-bedMinX,bedWidth=bedMaxZ-bedMinZ,bedTowardFoot=bedMinX+bedDepth*.74,bedMidZ=(bedMinZ+bedMaxZ)/2;
+ // A mesma malha que veste a cama fornece o apoio e a borda inferior.
+ const referenceSheet=new T.Mesh(drapedSheet(T,bedWidth-.065,bedDepth*.86,.28,.8),M.linen||M.white);referenceSheet.position.set(bedMinX+bedDepth*.55,.47,bedMidZ);referenceSheet.rotation.y=Math.PI/2;referenceSheet.updateMatrixWorld(true);
+ const supportRay=new T.Raycaster(new T.Vector3(bedTowardFoot,2,bedMidZ),new T.Vector3(0,-1,0)),bedTop=supportRay.intersectObject(referenceSheet)[0].point.y;
+ // Toalhas enroladas e apoiadas sobre o colchão, sem mudar seu volume.
  const towel=M.fabricWhite||M.white;
- for(const [x,y,z,r,l]of[[7.50,.61,11.10,.075,.30],[7.50,.75,11.12,.065,.27]]){const roll=cyl(x,y,z,r,l,towel,'bed-towel-roll',24);roll.rotation.z=Math.PI/2;const coil=new T.TorusGeometry(r*.82,.008,5,24),end=add(coil,towel,x+l/2+.002,y,z,'towel-edge');end.rotation.y=Math.PI/2;}
+ const lowerRadius=.075,upperRadius=.065,lowerY=bedTop+lowerRadius,upperY=lowerY+lowerRadius+upperRadius;
+ for(const [y,r,l]of[[lowerY,lowerRadius,.30],[upperY,upperRadius,.27]]){const roll=cyl(bedTowardFoot,y,bedMidZ,r,l,towel,'bed-towel-roll',24);roll.rotation.z=Math.PI/2;const coil=new T.TorusGeometry(r*.82,.008,5,24),end=add(coil,towel,bedTowardFoot+l/2+.002,y,bedMidZ,'towel-edge');end.rotation.y=Math.PI/2;}
+ // Foto15: a colcha cai no pé da cama e termina em franja curta. As tiras
+ // acompanham só a borda observada, preservando colchão, footprint e circulação.
+ const sheetPositions=referenceSheet.geometry.attributes.position,edge=[];
+ for(let i=sheetPositions.count-120;i<sheetPositions.count;i++){const p=new T.Vector3().fromBufferAttribute(sheetPositions,i);if(p.z>=bedDepth*.43-.001)edge.push(p.applyMatrix4(referenceSheet.matrixWorld));}
+ edge.sort((a,b)=>a.z-b.z);
+ for(let i=0;i<12;i++){const p=edge[Math.round(1+i*(edge.length-3)/11)],drop=.040+(i%3)*.007;tube([[p.x,p.y+.002,p.z],[p.x+.003,p.y-drop*.45,p.z+.003],[p.x+.004,p.y-drop,p.z-.003]],.004,towel,'bedspread-fringe',3);}
+ referenceSheet.geometry.dispose();
  box(5.99,1.75,11.05,.20,.07,.75,wood,'bedroom-shelf');cyl(6.015,1.87,11.05,.055,.17,M.basinStone||M.stone,'bedroom-vase');
  // Foto10: cestas escuras, trançadas e com franja irregular; medidas são estimadas.
  const fiber=(M.linen||wood).clone();fiber.color.set(0x4a3520);fiber.side=T.DoubleSide;

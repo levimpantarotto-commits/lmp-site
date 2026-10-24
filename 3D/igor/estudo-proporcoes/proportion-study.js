@@ -1,6 +1,6 @@
 // Alternativa isolada: nunca ativa sem ?study=proportion-v2.
-// Relações extraídas das fotos, não levantamento. Mantém o total de120m²,
-// redistribuindo-o: núcleo social mais largo; ligações posteriores compactas.
+// Relações extraídas das fotos, não levantamento. Premissa atual:120m²
+// INTERNOS somando pisos. Paredes/exteriores discriminados, não incluídos.
 import {exteriorReference as exterior} from './exterior-reference.js';
 export const proportionStudy=true; // Rota isolada do estudo, nunca a visita publicada.
 const piece=(v,knots)=>{for(let i=1;i<knots.length;i++)if(v<knots[i][0]){const[a,b]=knots[i-1],[c,d]=knots[i];return b+(v-a)*(d-b)/(c-a);}const[a,b]=knots.at(-2),[c,d]=knots.at(-1);return d+(v-c)*(d-b)/(c-a);};
@@ -15,11 +15,20 @@ export const planZ=z=>proportionStudy?piece(z,zKnots):z;
 export const planRect=r=>[planX(r[0]),planZ(r[1]),planX(r[2]),planZ(r[3])];
 export const derivative=(axis,value)=>proportionStudy?((axis==='x'?planX:planZ)(value+.00001)-(axis==='x'?planX:planZ)(value-.00001))/.00002:1;
 export const terrace={level:1.8,rect:[-4,2.5,0,11.5],stairs:{rect:[-2.3,-1.7,-.35,2.5],from:0,to:1.8}};
+// Fotos03/04/05: volume alto menor que o conjunto térreo. A base anterior
+// repetia toda a largura social no superior. Nova hipótese explicitamente
+// separada: ala superior mais estreita, preservando escada e painel de vidro.
+export const upperWidth=proportionStudy?4.55:5.8;
 export function applyProportionStudy(rooms,floors,walls,furniture){
  if(!proportionStudy)return;
+ for(const r of rooms.filter(r=>r.level===3))r.rect[2]=upperWidth;
+ for(const f of floors.filter(f=>f.level===3&&f.rect[2]===5.8))f.rect[2]=upperWidth;
+ for(const w of walls.filter(w=>w.base===3))for(const p of[w.a,w.b])if(p[0]===5.8)p[0]=upperWidth;
+ walls[21].openings[0].to=upperWidth-.12;
+ walls[26].openings[0].to=upperWidth-.25;
  walls[0].openings.find(o=>o.type==='door').style='porch-glass';
  Object.assign(rooms.find(r=>r.id==='jardim'),{rect:[...exterior.garden],spawn:[exterior.arrival.x,0,exterior.arrival.z],yaw:exterior.arrival.yaw});
- Object.assign(rooms.find(r=>r.id==='quintalDireito'),{rect:[...exterior.side],spawn:[10.45,0,4],note:'Faixa junto à cerca verde observada; largura estimada.'});
+ Object.assign(rooms.find(r=>r.id==='quintalDireito'),{name:'Passagem lateral',photo:5,rect:[...exterior.side],spawn:[10.45,0,4],note:'Passagem estreita junto à cerca verde da foto 05; largura estimada, não medida.'});
  for(const f of floors.filter(f=>f.material==='grass'))f.rect=[...(f.rect[1]<0?exterior.garden:exterior.side)];
  const deck=rooms.find(r=>r.id==='deck');Object.assign(deck,{name:'Terraço lateral',rect:[...terrace.rect],level:terrace.level,spawn:[-2,terrace.level,6.5],note:'Escada lateral → terraço: relação visível nas fotos 04/19–22. Desnível de 1,80 m é hipótese, não cota.'});
  const deckFloor=floors.find(f=>f.material==='deck');Object.assign(deckFloor,{rect:[...terrace.rect],level:terrace.level});
@@ -43,7 +52,7 @@ export function applyProportionStudy(rooms,floors,walls,furniture){
  Object.assign(rooms.find(r=>r.id==='hall'),{photo:6,note:'Ligação posterior ainda estimada. A foto12 é banheiro, não evidência de um hall.'});
  // Âncoras de escala humana: não permitir cama de casal de 1m de largura
  // resultante do encolhimento X/Z. Medidas estimadas, não medidas do imóvel.
- Object.assign(furniture.find(f=>f.id==='cama15'),{rect:[6.60,9.20,9.78,11.92],turn:Math.PI/2});
+ Object.assign(furniture.find(f=>f.id==='cama15'),{rect:[6.60,9.20,9.53,11.676],turn:Math.PI/2});
  // Dobradiça no outro batente permite abrir para o hall sem cruzar a cama.
  // Continua sujeita à varredura completa; posição de ferragem é estimada.
  Object.assign(rooms.find(r=>r.id==='quarto14'),{rect:[5.8,1.45,9.8,7.5]});
@@ -56,8 +65,8 @@ export function applyProportionStudy(rooms,floors,walls,furniture){
  // passagem física sem reduzir o leito estimado.
  Object.assign(walls[13].openings[0],{from:.55,to:1.75});
  Object.assign(walls[15].openings[0],{from:.20,to:.95,hinge:'end'});
- Object.assign(furniture.find(f=>f.id==='cama18'),{rect:[.40,10.00,2.80,11.84],turn:Math.PI/2});
- Object.assign(rooms.find(r=>r.id==='quarto18'),{spawn:[4.2,3,11.3]});
+ Object.assign(furniture.find(f=>f.id==='cama18'),{rect:[.40,10.00,2.55,11.66],turn:Math.PI/2});
+ Object.assign(rooms.find(r=>r.id==='quarto18'),{spawn:[3.8,3,11.3]});
  Object.assign(rooms.find(r=>r.id==='quarto15'),{spawn:[7.4,0,8.52],yaw:Math.PI});
  // Fotos00/01: futon ao longo do vidro lateral, e mesinha pequena junto dele.
  Object.assign(furniture.find(f=>f.id==='sofaMezanino'),{rect:[.18,.48,1.30,2.95],turn:-Math.PI/2});
