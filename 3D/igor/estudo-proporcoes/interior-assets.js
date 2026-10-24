@@ -44,14 +44,23 @@ export function buildInteriorAssets(THREE,scene,M,furniture,{mobile=false}={}){
  };
  function sofa(c,mezanino=false){
   const fabric=material(mezanino?'fabricGrey':'fabricTaupe'),pale=material('fabricWhite'),cloth=material('cloth',mezanino?'fabricGrey':'fabricTaupe'),wood=material('woodDark','wood');
-  c.round(c.w/2,.16,c.d/2,c.w-.06,.28,c.d-.06,mezanino?wood:material('plaster'),.045,'sofa-frame');
-  c.puffy(c.w/2,.37,c.d*.46,c.w-.10,.20,c.d*.67,cloth,.075,'seat-cushion',mezanino?.4:0);
+  if(mezanino){
+   // Foto01: pés e travessas visíveis; não é um bloco fechado até o chão.
+   c.round(c.w/2,.245,c.d/2,c.w-.06,.105,c.d-.06,wood,.018,'sofa-frame');
+   for(const u of[.12,c.w-.12])for(const v of[.11,c.d-.11])c.round(u,.12,v,.075,.24,.075,wood,.012,'futon-leg');
+  }else c.round(c.w/2,.18,c.d/2,c.w-.06,.34,c.d-.06,material('plaster'),.024,'sofa-frame');
+  c.puffy(c.w/2,mezanino?.37:.415,c.d*.46,c.w-.10,mezanino?.20:.14,c.d*.67,cloth,.075,'seat-cushion',mezanino?.4:0);
   // A costura e as dobras estão integradas na malha do assento; nenhum tubo risca o tecido.
   // Banco da sala é alvenaria contínua atrás das almofadas; elimina a leitura de encosto flutuante.
   if(!mezanino)c.round(c.w/2,.30,c.d-.065,c.w-.06,.60,.10,material('plaster'),.025,'sofa-back-support');
-  else c.round(c.w/2,.68,c.d-.10,c.w-.10,.58,.15,fabric,.055,'futon-grey-back');
+  else{const back=c.pillow(c.w/2,.68,c.d-.10,c.w-.10,.58,.15,fabric,'futon-grey-back',1.8);back.rotateX(-.035);}
   const count=mezanino?2:Math.max(2,Math.round(c.w/.68));
-  for(let i=0;i<count;i++){const u=(i+.5)*c.w/count,ww=mezanino?Math.min(.55,c.w*.3):c.w/count-.045,cushion=c.pillow(u,mezanino?.66:.615,c.d-(mezanino?.24:.21),ww,mezanino?.38:.46,.23,mezanino?pale:cloth,'back-cushion',i*.7);cushion.rotateX(mezanino?[-.075,-.11][i]:(-.085+(i%3)*.018));}
+  for(let i=0;i<count;i++){
+   const u=(i+.5)*c.w/count,ww=mezanino?Math.min(.55,c.w*.3):c.w/count-.025;
+   const cushion=c.pillow(u,mezanino?.66:.715+.009*Math.sin(i*2.3),c.d-(mezanino?.24:.21),ww,mezanino?.38:.52,.23,mezanino?pale:cloth,'back-cushion',i*.7);
+   cushion.rotateX(mezanino?[-.075,-.11][i]:(-.085+(i%3)*.018));
+   if(!mezanino)cushion.rotateZ(.016*Math.sin(i*2.7+.4));
+  }
  }
  function bed(c,low=false){
   const white=material('fabricWhite'),linen=material('linen','fabricWhite'),wood=material('woodDark','wood');

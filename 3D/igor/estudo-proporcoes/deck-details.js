@@ -28,6 +28,9 @@ export function buildDeckDetails(THREE,scene,M,{mobile=false}={}){
  const woodDark=tint(THREE,M.woodDark,0x4a2d1b),woodWeathered=tint(THREE,M.wood,0x78523b),tableGraphite=tint(THREE,M.wood,0x454442),yellow=tint(THREE,M.fabricTaupe||M.linen,0xd8bd46),rope=tint(THREE,M.linen||M.fabricTaupe,0xd6c59a),frame=tint(THREE,M.woodDark,0x33241a),terra=tint(THREE,M.wood,0x8c6544),soil=tint(THREE,M.woodDark,0x221b16);
  // Folha própria, opaca e áspera: não reutiliza o albedo de tecido das redes.
  const leaf=new THREE.MeshStandardMaterial({color:0x355c28,roughness:.86,metalness:0,side:THREE.DoubleSide});
+ const leafLight=leaf.clone(),leafDark=leaf.clone();leafLight.color.setHex(0x416d31);leafDark.color.setHex(0x294b22);
+ const leafVariants=[leaf,leafLight,leafDark];
+ const leafVein=new THREE.MeshStandardMaterial({color:0x24451d,roughness:.9,metalness:0});
  const vineStem=new THREE.MeshStandardMaterial({color:0x29451f,roughness:.92,metalness:0});
  const lampGlass=new THREE.MeshStandardMaterial({color:0xffc96a,emissive:0x8c4b12,emissiveIntensity:.72,roughness:.42,metalness:0});
  function tint(_THREE,base,color){const mat=base.clone();mat.color?.setHex(color);return mat;}
@@ -70,9 +73,23 @@ export function buildDeckDetails(THREE,scene,M,{mobile=false}={}){
  for(let i=0;i<8;i++){const p=stringCurve.getPoint((i+.35)/8);cylinder(p.x,p.y-.07,p.z,.018,.10,frame,{part:'pergola-light-drop',shadow:false});add(new THREE.SphereGeometry(.045,12,8),lampGlass,p.x,p.y-.145,p.z,{part:'pergola-light-bulb',shadow:false});}
  // Trepadeiras observadas nas duas fotos em postes opostos. A folha tem
  // nervura e curvatura transversal, em vez de esfera ou cartão plano.
- const leafGeometry=(length,width,curl=.028)=>{const rows=5,cols=4,pts=[],uv=[],idx=[];for(let r=0;r<=rows;r++){const t=r/rows;for(let c=0;c<=cols;c++){const v=-1+2*c/cols,edge=Math.sin(Math.PI*t),x=v*width*edge,y=t*length,z=curl*(1-v*v)*edge*(.35+.65*t);pts.push(x,y,z);uv.push((v+1)*.5,t);}}for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const a=r*(cols+1)+c,b=a+1,d=(r+1)*(cols+1)+c,e=d+1;idx.push(a,d,b,b,d,e);}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return g;};
+ // Jiboia: ponta marcada, ombros largos e pequena fenda no pecíolo. A curvatura
+ // longitudinal evita os retângulos verdes planos sem transformar a planta em
+ // folhagem densa ou cara para o bake.
+ const leafGeometry=(length,width,curl=.028)=>{const rows=6,cols=6,pts=[],uv=[],idx=[];
+  const point=(t,v)=>{const shoulder=Math.pow(Math.sin(Math.PI*t),.64),baseNotch=(1-t)*.035;return [v*width*shoulder,t*length-baseNotch*(1-v*v),curl*(1-v*v)*shoulder*(.28+.72*t)];};
+  // Pontas únicas e anéis intermediários: não gera triângulos degenerados nos polos.
+  pts.push(...point(0,0));uv.push(.5,0);
+  for(let r=1;r<rows;r++){const t=r/rows;for(let c=0;c<=cols;c++){const v=-1+2*c/cols;pts.push(...point(t,v));uv.push((v+1)*.5,t);}}
+  const tip=pts.length/3;pts.push(...point(1,0));uv.push(.5,1);
+  for(let c=0;c<cols;c++)idx.push(0,1+c,1+c+1);
+  for(let r=0;r<rows-2;r++)for(let c=0;c<cols;c++){const a=1+r*(cols+1)+c,b=a+1,d=a+cols+1,e=d+1;idx.push(a,d,b,b,d,e);}
+  const last=1+(rows-2)*(cols+1);for(let c=0;c<cols;c++)idx.push(last+c,tip,last+c+1);
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();g.computeBoundingBox();g.computeBoundingSphere();return g;};
  const leafGeo=leafGeometry(.30,.105);
- function vine(postX,postZ,phase){const stemPts=[];for(let i=0;i<15;i++){const t=i/14,y=.42+t*1.92,a=phase+t*8.6;stemPts.push([postX+Math.cos(a)*.145,y,postZ+Math.sin(a)*.145]);}add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(stemPts.map(p=>new THREE.Vector3(...p))),36,.013,6,false),vineStem,0,0,0,{part:'vine-stem',shadow:false});for(let i=1;i<13;i++){const t=i/13,a=phase+t*8.6,side=i%2?-1:1,x=postX+Math.cos(a)*.165+side*.065,z=postZ+Math.sin(a)*.165,y=.44+t*1.82;const l=add(leafGeo,leaf,x,y,z,{part:'vine-curved-leaf',shadow:false});l.rotation.set(.15*Math.sin(i),side*.75,side*(.46+.11*(i%3)));l.scale.setScalar(.82+(i%3)*.13);}}
+ const leafVeinGeo=new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0,-.035,0),new THREE.Vector3(0,.15,.018),new THREE.Vector3(0,.30,0)]),8,.005,5,false);
+ function placeLeaf(x,y,z,scale,rotation,part='vine-curved-leaf',variant=0){const l=add(leafGeo,leafVariants[variant%leafVariants.length],x,y,z,{part,shadow:false}),vein=add(leafVeinGeo,leafVein,x,y,z,{part:`${part}-vein`,shadow:false});l.rotation.set(...rotation);vein.rotation.copy(l.rotation);l.scale.setScalar(scale);vein.scale.copy(l.scale);return l;}
+ function vine(postX,postZ,phase){const stemPts=[];for(let i=0;i<15;i++){const t=i/14,y=.42+t*1.92,a=phase+t*8.6;stemPts.push([postX+Math.cos(a)*.145,y,postZ+Math.sin(a)*.145]);}add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(stemPts.map(p=>new THREE.Vector3(...p))),36,.013,6,false),vineStem,0,0,0,{part:'vine-stem',shadow:false});for(let i=1;i<13;i++){const t=i/13,a=phase+t*8.6,side=i%2?-1:1,x=postX+Math.cos(a)*.165+side*.065,z=postZ+Math.sin(a)*.165,y=.44+t*1.82;placeLeaf(x,y,z,.82+(i%3)*.13,[.15*Math.sin(i),side*.75,side*(.46+.11*(i%3))],'vine-curved-leaf',i);}}
  vine(-3.55,1.95,.32);vine(-.85,7.62,2.26);
 
  if(!proportionStudy){
@@ -104,7 +121,7 @@ export function buildDeckDetails(THREE,scene,M,{mobile=false}={}){
   box(x-w/2-.03,y,z,.042,h,.028,frame,{part:'wall-bracket',shadow:false});box(x+w/2+.03,y,z,.042,h,.028,frame,{part:'wall-bracket',shadow:false});box(x,y+h/2-.02,z,w+.10,.042,.028,frame,{part:'wall-bracket',shadow:false});box(x,y-h/2+.02,z,w+.10,.042,.040,frame,{part:'wall-shelf',shadow:false});
   const pot=add(new THREE.LatheGeometry(potProfile,16),terra,x,y-h*.14,8.835,{part:'wall-pot',shadow:false});pot.rotation.y=.18;
   const dirt=add(new THREE.CircleGeometry(.066,16),soil,x,y-h*.14+.123,8.835,{part:'wall-pot-soil',shadow:false});dirt.rotation.x=-Math.PI/2;
-  for(const [dx,dz,tilt] of[[-.028,-.012,-.48],[.026,.014,.34]]){const leafMesh=add(new THREE.SphereGeometry(.053,10,6),leaf,x+dx,y-h*.14+.18,8.815+dz,{part:'wall-leaf',shadow:false});leafMesh.scale.set(.48,1.18,.22);leafMesh.rotation.z=tilt;cylinder(x+dx*.45,y-h*.14+.16,8.808+dz*.45,.006,.09,frame,{part:'wall-leaf-vein',shadow:false});}
+  for(const [dx,dz,tilt,scale,variant] of[[-.030,-.014,-.50,.34,1],[.027,.013,.34,.30,2],[.004,.026,.03,.25,0]])placeLeaf(x+dx,y-h*.14+.135,8.807+dz,scale,[.82,0,tilt],'wall-leaf',variant);
  }
 
  const withinBudget=triangles<=budget;

@@ -26,6 +26,8 @@ export function applyProportionStudy(rooms,floors,walls,furniture){
  for(const opening of walls[3].openings){opening.style='leaded-glass';opening.initialOpen=false;}
  // Foto01 mostra parapeito e vidraças laterais; não apenas uma janelinha.
  walls[21].openings[0].bottom=.72;
+ // Fotos00/01: parapeitos claros sob os vidros, não lambris de madeira.
+ walls[21].material='plaster';walls[22].material='plaster';
  walls[22].openings=[{from:.15,to:3.65,bottom:.72,top:2.65,type:'window',panels:3},{from:4.45,to:8.7,bottom:1.9,top:2.65,type:'window',panels:3}];
  // Meia-parede junto ao banco não invade o corredor da porta frontal.
  const divider=walls.at(-1);if(divider.height===1.48)divider.b[1]=3.0;

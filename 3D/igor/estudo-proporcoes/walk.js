@@ -30,12 +30,15 @@ async function startScene(){
  renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile?1:1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
  const scene=new THREE.Scene();scene.background=new THREE.Color('#a3cae8');scene.fog=new THREE.Fog('#c8d9d2',55,130);
  const camera=new THREE.PerspectiveCamera(mobile?78:60,1,.05,120);camera.rotation.order='YXZ';const ambientFill=new THREE.HemisphereLight(0xd8e8ff,0x8b805c,1.55);scene.add(ambientFill);
- const sun=new THREE.DirectionalLight(0xffefd9,3.15);sun.position.set(-9,18,-12);sun.target.position.set(4,0,5);sun.castShadow=true;sun.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);Object.assign(sun.shadow.camera,{left:-20,right:20,top:20,bottom:-20,near:1,far:55});sun.shadow.normalBias=.025;sun.shadow.bias=-.0002;scene.add(sun,sun.target);
+ const sun=new THREE.DirectionalLight(0xffefd9,3.15);sun.position.set(-9,18,-12);sun.target.position.set(4,0,5);sun.castShadow=true;sun.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);Object.assign(sun.shadow.camera,{left:-20,right:20,top:20,bottom:-20,near:1,far:55});sun.shadow.normalBias=proportionStudy?.005:.025;sun.shadow.bias=-.0002;scene.add(sun,sun.target);
  const random=n=>{const v=Math.sin(n*97.13+11.5)*43958.27;return v-Math.floor(v);};
  const started=performance.now(),M=await createMaterials(THREE,renderer,{mobile});M.wood.normalScale.set(.35,.35);M.deck.normalScale.set(.35,.35);M.stone.normalScale.set(.65,.65);
  M.grass.normalScale.set(.12,.12); // grama curta: relevo sutil, não solo ondulado
  if(proportionStudy){M.roof.map.repeat.set(.26,.65);M.roof.normalMap.repeat.set(.26,.65);M.roof.normalScale.set(.40,.40);M.grass.color.set(0xc4ccae);M.glass.color.set(0xc4d0ce);M.glass.opacity=.22;M.glass.metalness=.03;}
  M.plaster.color.set(0xeadfc9);M.plaster.normalScale.set(.16,.16);M.tile.normalScale.set(.22,.22);M.tile.roughness=.58;M.woodDark.map=M.wood.map;M.woodDark.normalMap=M.wood.normalMap;M.woodDark.normalScale.set(.25,.25);M.woodDark.roughness=.8;
+ // Fotos01/11 distinguem vigas de madeira mel e esquadrias escuras. Usar o
+ // mesmo marrom quase preto em ambas apagava o veio e alterava essa leitura.
+ M.timber=M.wood.clone();M.timber.color.set(0xc7aa87);M.timber.roughness=.70;
  // HDR da base do Vale para reflexos. O bake guarda luz indireta em mapas
  // separados do albedo; as fotos do imóvel continuam sendo referência.
  const hdr=await new HDRLoader().loadAsync(new URL('./assets/ceu.hdr',import.meta.url).href);
@@ -69,11 +72,11 @@ async function startScene(){
  for(const z of[4.1,5.55])box(3.20,2.96,z,1.57,.10,.07,M.woodDark);
  // Tapete claro visível na foto01; escala/posição dentro do estudo estimadas.
  box(3.15,3.006,3.12,1.9,.012,1.45,M.fabricWhite).castShadow=false;
- for(let z=.6;z<9;z+=1.35)box(2.9,5.65,z,6.3,.16,.17,M.woodDark);
+ for(let z=.6;z<9;z+=1.35)box(2.9,5.65,z,6.3,.16,.17,proportionStudy?M.timber:M.woodDark);
  buildExterior(THREE,scene,M,box,cylinder,walls);
  for(const r of rooms.filter(r=>['banheiro1','banheiro2','hall','quarto15'].includes(r.id))){const[a,b,c,d]=r.rect;box((a+c)/2,2.88,(b+d)/2,c-a,.08,d-b,M.wood);}
  for(const r of secondaryRoofs(rooms,floorAreas)){const roof=box(r.x,(r.front+r.back)/2,r.z,r.w,.12,Math.hypot(r.d,r.back-r.front),M.roof);roof.rotation.x=-Math.atan2(r.back-r.front,r.d);}
- for(let z=.8;z<9;z+=1.7){const opening=z>3.9&&z<8.0;box(opening?3.8:2.9,2.86,z,opening?4:5.8,.13,.16,M.woodDark);}
+ for(let z=.8;z<9;z+=1.7){const opening=z>3.9&&z<8.0;box(opening?3.8:2.9,2.86,z,opening?4:5.8,.13,.16,proportionStudy?M.timber:M.woodDark);}
  const interiorStats=buildInteriorAssets(THREE,scene,M,furniture.filter(f=>f.id!=='mesa'),{mobile});
  const deckStats=buildDeckDetails(THREE,scene,M,{mobile});
  if(proportionStudy)for(const mesh of deckStats.meshes){mesh.position.y+=terrace.level;mesh.position.z+=2.5;}
@@ -84,7 +87,7 @@ async function startScene(){
  const mirrorSpecs=takeMirrorSurfaces(THREE,scene);
  for(const [x,z,y] of[[2.5,2.2,2.38],[4.1,7.1,2.65],[2.9,2.2,5.18]]){const light=new THREE.PointLight(0xffd4a1,2.2,5,2);light.position.set(x,y-.12,z);scene.add(light);}
  box(2.9,.09,9,5.8,.17,.045,M.woodDark);
- box(2.9,2.86,4.2,.2,.25,8.7,M.woodDark);
+ box(2.9,2.86,4.2,.2,.25,8.7,proportionStudy?M.timber:M.woodDark);
  box(6,-.25,4,60,.25,60,M.grass);
  // A casa é estática: agrupar superfícies opacas reduz chamadas sem alterar
  // o contrato de colisão. Vidros permanecem separados para ordenação correta.
