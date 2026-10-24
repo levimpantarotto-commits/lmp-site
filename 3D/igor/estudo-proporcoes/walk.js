@@ -34,7 +34,7 @@ async function startScene(){
  const random=n=>{const v=Math.sin(n*97.13+11.5)*43958.27;return v-Math.floor(v);};
  const started=performance.now(),M=await createMaterials(THREE,renderer,{mobile});M.wood.normalScale.set(.35,.35);M.deck.normalScale.set(.35,.35);M.stone.normalScale.set(.65,.65);
  M.grass.normalScale.set(.12,.12); // grama curta: relevo sutil, não solo ondulado
- if(proportionStudy){M.roof.map.repeat.set(.26,.65);M.roof.normalMap.repeat.set(.26,.65);M.roof.normalScale.set(.40,.40);M.grass.color.set(0xc4ccae);}
+ if(proportionStudy){M.roof.map.repeat.set(.26,.65);M.roof.normalMap.repeat.set(.26,.65);M.roof.normalScale.set(.40,.40);M.grass.color.set(0xc4ccae);M.glass.color.set(0xc4d0ce);M.glass.opacity=.22;M.glass.metalness=.03;}
  M.plaster.color.set(0xeadfc9);M.plaster.normalScale.set(.16,.16);M.tile.normalScale.set(.22,.22);M.tile.roughness=.58;M.woodDark.map=M.wood.map;M.woodDark.normalMap=M.wood.normalMap;M.woodDark.normalScale.set(.25,.25);M.woodDark.roughness=.8;
  // HDR da base do Vale para reflexos. O bake guarda luz indireta em mapas
  // separados do albedo; as fotos do imóvel continuam sendo referência.
@@ -131,7 +131,7 @@ async function startScene(){
  function requestRender(){if(!stopped&&!frame)frame=requestAnimationFrame(tick);}
  function stopMoving(){keys.clear();drag=false;lastTime=0;footsteps.stop();requestRender();}
  function setWalking(value){walking=value;$('walk-toggle').setAttribute('aria-pressed',String(value));$('walk-toggle').textContent=value?'Pausar caminhada':'Caminhar';$('touch').hidden=!value;if(!value)stopMoving();requestRender();}
- function jump(r){stopMoving();state={x:r.spawn[0],y:r.spawn[1],z:r.spawn[2]};yaw=r.yaw??Math.PI;pitch=0;requestRender();}
+ function jump(r){stopMoving();state={x:r.spawn[0],y:r.spawn[1],z:r.spawn[2]};yaw=r.yaw??Math.PI;pitch=r.pitch??0;requestRender();}
  async function unlockSound(){if(!footsteps.diagnostics().enabled)return;try{const ok=await footsteps.unlock();$('sound-toggle').textContent=ok?'Som dos passos: ligado':'Ativar som dos passos';$('sound-toggle').setAttribute('aria-pressed',String(ok));if(!keys.size)void footsteps.stop();}catch{$('sound-toggle').textContent='Tentar ativar som';}}
  $('enter').onclick=()=>{unlockSound();$('cover').hidden=true;$('ui').hidden=false;setWalking(true);canvas.focus();};$('walk-toggle').onclick=()=>{if(!walking&&footsteps.diagnostics().enabled)unlockSound();setWalking(!walking);};
  $('sound-toggle').onclick=()=>{const d=footsteps.diagnostics();if(d.enabled){void footsteps.setEnabled(false);$('sound-toggle').textContent='Som dos passos: desligado';$('sound-toggle').setAttribute('aria-pressed','false');}else{footsteps.setEnabled(true);unlockSound();}};

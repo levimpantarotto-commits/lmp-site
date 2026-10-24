@@ -31,6 +31,11 @@ export function applyProportionStudy(rooms,floors,walls,furniture){
  const divider=walls.at(-1);if(divider.height===1.48)divider.b[1]=3.0;
  Object.assign(rooms.find(r=>r.id==='cozinha'),{rect:[1.8,4.4,5.8,9],spawn:[4.2,0,5.45],note:'Cozinha integrada ampliada pela redistribuição do plano. Fotos 06/07/08/11; sem cotas medidas.'});
  Object.assign(rooms.find(r=>r.id==='hall'),{photo:6,note:'Ligação posterior ainda estimada. A foto12 é banheiro, não evidência de um hall.'});
+ // Destinos voltados para o ambiente, não para a porta/parede atrás do usuário.
+ for(const[id,yaw]of[['banheiro1',2.35],['banheiro2',2.45],['quarto15',1.57],['quarto18',1.57],['quarto14',3.70],['deck',Math.PI]])rooms.find(r=>r.id===id).yaw=yaw;
+ Object.assign(rooms.find(r=>r.id==='quarto14'),{spawn:[6.7,0,4.8],yaw:3.75});
+ // Inclinação de inspeção, sem mudar a lente nem a altura física dos olhos.
+ for(const[id,pitch]of[['banheiro1',-.42],['banheiro2',-.48],['quarto15',-.58],['quarto18',-.50],['quarto14',-.18],['deck',-.27],['mezanino',-.20]])rooms.find(r=>r.id===id).pitch=pitch;
  // Os detalhes do deck deixam de colidir no chão do jardim.
  furniture.push(...[
   [-2.72,7.72,-1.32,8.92],[-3.23,7.85,-2.73,8.75],[-1.30,7.82,-.80,8.72],

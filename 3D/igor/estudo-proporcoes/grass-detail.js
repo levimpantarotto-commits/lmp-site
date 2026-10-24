@@ -4,7 +4,7 @@ import {proportionStudy,planX,planZ} from './proportion-study.js';
 import {exteriorReference} from './exterior-reference.js';
 export const grassField=proportionStudy?{minX:-2.55,maxX:11.05,minZ:-18,maxZ:0}:{minX:-6,maxX:14,minZ:-18,maxZ:0};
 export const patioPolygon=proportionStudy?exteriorReference.patio:[[-6,0],[-6,-8.4],[-.8,-7],[5.5,-3.9],[10.3,-3.9],[10.3,0]];
-export const grassBudgets={desktop:{instances:5200,triangles:41600},mobile:{instances:1700,triangles:13600}};
+export const grassBudgets=proportionStudy?{desktop:{instances:15000,triangles:120000},mobile:{instances:4800,triangles:38400}}:{desktop:{instances:5200,triangles:41600},mobile:{instances:1700,triangles:13600}};
 
 const paths=Array.from({length:12},(_,i)=>({x:2.2-i*.18,z:-16+i*.83,halfX:.39,halfZ:.215}));
 const mulberry32=seed=>()=>{let t=seed+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};

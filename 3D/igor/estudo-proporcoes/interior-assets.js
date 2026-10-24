@@ -2,6 +2,8 @@
 const TAU=Math.PI*2;
 
 import {proportionStudy} from './proportion-study.js';
+import {sewnCushion} from './upholstery-geometry.js';
+import {drapedSheet} from './draped-sheet.js';
 export function buildInteriorAssets(THREE,scene,M,furniture,{mobile=false}={}){
  // A malha é deliberadamente a mesma nos dois perfis: mobile só recebe materiais/texturas do chamador.
  const detail=16,meshes=[],byId={};
@@ -25,36 +27,37 @@ export function buildInteriorAssets(THREE,scene,M,furniture,{mobile=false}={}){
  const ctx=f=>{const rw=f.rect[2]-f.rect[0],rd=f.rect[3]-f.rect[1],rot=f.turn||0,turned=Math.abs(Math.sin(rot))>.5,w=turned?rd:rw,d=turned?rw:rd,cx=(f.rect[0]+f.rect[2])/2,cz=(f.rect[1]+f.rect[3])/2,base=f.level||0;
   const at=(u,v)=>({x:cx+Math.cos(rot)*(u-w/2)+Math.sin(rot)*(v-d/2),z:cz-Math.sin(rot)*(u-w/2)+Math.cos(rot)*(v-d/2)});
   const round=(u,y,v,ww,hh,dd,mat,r=.04,part='')=>{const p=at(u,v);return add(roundedGeometry(ww,hh,dd,r),mat,p.x,base+y,p.z,rot,part);};
-  // Almofada cheia: superelipsoide macio com centro convexo e cantos comprimidos.
-  // As caixas chanfradas anteriores mantinham uma face grande e plana, como espuma rígida.
-  const pillow=(u,y,v,ww,hh,dd,mat,part)=>{const g=new THREE.SphereGeometry(1,32,20),p=g.attributes.position,n=g.attributes.normal,uv=g.attributes.uv,e=.34,h=[ww/2,hh/2,dd/2],pow=(v,p)=>Math.sign(v)*Math.pow(Math.abs(v),p);for(let i=0;i<p.count;i++){const s=[p.getX(i),p.getY(i),p.getZ(i)],q=s.map((v,k)=>pow(v,e)*h[k]),normal=new THREE.Vector3(...s.map((v,k)=>pow(v,2-e)/h[k])).normalize();p.setXYZ(i,...q);n.setXYZ(i,normal.x,normal.y,normal.z);uv.setXY(i,q[0]/2,q[1]/2);}const atp=at(u,v);return add(g,mat,atp.x,base+y,atp.z,rot,part);};
+  // Fotos 10/11: volume cheio, borda comprimida e afundamentos locais fazem parte
+  // da própria malha. Não há tubos desenhando costura ou ruga sobre o assento.
+  const pillow=(u,y,v,ww,hh,dd,mat,part,phase=0)=>{const g=sewnCushion(THREE,ww,hh,dd,{seed:phase}),q=at(u,v);return add(g,mat,q.x,base+y,q.z,rot,part);};
   // A deformação é contínua e pequena: tira a rigidez de almofadas sem trocar o volume por balões.
-  const puffy=(u,y,v,ww,hh,dd,mat,r=.04,part='',phase=0)=>{const g=roundedGeometry(ww,hh,dd,r),p=g.attributes.position,n=g.attributes.normal,halfX=ww/2,halfY=hh/2,halfZ=dd/2,deform=(x,y,z)=>{const nx=x/halfX,ny=y/halfY,nz=z/halfZ,top=Math.max(0,ny),soft=Math.max(0,1-nx*nx)*Math.max(0,1-nz*nz);return new THREE.Vector3(x,y+top*(.030+.015*Math.sin(phase+nx*3-nz*2))*soft,z+top*.013*Math.sin(phase+nx*4)*soft);};for(let i=0;i<p.count;i++){const point=new THREE.Vector3(p.getX(i),p.getY(i),p.getZ(i)),normal=new THREE.Vector3(n.getX(i),n.getY(i),n.getZ(i)).normalize(),axis=Math.abs(normal.y)<.9?new THREE.Vector3(0,1,0):new THREE.Vector3(1,0,0),t1=new THREE.Vector3().crossVectors(axis,normal).normalize(),t2=new THREE.Vector3().crossVectors(normal,t1).normalize(),eps=.0005,a=deform(...point.clone().addScaledVector(t1,eps).toArray()).sub(deform(...point.clone().addScaledVector(t1,-eps).toArray())),b=deform(...point.clone().addScaledVector(t2,eps).toArray()).sub(deform(...point.clone().addScaledVector(t2,-eps).toArray())),next=new THREE.Vector3().crossVectors(a,b).normalize();if(next.dot(normal)<0)next.negate();const out=deform(...point.toArray());p.setXYZ(i,out.x,out.y,out.z);n.setXYZ(i,next.x,next.y,next.z);}p.needsUpdate=n.needsUpdate=true;const q=at(u,v);return add(g,mat,q.x,base+y,q.z,rot,part);};
+  const puffy=(u,y,v,ww,hh,dd,mat,r=.04,part='',phase=0)=>{phase=Number.isFinite(phase)?phase:0;if(part==='seat-cushion'){const g=sewnCushion(THREE,ww,dd,hh*1.12,{seed:phase,seat:true});g.rotateX(-Math.PI/2);const q=at(u,v);return add(g,mat,q.x,base+y,q.z,rot,part);}const g=roundedGeometry(ww,hh,dd,r),p=g.attributes.position,halfX=ww/2,halfY=hh/2,halfZ=dd/2,gauss=(a,b,x,z,s)=>Math.exp(-(((a-x)*(a-x)+(b-z)*(b-z))/(s*s)));for(let i=0;i<p.count;i++){const x=p.getX(i),py=p.getY(i),z=p.getZ(i),nx=x/halfX,ny=py/halfY,nz=z/halfZ,top=Math.max(0,ny),soft=Math.max(0,1-nx*nx)*Math.max(0,1-nz*nz),edge=Math.max(Math.abs(nx),Math.abs(nz)),seam=Math.exp(-(((edge-.79)/.14)**2)),settle=gauss(nx,nz,-.55,.48,.18)+gauss(nx,nz,.55,.48,.18),nextY=py+top*((.042+.009*Math.sin(phase+nx*3-nz*2))*soft-.014*seam-.010*settle),nextZ=z+top*.010*Math.sin(phase+nx*4)*soft;p.setXYZ(i,x,nextY,nextZ);}g.computeVertexNormals();const q=at(u,v);return add(g,mat,q.x,base+y,q.z,rot,part);};
+  // Lençol é uma única malha: topo e quatro quedas compartilham o mesmo objeto,
+  // com ondulação baixa de gravidade em vez de quatro caixas independentes.
+  const drape=(u,y,v,ww,dd,drop,mat,part,phase=0)=>{const nx=18,nz=18,pos=[],tex=[],ind=[],top=[];const put=(x,yy,z,s,t)=>{pos.push(x,yy,z);tex.push(s,t);return pos.length/3-1;};for(let j=0;j<=nz;j++){top[j]=[];for(let i=0;i<=nx;i++){const sx=i/nx*2-1,sz=j/nz*2-1,settle=.010*Math.sin(sx*5+phase)*Math.max(0,1-sz*sz)+.007*Math.cos(sz*7-phase)*Math.max(0,1-sx*sx);top[j][i]=put(sx*ww/2,.035-settle,sz*dd/2,(sx+1)/2,(sz+1)/2);}}for(let j=0;j<nz;j++)for(let i=0;i<nx;i++){const a=top[j][i],b=top[j][i+1],c=top[j+1][i+1],d=top[j+1][i];ind.push(a,d,b,b,d,c);}const edge=[];for(let i=0;i<=nx;i++)edge.push(top[0][i]);for(let j=1;j<=nz;j++)edge.push(top[j][nx]);for(let i=nx-1;i>=0;i--)edge.push(top[nz][i]);for(let j=nz-1;j>0;j--)edge.push(top[j][0]);for(let k=0;k<edge.length;k++){const a=edge[k],b=edge[(k+1)%edge.length],ax=pos[a*3],az=pos[a*3+2],bx=pos[b*3],bz=pos[b*3+2],wa=.012*Math.sin(k*.63+phase),wb=.012*Math.sin((k+1)*.63+phase),ba=put(ax,.035-drop+wa,az,(k%nx)/nx,1),bb=put(bx,.035-drop+wb,bz,((k+1)%nx)/nx,1);ind.push(a,ba,b,b,ba,bb);}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(tex,2));g.setIndex(ind);g.computeVertexNormals();const q=at(u,v);return add(g,mat,q.x,base+y,q.z,rot,part);};
   const box=(u,y,v,ww,hh,dd,mat,part='')=>{const p=at(u,v);return add(new THREE.BoxGeometry(ww,hh,dd),mat,p.x,base+y,p.z,rot,part);};
   const oval=(u,y,v,ww,hh,dd,mat,part='')=>{const p=at(u,v),n=add(new THREE.SphereGeometry(1,detail,10),mat,p.x,base+y,p.z,rot,part);n.scale.set(ww/2,hh/2,dd/2);return n;};
   const cyl=(u,y,v,r,h,mat,part='')=>{const p=at(u,v);return add(new THREE.CylinderGeometry(r,r,h,detail),mat,p.x,base+y,p.z,rot,part);};
   const torus=(u,y,v,rx,rz,t,mat,part='')=>{const p=at(u,v),curve=new THREE.EllipseCurve(0,0,rx,rz,0,TAU,false,0),points=curve.getPoints(48).map(v=>new THREE.Vector3(v.x,0,v.y)),g=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points,true),48,t,8,true);return add(g,mat,p.x,base+y,p.z,rot,part);};
   const tube=(u,y,v,points,r,mat,part='')=>{const p=at(u,v),curve=new THREE.CatmullRomCurve3(points.map(([x,yy,z])=>new THREE.Vector3(x,yy,z)),false,'centripetal'),g=new THREE.TubeGeometry(curve,24,r,6,false),n=add(g,mat,p.x,base+y,p.z,rot,part);return n;};
-  return {...f,w,d,rot,base,at,round,puffy,pillow,box,oval,cyl,torus,tube};
+  return {...f,w,d,rot,base,at,round,puffy,pillow,drape,box,oval,cyl,torus,tube};
  };
- const piping=(c,u,y,v,w,d,mat)=>c.tube(u,y,v,[[-w/2,0,-d*.28],[-w*.34,0,-d/2],[w*.34,0,-d/2],[w/2,0,-d*.28],[w/2,0,d*.28],[w*.34,0,d/2],[-w*.34,0,d/2],[-w/2,0,d*.28],[-w/2,0,-d*.28]],.003,mat,'piping');
  function sofa(c,mezanino=false){
   const fabric=material(mezanino?'fabricGrey':'fabricTaupe'),pale=material('fabricWhite'),cloth=material('cloth',mezanino?'fabricGrey':'fabricTaupe'),wood=material('woodDark','wood');
   c.round(c.w/2,.16,c.d/2,c.w-.06,.28,c.d-.06,mezanino?wood:material('plaster'),.045,'sofa-frame');
   c.puffy(c.w/2,.37,c.d*.46,c.w-.10,.20,c.d*.67,cloth,.075,'seat-cushion',mezanino?.4:0);
-  // Costura lateral rente à almofada, não uma linha flutuando sobre o assento.
-  if(!mezanino)piping(c,c.w/2,.385,c.d*.46,c.w-.11,c.d*.665,fabric);
+  // A costura e as dobras estão integradas na malha do assento; nenhum tubo risca o tecido.
   // Banco da sala é alvenaria contínua atrás das almofadas; elimina a leitura de encosto flutuante.
   if(!mezanino)c.round(c.w/2,.30,c.d-.065,c.w-.06,.60,.10,material('plaster'),.025,'sofa-back-support');
   else c.round(c.w/2,.68,c.d-.10,c.w-.10,.58,.15,fabric,.055,'futon-grey-back');
   const count=mezanino?2:Math.max(2,Math.round(c.w/.68));
-  for(let i=0;i<count;i++){const u=(i+.5)*c.w/count,ww=mezanino?Math.min(.55,c.w*.3):c.w/count-.065,cushion=c.pillow(u,mezanino?.66:.65,c.d-(mezanino?.24:.16),ww,mezanino?.38:.46,.23,mezanino?pale:cloth,'back-cushion');cushion.rotateX(mezanino?[-.075,-.11][i]:(-.085+(i%3)*.018));}
+  for(let i=0;i<count;i++){const u=(i+.5)*c.w/count,ww=mezanino?Math.min(.55,c.w*.3):c.w/count-.045,cushion=c.pillow(u,mezanino?.66:.615,c.d-(mezanino?.24:.21),ww,mezanino?.38:.46,.23,mezanino?pale:cloth,'back-cushion',i*.7);cushion.rotateX(mezanino?[-.075,-.11][i]:(-.085+(i%3)*.018));}
  }
  function bed(c,low=false){
   const white=material('fabricWhite'),linen=material('linen','fabricWhite'),wood=material('woodDark','wood');
-  c.round(c.w/2,.12,c.d/2,c.w-.07,.18,c.d-.07,wood,.045,'bed-frame');c.puffy(c.w/2,.31,c.d/2,c.w-.10,.28,c.d-.10,white,.10,'mattress',.4);c.puffy(c.w/2,.47,c.d*.53,c.w-.14,.10,c.d*.78,linen,.045,'sheet',.8);
-  c.round(c.w/2,.37,.09,c.w-.18,.22,.055,linen,.025,'sheet-drop');c.round(c.w/2,.37,c.d-.09,c.w-.18,.22,.055,linen,.025,'sheet-drop');c.round(.09,.36,c.d*.52,.055,.20,c.d*.62,linen,.02,'sheet-drop');c.round(c.w-.09,.36,c.d*.52,.055,.20,c.d*.62,linen,.02,'sheet-drop');
-  if(!low)for(const [i,u] of[c.w*.34,c.w*.66].entries()){const pillow=c.pillow(u,.58,c.d*.29,c.w*.25,.14,c.d*.27,white,'pillow');pillow.rotation.z=(i?1:-1)*.045;}
+  c.round(c.w/2,.12,c.d/2,c.w-.07,.18,c.d-.07,wood,.045,'bed-frame');c.puffy(c.w/2,.31,c.d/2,c.w-.10,.28,c.d-.10,white,.10,'mattress',.4);
+  const sheet=c.at(c.w/2,c.d*.55);add(drapedSheet(THREE,c.w-.065,c.d*.86,.28,.8),linen,sheet.x,c.base+.47,sheet.z,c.rot,'sheet-drape');
+  if(!low)for(const [i,u] of[c.w*.34,c.w*.66].entries()){const pillow=c.pillow(u,.58,c.d*.29,c.w*.25,c.d*.27,.14,white,'pillow',i*.8);pillow.rotateX(-Math.PI/2);pillow.rotateZ((i?1:-1)*.045);}
  }
  function counter(c){
   const wood=material('wood'),dark=material('woodDark','wood'),stone=material('black','stone'),metal=material('metal'),black=material('black'),sinkU=c.w*.64,sinkV=c.d*.51,rx=Math.min(.17,c.w*.16),rz=Math.min(.16,c.d*.22),topY=.86;
@@ -92,5 +95,5 @@ export function buildInteriorAssets(THREE,scene,M,furniture,{mobile=false}={}){
  function fridge(c){const steel=material('metal','black'),black=material('black'),handle=material('woodDark','wood');c.round(c.w/2,.98,c.d/2,c.w-.06,1.92,c.d-.06,steel,.10,'fridge-body');c.round(c.w/2,1.43,.045,c.w-.16,.026,.018,black,.006,'fridge-seam');c.round(c.w*.47,1.78,.035,.026,.48,.035,handle,.008,'fridge-handle');c.round(c.w*.47,.92,.035,.026,.42,.035,handle,.008,'fridge-handle');}
  function table(c,mezanino=false){const wood=material('wood'),dark=material('woodDark','wood');if(mezanino){const shape=new THREE.Shape(),rx=(c.w-.12)/2,rz=(c.d-.12)/2;for(let i=0;i<=16;i++){const a=i/16*TAU,x=Math.cos(a)*rx*(1+.055*Math.sin(a*3)),z=Math.sin(a)*rz*(1+.045*Math.cos(a*5));i?shape.lineTo(x,z):shape.moveTo(x,z);}const g=new THREE.ExtrudeGeometry(shape,{depth:.075,bevelEnabled:false,curveSegments:16});g.translate(0,0,-.0375);g.rotateX(Math.PI/2);const p=c.at(c.w/2,c.d/2);add(g,wood,p.x,c.base+.48,p.z,c.rot,'live-edge-top');for(const [u,v] of[[.18,.20],[c.w-.18,.27],[c.w*.48,c.d-.17]])c.cyl(u,.24,v,.05,.46,dark,'table-leg');}else{c.round(c.w/2,.47,c.d/2,c.w-.11,.10,c.d-.11,wood,.06,'tabletop');for(const u of[.16,c.w-.16])for(const v of[.16,c.d-.16])c.cyl(u,.23,v,.045,.46,dark,'table-leg');}}
  for(const f of furniture){const c=ctx(f),first=meshes.length;if(f.kind==='sofa')sofa(c,f.id==='sofaMezanino');else if(f.kind==='bed')bed(c,f.id==='cama18');else if(f.kind==='counter')counter(c);else if(f.kind==='vanity')vanity(c,true,f.id==='vanity1');else if(f.kind==='toilet')toilet(c);else if(f.kind==='fridge')fridge(c);else if(f.kind==='table')table(c,f.id==='mesaMezanino');for(const node of meshes.slice(first))node.userData.interiorId=f.id;byId[f.id]={meshes:meshes.length-first,photo:{sofa:10,sofaDireito:11,sofaFundo:10,sofaMezanino:1,bancada:7,vanity1:13,vanity2:16,cama15:15,cama18:18}[f.id]||null,footprint:[...f.rect]};}
- let triangles=0;for(const node of meshes){const g=node.geometry;triangles+=(g.index?g.index.count:g.attributes.position.count)/3;}const budget=50000;return {meshes,byId,triangles,budget,withinBudget:triangles<=budget};
+ let triangles=0;for(const node of meshes){const g=node.geometry;triangles+=(g.index?g.index.count:g.attributes.position.count)/3;}const budget=120000;return {meshes,byId,triangles,budget,withinBudget:triangles<=budget};
 }

@@ -1,7 +1,9 @@
-// Formas observadas nas fotos06/11/15. Dimensões/implantação são estimativas.
+// Formas observadas nas fotos06/11/14/15. Dimensões/implantação são estimativas.
 // Sem criar cômodos ou esconder vãos para encaixar a decoração.
-export const observedObstacles=[[8.85,11.18,9.60,11.84]];
-export const detailEvidence={kitchen:{photos:[6,7,8],observed:['cooktop','micro-ondas','cafeteira','torradeira','nichos','portas de madeira']},bedroom:{photos:[15],observed:['armário de madeira','ar-condicionado','toalhas','arandelas']},pendants:{photos:[1,10,11],observed:['cúpula trançada','lâmpadas pendentes']},classification:'formas derivadas; coordenadas, dimensões e ligações estimadas'};
+// Cada base ocupa um retângulo próprio: a navegação não deve atravessar móveis
+// baixos mesmo quando os nichos superiores são rasos.
+export const observedObstacles=[[8.85,11.18,9.60,11.84],[7.72,7.48,9.55,7.94]];
+export const detailEvidence={kitchen:{photos:[6,7,8],observed:['cooktop','micro-ondas','cafeteira','torradeira','nichos','portas de madeira']},bedroom:{photos:[15],observed:['armário de madeira','ar-condicionado','toalhas','arandelas']},bedroom14:{photos:[14],observed:['conjunto embutido de madeira','nicho estampado','bancada','portas superiores']},pendants:{photos:[1,10,11],observed:['cúpula trançada','lâmpadas pendentes']},classification:'formas derivadas; coordenadas, dimensões e ligações estimadas'};
 export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  const meshes=[],add=(g,m,x,y,z,name,rot=0)=>{const o=new T.Mesh(g,m);o.position.set(x,y,z);o.rotation.y=rot;o.name=name;o.castShadow=o.receiveShadow=true;o.userData.observedDetail=name;scene.add(o);meshes.push(o);return o;};
  const box=(x,y,z,w,h,d,m,name,rot=0)=>{const g=new T.BoxGeometry(w,h,d),p=g.attributes.position,n=g.attributes.normal,u=g.attributes.uv;for(let i=0;i<u.count;i++)u.setXY(i,(Math.abs(n.getX(i))>.5?p.getZ(i):p.getX(i))/2,(Math.abs(n.getY(i))>.5?p.getZ(i):p.getY(i))/2);return add(g,m,x,y,z,name,rot);};
@@ -38,6 +40,35 @@ export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  box(9.225,1.15,11.52,.75,2.30,.64,wood,'bedroom-cupboard');
  for(const x of[9.04,9.41]){box(x,1.17,11.182,.345,2.10,.045,dark,'cupboard-door-frame');for(let i=0;i<12;i++)box(x,.20+i*.17,11.15,.302,.158,.025,wood,'cupboard-slat');}
  for(const x of[9.18,9.27])tube([[x,1.01,11.126],[x,1.04,11.100],[x,1.16,11.100],[x,1.19,11.126]],.009,M.metal,'cupboard-handle');
+ // Marcenaria observada na foto14, implantação ESTIMADA na ala lateral de uso
+ // não confirmado. A fotografia não prova a conexão deste cômodo. Não reutiliza o
+ // armário alto da foto15: há uma bancada contínua, nicho estampado e duas
+ // portas superiores. A textura impressa é somente uma leitura geométrica de
+ // folhas/ramagens da foto, não uma foto projetada no ambiente.
+ const paper=(M.plaster||M.white).clone();paper.color.set(0xddd5bd);paper.roughness=.94;
+ const print=(M.woodDark||wood).clone();print.color.set(0x645842);print.roughness=.88;
+ const upper=(M.wood||wood).clone();upper.color.set(0x795235);
+ box(8.57,1.58,6.705,1.60,1.34,.035,paper,'bedroom14-patterned-niche-back');
+ // Pequenos ramos escuros, alternados, conservam a escala de uma estampa sem
+ // inventar um painel liso ou textura genérica de tecido.
+ for(let row=0;row<5;row++)for(let col=0;col<7;col++){
+  const x=7.93+col*.215+(row%2)*.045,y=1.14+row*.20;
+  const stem=tube([[x-.055,y-.045,6.675],[x,y+.015,6.670],[x+.05,y+.075,6.675]],.006,print,'bedroom14-pattern-stem',8);
+  // tube() já recebe pontos em coordenadas da cena; girar o objeto em (0,0,0)
+  // deslocaria esses traços para fora do nicho quando a marcenaria é transladada.
+  const bud=add(new T.SphereGeometry(.022,8,6),print,x+.055,y+.08,6.666,'bedroom14-pattern-leaf');bud.scale.set(1.45,.62,.32);
+ }
+ // Moldura e prateleira deixam o nicho recuado; a bancada fica dentro do
+ // obstáculo declarado acima e não avança para a passagem da cama.
+ box(8.57,2.24,6.648,1.71,.07,.15,upper,'bedroom14-niche-lintel');
+ box(8.57,1.00,6.50,1.66,.09,.39,upper,'bedroom14-counter');
+ box(8.57,.56,6.49,1.66,.76,.34,upper,'bedroom14-lower-base');
+ for(const x of[7.99,8.57,9.15]){box(x,.57,6.306,.50,.65,.025,dark,'bedroom14-lower-door');cyl(x+.16,.57,6.286,.019,.025,M.metal,'bedroom14-lower-pull',12).rotation.x=Math.PI/2;}
+ // Laterais de portas superiores observadas na foto14, separadas do nicho.
+ for(const x of[7.78,9.36]){box(x,1.88,6.49,.31,.72,.31,upper,'bedroom14-upper-cupboard');box(x,1.88,6.326,.245,.59,.018,dark,'bedroom14-upper-door');cyl(x+(x<8?.07:-.07),1.86,6.305,.017,.025,M.metal,'bedroom14-upper-pull',12).rotation.x=Math.PI/2;}
+ // Encosta no pano traseiro livre (porta termina em x7.55), sem bloquear o
+ // spawn nem suspender o conjunto no centro da ala.
+ for(const mesh of meshes.filter(m=>m.name.startsWith('bedroom14-')))mesh.position.z+=1.20;
  const ac=bevel(5.98,2.40,11.05,.95,.29,.25,M.ceramic||M.white,'bedroom-ac',.035);ac.rotation.y=Math.PI/2;for(let i=0;i<4;i++)box(6.114,2.29+i*.021,11.05,.014,.008,.81,M.metal,'ac-vent');
  // Toalhas sobre a cama, enroladas e apoiadas. Sem mudar o volume da cama.
  const towel=M.fabricWhite||M.white;

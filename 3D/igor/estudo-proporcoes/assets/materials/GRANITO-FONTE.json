@@ -1,0 +1,36 @@
+{
+  "source": "https://polyhaven.com/a/granite_wall",
+  "license": "CC0",
+  "sourceWidthMeters": 1.9,
+  "observed": "Aproximação das pedras cinza nas fotos10/11; não textura extraída nem levantamento da casa.",
+  "files": [
+    {
+      "name": "granito-diff.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/granite_wall/granite_wall_diff_1k.jpg",
+      "sourceSha256": "a971fd7ad16322fb8731cfacb593224ceca24dd2eaf77724a5a84a1de50d17f1",
+      "sha256": "03bf04a95ff19318214b33c56f8207b2d7c3c82572902c9d6478adbd114c282c",
+      "processing": "Desaturação cromática aproximada para pedra cinza observada; nenhuma foto do imóvel alterada."
+    },
+    {
+      "name": "granito-normal.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/granite_wall/granite_wall_nor_gl_1k.jpg",
+      "sourceSha256": "ff57f9aebe854895b5b69c44d8725451c06da59b32c15e9457df8994130a7c53",
+      "sha256": "ff57f9aebe854895b5b69c44d8725451c06da59b32c15e9457df8994130a7c53",
+      "processing": "Original"
+    },
+    {
+      "name": "granito-rough.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/granite_wall/granite_wall_rough_1k.jpg",
+      "sourceSha256": "e158fffb5af9e30ec181237fe8063a33c7eaa6fe1b74518b35daec54a1b1f3b9",
+      "sha256": "e158fffb5af9e30ec181237fe8063a33c7eaa6fe1b74518b35daec54a1b1f3b9",
+      "processing": "Original"
+    },
+    {
+      "name": "granito-height.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/granite_wall/granite_wall_disp_1k.png",
+      "sourceSha256": "b19adc0396f9ec3e412bbcc3dada8f563259e931cf8ea3d4fd62c94d96a9cd15",
+      "sha256": "b19adc0396f9ec3e412bbcc3dada8f563259e931cf8ea3d4fd62c94d96a9cd15",
+      "processing": "Original"
+    }
+  ]
+}

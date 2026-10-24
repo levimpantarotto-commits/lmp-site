@@ -4,7 +4,7 @@
 import {proportionStudy} from './proportion-study.js';
 export const deckEvidence={
  photos:[19,20,21,22],
- observed:['mesa escura retangular','cadeiras ripadas','rede amarela','pergolado de toras','quadros/vasos na parede de madeira'],
+ observed:['mesa escura retangular','cadeiras ripadas','rede amarela','pergolado de toras','cobertura de madeira mais fechada','lâmpadas em fio','trepadeira nos postes','quadros/vasos na parede de madeira'],
  derived:['distribuição no retângulo lógico [-4,0,0,9]','altura do pergolado','dimensões dos móveis'],
  excluded:['topografia, vista e limites externos não medidos']
 };
@@ -25,7 +25,11 @@ export const deckObstacles=[
 
 export function buildDeckDetails(THREE,scene,M,{mobile=false}={}){
  const meshes=[],budget=25000;let triangles=0;
- const woodDark=tint(THREE,M.woodDark,0x4a2d1b),woodWeathered=tint(THREE,M.wood,0x78523b),tableGraphite=tint(THREE,M.wood,0x454442),yellow=tint(THREE,M.fabricTaupe||M.linen,0xd8bd46),rope=tint(THREE,M.linen||M.fabricTaupe,0xd6c59a),frame=tint(THREE,M.woodDark,0x33241a),terra=tint(THREE,M.wood,0x8c6544),soil=tint(THREE,M.woodDark,0x221b16),leaf=tint(THREE,M.fabricTaupe||M.linen,0x456342);
+ const woodDark=tint(THREE,M.woodDark,0x4a2d1b),woodWeathered=tint(THREE,M.wood,0x78523b),tableGraphite=tint(THREE,M.wood,0x454442),yellow=tint(THREE,M.fabricTaupe||M.linen,0xd8bd46),rope=tint(THREE,M.linen||M.fabricTaupe,0xd6c59a),frame=tint(THREE,M.woodDark,0x33241a),terra=tint(THREE,M.wood,0x8c6544),soil=tint(THREE,M.woodDark,0x221b16);
+ // Folha própria, opaca e áspera: não reutiliza o albedo de tecido das redes.
+ const leaf=new THREE.MeshStandardMaterial({color:0x355c28,roughness:.86,metalness:0,side:THREE.DoubleSide});
+ const vineStem=new THREE.MeshStandardMaterial({color:0x29451f,roughness:.92,metalness:0});
+ const lampGlass=new THREE.MeshStandardMaterial({color:0xffc96a,emissive:0x8c4b12,emissiveIntensity:.72,roughness:.42,metalness:0});
  function tint(_THREE,base,color){const mat=base.clone();mat.color?.setHex(color);return mat;}
  // Convenção usada pelo restante da cena: coordenada assinada em metros / 2.
  // A projeção preserva a direção do veio da madeira; abs() aqui espelhava o mapa.
@@ -52,6 +56,24 @@ export function buildDeckDetails(THREE,scene,M,{mobile=false}={}){
  for(const z of[1.95,7.62])beamBetween([-3.55,2.56,z],[-.85,2.56,z],.11,woodDark,'pergola-beam');
  for(const x of[-3.55,-2.65,-1.75,-.85])beamBetween([x,2.56,1.95],[x,2.56,7.62],.065,woodDark,'pergola-rafter');
  for(let z=2.45;z<=7.15;z+=.68)beamBetween([-3.55,2.46,z],[-.85,2.46,z],.032,woodWeathered,'pergola-lathe');
+ // Nas fotos 19/22 a cobertura não é só uma grade aberta: tábuas estreitas
+ // percorrem o vão e filtram o sol. Elas ficam acima das pessoas e não mudam
+ // percurso nem a planta do terraço.
+ for(let z=2.14;z<=7.42;z+=.23)box(-2.20,2.525,z,2.61,.040,.135,woodWeathered,{part:'pergola-roof-board'});
+ // Cordão de luz em duas curvas discretas sob a cobertura, com lâmpadas
+ // espaçadas como na foto19. É estático para continuar compatível com o bake.
+ const stringCurve=new THREE.CatmullRomCurve3([
+  new THREE.Vector3(-3.37,2.38,2.18),new THREE.Vector3(-2.72,2.21,3.58),
+  new THREE.Vector3(-2.10,2.30,5.05),new THREE.Vector3(-1.04,2.38,6.92)
+ ]);
+ add(new THREE.TubeGeometry(stringCurve,32,.010,6,false),frame,0,0,0,{part:'pergola-light-cable',shadow:false});
+ for(let i=0;i<8;i++){const p=stringCurve.getPoint((i+.35)/8);cylinder(p.x,p.y-.07,p.z,.018,.10,frame,{part:'pergola-light-drop',shadow:false});add(new THREE.SphereGeometry(.045,12,8),lampGlass,p.x,p.y-.145,p.z,{part:'pergola-light-bulb',shadow:false});}
+ // Trepadeiras observadas nas duas fotos em postes opostos. A folha tem
+ // nervura e curvatura transversal, em vez de esfera ou cartão plano.
+ const leafGeometry=(length,width,curl=.028)=>{const rows=5,cols=4,pts=[],uv=[],idx=[];for(let r=0;r<=rows;r++){const t=r/rows;for(let c=0;c<=cols;c++){const v=-1+2*c/cols,edge=Math.sin(Math.PI*t),x=v*width*edge,y=t*length,z=curl*(1-v*v)*edge*(.35+.65*t);pts.push(x,y,z);uv.push((v+1)*.5,t);}}for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const a=r*(cols+1)+c,b=a+1,d=(r+1)*(cols+1)+c,e=d+1;idx.push(a,d,b,b,d,e);}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return g;};
+ const leafGeo=leafGeometry(.30,.105);
+ function vine(postX,postZ,phase){const stemPts=[];for(let i=0;i<15;i++){const t=i/14,y=.42+t*1.92,a=phase+t*8.6;stemPts.push([postX+Math.cos(a)*.145,y,postZ+Math.sin(a)*.145]);}add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(stemPts.map(p=>new THREE.Vector3(...p))),36,.013,6,false),vineStem,0,0,0,{part:'vine-stem',shadow:false});for(let i=1;i<13;i++){const t=i/13,a=phase+t*8.6,side=i%2?-1:1,x=postX+Math.cos(a)*.165+side*.065,z=postZ+Math.sin(a)*.165,y=.44+t*1.82;const l=add(leafGeo,leaf,x,y,z,{part:'vine-curved-leaf',shadow:false});l.rotation.set(.15*Math.sin(i),side*.75,side*(.46+.11*(i%3)));l.scale.setScalar(.82+(i%3)*.13);}}
+ vine(-3.55,1.95,.32);vine(-.85,7.62,2.26);
 
  if(!proportionStudy){
   // Baseline preservado literalmente: esta geometria já pertence ao bake
