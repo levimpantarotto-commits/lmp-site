@@ -1,8 +1,9 @@
+import {proportionStudy} from './proportion-study.js';
 // Formas observadas nas fotos06/11/14/15. Dimensões/implantação são estimativas.
 // Sem criar cômodos ou esconder vãos para encaixar a decoração.
 // Cada base ocupa um retângulo próprio: a navegação não deve atravessar móveis
 // baixos mesmo quando os nichos superiores são rasos.
-export const observedObstacles=[[8.85,11.18,9.60,11.84],[7.72,7.48,9.55,7.94]];
+export const observedObstacles=[[proportionStudy?5.925:8.85,proportionStudy?8.21:11.18,proportionStudy?6.675:9.60,proportionStudy?8.87:11.84],[7.72,proportionStudy?6.98:7.48,9.55,proportionStudy?7.44:7.94]];
 export const detailEvidence={kitchen:{photos:[6,7,8],observed:['cooktop','micro-ondas','cafeteira','torradeira','nichos','portas de madeira']},bedroom:{photos:[15],observed:['armário de madeira','ar-condicionado','toalhas','arandelas']},bedroom14:{photos:[14],observed:['conjunto embutido de madeira','nicho estampado','bancada','portas superiores']},pendants:{photos:[1,10,11],observed:['cúpula trançada','lâmpadas pendentes']},classification:'formas derivadas; coordenadas, dimensões e ligações estimadas'};
 export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  const meshes=[],add=(g,m,x,y,z,name,rot=0)=>{const o=new T.Mesh(g,m);o.position.set(x,y,z);o.rotation.y=rot;o.name=name;o.castShadow=o.receiveShadow=true;o.userData.observedDetail=name;scene.add(o);meshes.push(o);return o;};
@@ -36,10 +37,12 @@ export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  for(const z of[7.26,7.82,8.37,8.90])box(5.47,2.10,z,.50,.38,.05,M.plaster,'kitchen-niche-divider');
  for(let i=0;i<8;i++){const z=7.40+i*.18;cyl(5.34,2.01,z,.045,.14,i%3?M.ceramic||M.white:M.metal,'storage-jar',14);cyl(5.34,2.09,z,.047,.018,wood,'jar-lid',14);}
  }
- // Armário de duas portas ripadas e ferragens da foto15.
- box(9.225,1.15,11.52,.75,2.30,.64,wood,'bedroom-cupboard');
- for(const x of[9.04,9.41]){box(x,1.17,11.182,.345,2.10,.045,dark,'cupboard-door-frame');for(let i=0;i<12;i++)box(x,.20+i*.17,11.15,.302,.158,.025,wood,'cupboard-slat');}
- for(const x of[9.18,9.27])tube([[x,1.01,11.126],[x,1.04,11.100],[x,1.16,11.100],[x,1.19,11.126]],.009,M.metal,'cupboard-handle');
+ // Armário de duas portas ripadas e ferragens da foto15. No estudo ele recua
+ // para liberar a cama proposta; no modo padrão a implantação permanece igual.
+ const cupboardX=proportionStudy?6.30:9.225,cupboardZ=proportionStudy?8.55:11.52;
+ box(cupboardX,1.15,cupboardZ,.75,2.30,.64,wood,'bedroom-cupboard');
+ for(const x of[cupboardX-.185,cupboardX+.185]){box(x,1.17,cupboardZ-.338,.345,2.10,.045,dark,'cupboard-door-frame');for(let i=0;i<12;i++)box(x,.20+i*.17,cupboardZ-.370,.302,.158,.025,wood,'cupboard-slat');}
+ for(const x of[cupboardX-.045,cupboardX+.045])tube([[x,1.01,cupboardZ-.394],[x,1.04,cupboardZ-.420],[x,1.16,cupboardZ-.420],[x,1.19,cupboardZ-.394]],.009,M.metal,'cupboard-handle');
  // Marcenaria observada na foto14, implantação ESTIMADA na ala lateral de uso
  // não confirmado. A fotografia não prova a conexão deste cômodo. Não reutiliza o
  // armário alto da foto15: há uma bancada contínua, nicho estampado e duas
@@ -68,7 +71,9 @@ export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  for(const x of[7.78,9.36]){box(x,1.88,6.49,.31,.72,.31,upper,'bedroom14-upper-cupboard');box(x,1.88,6.326,.245,.59,.018,dark,'bedroom14-upper-door');cyl(x+(x<8?.07:-.07),1.86,6.305,.017,.025,M.metal,'bedroom14-upper-pull',12).rotation.x=Math.PI/2;}
  // Encosta no pano traseiro livre (porta termina em x7.55), sem bloquear o
  // spawn nem suspender o conjunto no centro da ala.
- for(const mesh of meshes.filter(m=>m.name.startsWith('bedroom14-')))mesh.position.z+=1.20;
+ // No estudo, a faixa cedida ao quarto15 move este embutido estimado .50m
+ // à frente da nova parede transversal; padrão mantém a implantação vigente.
+ for(const mesh of meshes.filter(m=>m.name.startsWith('bedroom14-')))mesh.position.z+=proportionStudy?.70:1.20;
  const ac=bevel(5.98,2.40,11.05,.95,.29,.25,M.ceramic||M.white,'bedroom-ac',.035);ac.rotation.y=Math.PI/2;for(let i=0;i<4;i++)box(6.114,2.29+i*.021,11.05,.014,.008,.81,M.metal,'ac-vent');
  // Toalhas sobre a cama, enroladas e apoiadas. Sem mudar o volume da cama.
  const towel=M.fabricWhite||M.white;
@@ -76,7 +81,10 @@ export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
  box(5.99,1.75,11.05,.20,.07,.75,wood,'bedroom-shelf');cyl(6.015,1.87,11.05,.055,.17,M.basinStone||M.stone,'bedroom-vase');
  // Foto10: cestas escuras, trançadas e com franja irregular; medidas são estimadas.
  const fiber=(M.linen||wood).clone();fiber.color.set(0x4a3520);fiber.side=T.DoubleSide;
- for(const [x,y,z,r]of[[2.5,2.38,2.2,.32],[2.9,5.18,2.2,.34]]){
+ // O térreo preserva o pendente hemisférico da foto10. No estudo os dois
+ // pendentes superiores cilíndricos substituem o hemisférico alto.
+ const hemisphericalPendents=proportionStudy?[[2.5,2.38,2.2,.32]]:[[2.5,2.38,2.2,.32],[2.9,5.18,2.2,.34]];
+ for(const [x,y,z,r]of hemisphericalPendents){
   const wovenTube=(points,radius,name,segments,closed=false)=>add(new T.TubeGeometry(new T.CatmullRomCurve3(points.map(v=>new T.Vector3(...v)),closed),segments,radius,3,closed),fiber,0,0,0,name);
   const profile=[[.10,.26],[.17,.22],[r*.85,.06],[r,-.16]];
   for(let i=0;i<52;i++){const a=i*Math.PI/26;wovenTube(profile.map(([rr,yy])=>[x+Math.cos(a)*rr,y+yy,z+Math.sin(a)*rr]),.005,'woven-pendant-rib',6);}
@@ -88,6 +96,14 @@ export function buildObservedDetails(T,scene,M,{includeLegacyKitchen=false}={}){
   for(let i=0;i<36;i++){const a=i*Math.PI/18,fringe=.058+(i*7%8)*.01,rr=r*(.92+(i%3)*.03);wovenTube([[x+Math.cos(a)*rr,y-.14,z+Math.sin(a)*rr],[x+Math.cos(a+.08)*rr*1.02,y-.14-fringe*.35,z+Math.sin(a+.08)*rr*1.02],[x+Math.cos(a+.13)*rr*.98,y-.14-fringe,z+Math.sin(a+.13)*rr*.98]],.005,'woven-pendant-fringe',4);}
   const bulb=add(new T.SphereGeometry(.045,12,8),M.light,x,y-.17,z,'pendant-bulb');bulb.scale.y=1.25;
   cyl(x,y+.43,z,.007,.34,black,'pendant-cable',8);
+ }
+ if(proportionStudy)for(const [x,z]of[[1.9,2.4],[4.3,5.9]]){
+  const y=5.25,r=.23,h=.50,top=y+h/2,bottom=y-h/2;
+  // Trama vertical levemente irregular e anéis discretos, sem a franja do
+  // modelo térreo e com seções reduzidas para o orçamento do estudo.
+  for(let i=0;i<48;i++){const a=i*Math.PI/24,rr=r*(1+Math.sin(i*7)*.025),points=[[x+Math.cos(a)*rr,top,z+Math.sin(a)*rr],[x+Math.cos(a)*rr*(.98+(i%2)*.015),y,z+Math.sin(a)*rr*(.98+(i%2)*.015)],[x+Math.cos(a)*rr,bottom,z+Math.sin(a)*rr]].map(v=>new T.Vector3(...v));add(new T.TubeGeometry(new T.CatmullRomCurve3(points),5,.0048,3,false),fiber,0,0,0,'upper-woven-pendant-rib');}
+  for(let j=0;j<40;j++){const yy=bottom+.035+j*(h-.07)/39+(j%3-1)*.001,points=[];for(let i=0;i<10;i++){const a=i*Math.PI/5,rr=r*(1+Math.sin(i*3+j)*.018);points.push(new T.Vector3(x+Math.cos(a)*rr,yy,z+Math.sin(a)*rr));}add(new T.TubeGeometry(new T.CatmullRomCurve3(points,true),10,.0042,3,true),fiber,0,0,0,'upper-woven-pendant-weft');}
+  const bulb=add(new T.SphereGeometry(.045,12,8),M.light,x,bottom+.12,z,'pendant-bulb');bulb.scale.y=1.25;cyl(x,top+.18,z,.007,.36,black,'pendant-cable',8);
  }
  const triangles=meshes.reduce((n,m)=>n+(m.geometry.index?.count||m.geometry.attributes.position.count)/3,0);
  return {meshes,triangles,evidence:detailEvidence,budget:23000,withinBudget:triangles<=23000};

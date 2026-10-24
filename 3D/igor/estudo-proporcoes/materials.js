@@ -32,8 +32,10 @@ export async function createMaterials(THREE,renderer,{mobile=false}={}){
  // da mesma captura. Seleção aproximada pelas fotos06/14, não material medido.
  const wood=()=>standard({color:0xffffff,map:woodMap,normalMap:woodNormal,roughnessMap:woodRoughness,roughness:.82,metalness:0});
  const tile=()=>standard({color:0xffffff,map:tileMap,normalMap:tileNormal,roughnessMap:tileRough,roughness:.66});
- const furnitureWood=()=>standard({color:0xfff5e8,map:furnitureMap,normalMap:furnitureNormal,normalScale:new THREE.Vector2(.42,.42),roughnessMap:furnitureRough,roughness:.58,metalness:0});
- const timber=()=>standard({color:0xffede0,map:timberMap,normalMap:timberNormal,normalScale:new THREE.Vector2(.32,.32),roughnessMap:timberRough,roughness:.74,metalness:0});
+ // Fotos 06/07: madeira usada, castanha e quente; o PBR preserva os veios,
+ // sem forçar preto puro nem trocar os conjuntos de mapas já rastreados.
+ const furnitureWood=()=>standard({color:0x79513a,map:furnitureMap,normalMap:furnitureNormal,normalScale:new THREE.Vector2(.42,.42),roughnessMap:furnitureRough,roughness:.58,metalness:0});
+ const timber=()=>standard({color:0x8b5a32,map:timberMap,normalMap:timberNormal,normalScale:new THREE.Vector2(.32,.32),roughnessMap:timberRough,roughness:.74,metalness:0});
  return {
   graniteWall:standard({color:0xf0eee5,map:graniteMap,normalMap:graniteNormal,normalScale:new THREE.Vector2(.28,.28),roughnessMap:graniteRough,roughness:1,metalness:0}),
   fabricTaupe:fabric(0xb7a58e),fabricGrey:fabric(0x94918b),fabricWhite:fabric(0xece9dd),ceramic:neutral(0xf4f2ec,.22),stainless:neutral(0xb1b5b8,.24,{metalness:.88}),basinStone:standard({color:0xc2bdb5,map:basinMap,normalMap:basinNormal,normalScale:new THREE.Vector2(.11,.11),roughness:.48}),

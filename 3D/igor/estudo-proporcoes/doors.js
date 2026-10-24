@@ -31,7 +31,7 @@ export function createDoors(walls=[],furniture=[],exteriorObstacles=[]){
   (wall.openings||[]).filter(opening=>opening.type==='door').forEach(opening=>{
    const width=opening.to-opening.from,base=wall.base+(opening.bottom||0),height=(opening.top??wall.height)-(opening.bottom||0),id=`door-${sequence++}`;
    const makeLeaf=(from,to,hingeAtStart)=>{const hingeDistance=hingeAtStart?from:to;const hinge={x:wall.a[0]+Math.cos(angle)*hingeDistance,z:wall.a[1]+Math.sin(angle)*hingeDistance};return{hinge,length:to-from,closedAngle:hingeAtStart?angle:angle+Math.PI,direction:1,base,height};};
-   const leaves=width<=1.4?[makeLeaf(opening.from,opening.to,true)]:[makeLeaf(opening.from,(opening.from+opening.to)/2,true),makeLeaf((opening.from+opening.to)/2,opening.to,false)];
+   const leaves=width<=1.4?[makeLeaf(opening.from,opening.to,opening.hinge!=='end')]:[makeLeaf(opening.from,(opening.from+opening.to)/2,true),makeLeaf((opening.from+opening.to)/2,opening.to,false)];
    // Escolhe a abertura de 90° com varredura livre; se ambas falharem, mantém
    // a alternativa menos surpreendente e deixa a porta fechada (segura).
    const spec={id,wallIndex,opening:{...opening},base,height,width,leaves,open:false,progress:0,target:0,moving:false,status:'fechada',motivo:null,handleTime:HANDLE_DURATION,motionStart:0,motionElapsed:0,motionDuration:DURATION};

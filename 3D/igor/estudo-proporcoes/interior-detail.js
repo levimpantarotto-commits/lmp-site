@@ -3,7 +3,7 @@
 export function buildDiningSet(THREE,scene,M){
  const meshes=[];
  const solidWood=M.furnitureWood||M.wood,chairWood=solidWood.clone?.()||solidWood;
- if(chairWood!==solidWood&&chairWood.color)chairWood.color.set(0xd4c4b2);
+ if(chairWood!==solidWood&&chairWood.color)chairWood.color.set(0x9c7a5b);
  const add=(geometry,material,x,y,z,rotationY=0,name='dining-detail')=>{
   // Geometrias Three nativas já possuem UVs; esta guarda torna a exigência explícita para o batcher.
   if(!geometry.attributes.position||!geometry.attributes.normal||!geometry.attributes.uv)throw new Error(`Geometria sem atributos PNU: ${name}`);
@@ -54,7 +54,16 @@ export function buildDiningSet(THREE,scene,M){
  const backShape=new THREE.Shape();
  backShape.moveTo(-.095,.47);backShape.quadraticCurveTo(-.15,.53,-.15,.72);backShape.quadraticCurveTo(-.15,.89,-.105,.91);backShape.quadraticCurveTo(0,.935,.105,.91);backShape.quadraticCurveTo(.15,.89,.15,.72);backShape.quadraticCurveTo(.15,.53,.095,.47);backShape.quadraticCurveTo(0,.445,-.095,.47);
  const backPanel=planarUV(new THREE.ExtrudeGeometry(backShape,{depth:.028,bevelEnabled:true,bevelThickness:.006,bevelSize:.006,bevelSegments:1,curveSegments:4}),'x','y');
- const backPositions=backPanel.attributes.position;for(let i=0;i<backPositions.count;i++){const x=backPositions.getX(i),z=backPositions.getZ(i);backPositions.setZ(i,z+.024*(1-Math.min(1,Math.abs(x)/.15)**2));}backPanel.computeVertexNormals();
+ // A tampa do Extrude é não indexada: computeVertexNormals depois da curva
+ // cria reflexos triangulares enormes. Transformar as normais originais pela
+ // derivada da deformação preserva a curvatura contínua e as bordas do bevel.
+ const backPositions=backPanel.attributes.position,backNormals=backPanel.attributes.normal;
+ for(let i=0;i<backPositions.count;i++){
+  const x=backPositions.getX(i),z=backPositions.getZ(i),slope=Math.abs(x)<.15?-.048*x/(.15*.15):0;
+  backPositions.setZ(i,z+.024*(1-Math.min(1,Math.abs(x)/.15)**2));
+  const nx=backNormals.getX(i)-slope*backNormals.getZ(i),ny=backNormals.getY(i),nz=backNormals.getZ(i),length=Math.hypot(nx,ny,nz);
+  backNormals.setXYZ(i,nx/length,ny/length,nz/length);
+ }
  const chairLeg=cylindricalUV(lathe([new THREE.Vector2(.024,-.22),new THREE.Vector2(.031,-.18),new THREE.Vector2(.024,.16),new THREE.Vector2(.030,.20)],8));
  const chairPost=cylindricalUV(lathe([new THREE.Vector2(.026,-.24),new THREE.Vector2(.031,-.20),new THREE.Vector2(.024,.22),new THREE.Vector2(.029,.27)],8));
  for(const[x,z,turn]of chairCenters){

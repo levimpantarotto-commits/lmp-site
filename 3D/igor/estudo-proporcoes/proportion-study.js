@@ -5,8 +5,11 @@ import {exteriorReference as exterior} from './exterior-reference.js';
 export const proportionStudy=true; // Rota isolada do estudo, nunca a visita publicada.
 const piece=(v,knots)=>{for(let i=1;i<knots.length;i++)if(v<knots[i][0]){const[a,b]=knots[i-1],[c,d]=knots[i];return b+(v-a)*(d-b)/(c-a);}const[a,b]=knots.at(-2),[c,d]=knots.at(-1);return d+(v-c)*(d-b)/(c-a);};
 // A largura adicional está no corredor/social, não na profundidade da pia.
-const xKnots=[[-40,-40],[0,0],[1.5,1.5],[4.9,6.43],[5.8,7.33],[12.5,13.159],[40,40.659]];
-const zKnots=[[-40,-40],[0,0],[3.2,3.2],[8.85,9.528],[9,9.678],[13,12.678],[40,39.678]];
+// Fotos06/07/11: alargar a faixa LIVRE entre o jantar e a bancada, não
+// engrossar pia, cadeiras ou banco. A ala posterior estimada cede profundidade.
+// Manter o lado observado do banco até x4.25 evita inflar o U inteiro.
+const xKnots=[[-40,-40],[0,0],[1.5,1.5],[4.25,5.4875],[4.9,7.18],[5.8,8.08],[12.5,13.909],[40,41.409]];
+const zKnots=[[-40,-40],[0,0],[3.2,3.2],[8.85,10.0],[9,10.15],[13,13.15],[40,40.15]];
 export const planX=x=>proportionStudy?piece(x,xKnots):x;
 export const planZ=z=>proportionStudy?piece(z,zKnots):z;
 export const planRect=r=>[planX(r[0]),planZ(r[1]),planX(r[2]),planZ(r[3])];
@@ -38,8 +41,29 @@ export function applyProportionStudy(rooms,floors,walls,furniture){
  const divider=walls.at(-1);if(divider.height===1.48){divider.height=1.85;divider.b[1]=3.0;}
  Object.assign(rooms.find(r=>r.id==='cozinha'),{rect:[1.8,4.4,5.8,9],spawn:[4.2,0,5.45],note:'Cozinha integrada ampliada pela redistribuição do plano. Fotos 06/07/08/11; sem cotas medidas.'});
  Object.assign(rooms.find(r=>r.id==='hall'),{photo:6,note:'Ligação posterior ainda estimada. A foto12 é banheiro, não evidência de um hall.'});
+ // Âncoras de escala humana: não permitir cama de casal de 1m de largura
+ // resultante do encolhimento X/Z. Medidas estimadas, não medidas do imóvel.
+ Object.assign(furniture.find(f=>f.id==='cama15'),{rect:[6.60,9.20,9.78,11.92],turn:Math.PI/2});
+ // Dobradiça no outro batente permite abrir para o hall sem cruzar a cama.
+ // Continua sujeita à varredura completa; posição de ferragem é estimada.
+ Object.assign(rooms.find(r=>r.id==='quarto14'),{rect:[5.8,1.45,9.8,7.5]});
+ Object.assign(rooms.find(r=>r.id==='quarto15'),{rect:[5.8,7.5,9.8,12]});
+ walls[8].b[1]=7.5;walls[9].a[1]=7.5;
+ walls[13].a[1]=7.5;walls[13].b[1]=7.5;
+ Object.assign(walls[9].openings[0],{from:1.8,to:2.9,hinge:'end'});
+ // Ligações não fotografadas: acesso frontal livre e banheiro pelo pé da cama.
+ // A folha abre no trecho anterior à cama (e não varre vaso/cama), mantendo
+ // passagem física sem reduzir o leito estimado.
+ Object.assign(walls[13].openings[0],{from:.55,to:1.75});
+ Object.assign(walls[15].openings[0],{from:.20,to:.95,hinge:'end'});
+ Object.assign(furniture.find(f=>f.id==='cama18'),{rect:[.40,10.00,2.80,11.84],turn:Math.PI/2});
+ Object.assign(rooms.find(r=>r.id==='quarto18'),{spawn:[4.2,3,11.3]});
+ Object.assign(rooms.find(r=>r.id==='quarto15'),{spawn:[7.4,0,8.52],yaw:Math.PI});
+ // Fotos00/01: futon ao longo do vidro lateral, e mesinha pequena junto dele.
+ Object.assign(furniture.find(f=>f.id==='sofaMezanino'),{rect:[.18,.48,1.30,2.95],turn:-Math.PI/2});
+ Object.assign(furniture.find(f=>f.id==='mesaMezanino'),{rect:[1.55,.50,2.35,1.20],height:.46});
  // Destinos voltados para o ambiente, não para a porta/parede atrás do usuário.
- for(const[id,yaw]of[['banheiro1',2.35],['banheiro2',2.45],['quarto15',1.57],['quarto18',1.57],['quarto14',3.70],['deck',Math.PI]])rooms.find(r=>r.id===id).yaw=yaw;
+ for(const[id,yaw]of[['banheiro1',2.35],['banheiro2',2.45],['quarto15',Math.PI],['quarto18',1.57],['quarto14',3.70],['deck',Math.PI]])rooms.find(r=>r.id===id).yaw=yaw;
  Object.assign(rooms.find(r=>r.id==='quarto14'),{spawn:[6.7,0,4.8],yaw:3.75});
  // Inclinação de inspeção, sem mudar a lente nem a altura física dos olhos.
  for(const[id,pitch]of[['banheiro1',-.42],['banheiro2',-.48],['quarto15',-.58],['quarto18',-.50],['quarto14',-.18],['deck',-.27],['mezanino',-.20]])rooms.find(r=>r.id===id).pitch=pitch;
