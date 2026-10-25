@@ -21,7 +21,8 @@ import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=scale-r
 import {facadeAxis,worldX,worldYaw,movement as baseMovement} from './view-transform.js';
 import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem,calibration,exteriorObstacles} from './nav.js?v=walk-master-r1';
 import {buildTileFloor} from './tile-floor-reference.js';
-import {loadMasterWalk} from './master-walk.js?v=walk-master-r1';
+import {loadMasterWalk} from './master-walk.js?v=physical-rnm-r1';
+import {buildMasterReflections} from './master-reflections.js?v=physical-r1';
 import {applyMasterNavigation} from './master-navigation.js?v=walk-master-r1';
 const $=id=>document.getElementById(id),canvas=$('cena'),mobile=matchMedia('(pointer:coarse)').matches;
 let renderer,stopped=false,frame=0;
@@ -133,6 +134,7 @@ async function startScene(){
  for(const node of scene.children)if(!vegetationBefore.has(node))calibrateNode(node,planScale);
  const visualRoot=new THREE.Group();for(const child of [...scene.children])visualRoot.add(child);visualRoot.scale.x=-1;visualRoot.position.x=planX(facadeAxis)*planScale;scene.add(visualRoot);
  if(masterVisual){scene.add(masterVisual.root);masterVisual.stats.navigation=applyMasterNavigation(masterVisual.manifest,{furniture,exteriorObstacles,scale:planScale,planX,planZ,facadeAxis});masterVisual.stats.cleanup=masterVisual.releaseUnused(scene);}
+ if(masterVisual)masterVisual.stats.reflections=!mobile&&lightQuery.get('local-reflections')!=='0'?buildMasterReflections(THREE,renderer,scene,masterVisual.root,{mobile}):{enabled:false,reason:mobile?'mobile-startup-budget':'disabled-for-QA'};
  let doorMessageId=null;
  const arrival=proportionStudy?exteriorReference.arrival:{x:11,z:-14,y:0,yaw:2.69,pitch:.035};
  let state={x:arrival.x,z:arrival.z,y:0},yaw=arrival.yaw,pitch=arrival.pitch,walking=false,drag=false,lastX=0,lastY=0,lastTime=0,activeRoom=null;
