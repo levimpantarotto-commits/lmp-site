@@ -2,7 +2,7 @@
 const retry=document.getElementById('retry');
 retry.onclick=()=>location.reload();
 let timeout;
-Promise.race([import('./walk.js?v=scale-r1'),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(new Error('Tempo de carregamento esgotado')),45000);})]).then(()=>{
+Promise.race([import('./walk.js?v=walk-master-r1'),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(new Error('Tempo de carregamento esgotado')),120000);})]).then(()=>{
  clearTimeout(timeout);
  const enter=document.getElementById('enter');enter.disabled=false;enter.removeAttribute('aria-busy');enter.innerHTML='Caminhar pela casa <span>↗</span>';
 }).catch(error=>{

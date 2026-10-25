@@ -7,7 +7,7 @@ import {buildKitchenReference} from './kitchen-reference.js?v=scale-r1';
 import {buildMasonryReference} from './masonry-reference.js?v=scale-r1';
 import {calibrateNode,metricPosition} from './spatial-calibration.js?v=scale-r1';
 import {buildBathDetails} from './bath-details.js';
-import {takeMirrorSurfaces,buildMirrors} from './mirror-detail.js';
+import {takeMirrorSurfaces,buildMirrors} from './mirror-detail.js?v=walk-master-r1';
 import {secondaryRoofs,roofPlanes} from './roof-layout.js?v=scale-r1';
 import {proportionStudy,planX,planZ,derivative,terrace,upperWidth,buildStudyStructure} from './proportion-study.js';
 import {addPottedPlants} from './plant-detail.js?v=scale-r1';
@@ -19,8 +19,10 @@ import {HDRLoader} from './vendor/HDRLoader.js';
 import {createFootsteps} from './footsteps.js';
 import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=scale-r1';
 import {facadeAxis,worldX,worldYaw,movement as baseMovement} from './view-transform.js';
-import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem,calibration} from './nav.js?v=scale-r1';
+import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem,calibration,exteriorObstacles} from './nav.js?v=walk-master-r1';
 import {buildTileFloor} from './tile-floor-reference.js';
+import {loadMasterWalk} from './master-walk.js?v=walk-master-r1';
+import {applyMasterNavigation} from './master-navigation.js?v=walk-master-r1';
 const $=id=>document.getElementById(id),canvas=$('cena'),mobile=matchMedia('(pointer:coarse)').matches;
 let renderer,stopped=false,frame=0;
 const footsteps=createFootsteps();
@@ -106,14 +108,17 @@ async function startScene(){
  // Uma conversão única do plano lógico em metros para a cena, bake, luzes e
  // materiais dinâmicos. Colisões usam o mesmo fator no raio/velocidade/câmera.
  for(const node of scene.children)calibrateNode(node,planScale);
+ let masterVisual=null,masterFailure=null;
+ if(proportionStudy&&new URLSearchParams(location.search).get('master')!=='0'&&!new URLSearchParams(location.search).has('bake-export'))try{masterVisual=await loadMasterWalk(THREE,scene,{mobile});}catch(error){masterFailure=error.message;console.warn('Mestre indisponível: '+masterFailure);}
+ if(masterVisual){renderer.toneMapping=THREE.AgXToneMapping;renderer.toneMappingExposure=Math.pow(2,-.3);}
  const batches=new Map();scene.updateMatrixWorld(true);
  for(const mesh of scene.children.filter(n=>n.isMesh&&!n.material.transparent))for(const attr of ['position','normal','uv'])if(!mesh.geometry.attributes[attr])throw Error(`Atributo ${attr} ausente: ${mesh.name||JSON.stringify(mesh.userData)}`);
  for(const mesh of [...scene.children]){if(!mesh.isMesh||mesh.material.transparent)continue;const key=`${mesh.material.uuid}:${mesh.castShadow}:${mesh.receiveShadow}`;if(!batches.has(key))batches.set(key,{material:mesh.material,cast:mesh.castShadow,receive:mesh.receiveShadow,items:[]});const clone=mesh.geometry.clone().applyMatrix4(mesh.matrixWorld),flat=clone.index?clone.toNonIndexed():clone;batches.get(key).items.push(flat);if(flat!==clone)clone.dispose();scene.remove(mesh);mesh.geometry.dispose();}
  for(const batch of batches.values()){const geometry=new THREE.BufferGeometry();for(const name of ['position','normal','uv']){const size=batch.items[0].attributes[name].itemSize,length=batch.items.reduce((n,g)=>n+g.attributes[name].array.length,0),values=new Float32Array(length);let offset=0;for(const g of batch.items){values.set(g.attributes[name].array,offset);offset+=g.attributes[name].array.length;}geometry.setAttribute(name,new THREE.BufferAttribute(values,size));}geometry.computeBoundingSphere();const mesh=new THREE.Mesh(geometry,batch.material);mesh.castShadow=batch.cast;mesh.receiveShadow=batch.receive;scene.add(mesh);batch.items.forEach(g=>g.dispose());}
  const exportBake=()=>({...exportBakeSource(scene,M),planScale,areaCalibration:calibration,study:proportionStudy,lighting:{environmentFile:scene.userData.environmentFile,environmentIntensity:scene.environmentIntensity,lights:scene.children.filter(o=>o.isDirectionalLight||o.isPointLight).map(o=>({type:o.type,color:o.color.toArray(),intensity:o.intensity,position:o.position.toArray(),target:o.target?.position.toArray()}))},lightPositions:practicalPositions.map(([x,z,y])=>[planX(x)*planScale,y-.12,planZ(z)*planScale])});
- let bakedStats={enabled:false};
+ let bakedStats=masterVisual?masterVisual.stats:{enabled:false};
  const lightQuery=new URLSearchParams(location.search);
- if(lightQuery.get('lighting')!=='baseline'&&!lightQuery.has('bake-export'))bakedStats=await applyBakedLighting(THREE,scene,{mobile,basePath:proportionStudy?'./assets/baked-study/':'./assets/baked/'}).catch(error=>({enabled:false,reason:error.message}));
+ if(!masterVisual&&lightQuery.get('lighting')!=='baseline'&&!lightQuery.has('bake-export'))bakedStats=await applyBakedLighting(THREE,scene,{mobile,basePath:proportionStudy?'./assets/baked-study/':'./assets/baked/'}).catch(error=>({enabled:false,reason:error.message}));
  if(bakedStats.enabled)ambientFill.intensity=.28;
  // Folhas móveis ficam fora do agrupamento estático. A mesma instância
  // alimenta a geometria, a interação e a colisão de nav.js.
@@ -127,6 +132,7 @@ async function startScene(){
  const plantStats=await addPottedPlants(THREE,scene,M);vegetationStats.potted=plantStats;
  for(const node of scene.children)if(!vegetationBefore.has(node))calibrateNode(node,planScale);
  const visualRoot=new THREE.Group();for(const child of [...scene.children])visualRoot.add(child);visualRoot.scale.x=-1;visualRoot.position.x=planX(facadeAxis)*planScale;scene.add(visualRoot);
+ if(masterVisual){scene.add(masterVisual.root);masterVisual.stats.navigation=applyMasterNavigation(masterVisual.manifest,{furniture,exteriorObstacles,scale:planScale,planX,planZ,facadeAxis});masterVisual.stats.cleanup=masterVisual.releaseUnused(scene);}
  let doorMessageId=null;
  const arrival=proportionStudy?exteriorReference.arrival:{x:11,z:-14,y:0,yaw:2.69,pitch:.035};
  let state={x:arrival.x,z:arrival.z,y:0},yaw=arrival.yaw,pitch=arrival.pitch,walking=false,drag=false,lastX=0,lastY=0,lastTime=0,activeRoom=null;
@@ -158,5 +164,5 @@ async function startScene(){
  function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();requestRender();}addEventListener('resize',resize);
  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();fallback('O navegador interrompeu o 3D. Você pode tentar novamente ou consultar as fotos.');});$('retry').onclick=()=>location.reload();
  const map=$('map-shapes');rooms.filter(r=>r.level===0).forEach(r=>{const node=document.createElementNS('http://www.w3.org/2000/svg','rect');for(const [k,v]of Object.entries({x:(worldX(r.rect[2])+11)*5,y:(r.rect[1]+19)*5,width:(r.rect[2]-r.rect[0])*5,height:(r.rect[3]-r.rect[1])*5,fill:r.estimate?'#8d68424d':'#dbd2b22e',stroke:'#d8c8aa','stroke-width':.6}))node.setAttribute(k,String(v));map.append(node);});
- const readyMs=Math.round(performance.now()-started);window.__igorWalk={exportBake:()=>bakeSnapshot,getState:()=>({...state,metric:metricPosition(state,planScale),area:calibration,yaw,pitch,walking,room:activeRoom?.id,idle:!frame,baked:bakedStats,triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,vegetation:vegetationStats,interior:{triangles:interiorStats.triangles,withinBudget:interiorStats.withinBudget,byId:interiorStats.byId},mobile,readyMs,pixelRatio:renderer.getPixelRatio(),memory:{...renderer.info.memory},sound:footsteps.diagnostics(),doors:doorSystem.snapshot()}),jumpTo:id=>{const r=rooms.find(r=>r.id===id);if(r)jump(r);},reset:()=>{state={x:arrival.x,z:arrival.z,y:0};yaw=arrival.yaw;pitch=arrival.pitch;stopMoving();requestRender();},step:(dx,dz)=>{state=move(state,dx,dz);requestRender();},inspectPose:p=>{if(isWalkable(p.x,p.z,p.y)){stopMoving();state={x:p.x,y:p.y,z:p.z};yaw=p.yaw??yaw;pitch=p.pitch??0;requestRender();return true;}return false;},isWalkable};resize();
+ const readyMs=Math.round(performance.now()-started);window.__igorWalk={exportBake:()=>bakeSnapshot,getState:()=>({...state,metric:metricPosition(state,planScale),area:calibration,yaw,pitch,walking,room:activeRoom?.id,idle:!frame,baked:bakedStats,masterFailure,triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,vegetation:vegetationStats,interior:{triangles:interiorStats.triangles,withinBudget:interiorStats.withinBudget,byId:interiorStats.byId},mobile,readyMs,pixelRatio:renderer.getPixelRatio(),memory:{...renderer.info.memory},sound:footsteps.diagnostics(),doors:doorSystem.snapshot()}),jumpTo:id=>{const r=rooms.find(r=>r.id===id);if(r)jump(r);},reset:()=>{state={x:arrival.x,z:arrival.z,y:0};yaw=arrival.yaw;pitch=arrival.pitch;stopMoving();requestRender();},step:(dx,dz)=>{state=move(state,dx,dz);requestRender();},inspectPose:p=>{if(isWalkable(p.x,p.z,p.y)){stopMoving();state={x:p.x,y:p.y,z:p.z};yaw=p.yaw??yaw;pitch=p.pitch??0;requestRender();return true;}return false;},isWalkable};resize();
 }

@@ -14,7 +14,7 @@ function leafBlocked(leaf,progress,player,walls,furniture,exteriorObstacles,ownW
  const segment=leafSegment(leaf,progress);const samples=8;
  for(let i=0;i<=samples;i++){const t=i/samples,x=segment.a.x+(segment.b.x-segment.a.x)*t,z=segment.a.z+(segment.b.z-segment.a.z)*t;
   if(player&&Math.hypot(player.x-x,player.z-z)<R+.16&&Math.abs(player.y-leaf.base)<2.7)return true;
-  if(furniture.some(f=>Math.abs((f.level||0)-leaf.base)<.35&&inside(x,z,f.rect,SWEEP)))return true;
+  if(furniture.some(f=>Math.abs((f.level||0)-leaf.base)<.35&&(f.containsPoint?f.containsPoint(x,z,SWEEP):inside(x,z,f.rect,SWEEP))))return true;
   if(leaf.base<.35&&exteriorObstacles.some(rect=>inside(x,z,rect,SWEEP)))return true;
   // Uma parede perpendicular pode terminar exatamente no pino: é o batente,
   // não um obstáculo à rotação. O restante da folha continua sendo amostrado.
