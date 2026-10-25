@@ -2,7 +2,7 @@
 // As câmeras, portas e colisões continuam sendo controladas pela caminhada.
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {geometryKey} from './baked-lighting.js';
-import {createMasterMaterial} from './master-material.js?v=physical-r1';
+import {createMasterMaterial} from './master-material.js?v=nature-r1';
 const expectedMaster='01cddbb20575e7de342801ec206a272cbdface16059518e0da1a9f34570428ec';
 const safe=name=>typeof name==='string'&&/^[a-zA-Z0-9_.-]+$/.test(name)&&!name.includes('..');
 // source-editable.json preserves all Float32 values but JSON canonicalizes -0.
@@ -10,7 +10,7 @@ const safe=name=>typeof name==='string'&&/^[a-zA-Z0-9_.-]+$/.test(name)&&!name.i
 const sourceKey=g=>geometryKey({attributes:Object.fromEntries(['position','normal','uv'].map(name=>[name,{itemSize:g.attributes[name].itemSize,array:Float32Array.from(g.attributes[name].array,v=>v===0?0:v)}]))});
 export async function loadMasterWalk(THREE,scene,{mobile=false}={}){
  const base=new URL('./assets/walk-master/',import.meta.url),asset=name=>{if(!safe(name))throw Error('Nome de ativo inválido');return new URL(name,base).href;};
- const response=await fetch(asset('runtime-manifest.json')+'?v=physical-rnm-r1',{cache:'no-cache'});if(!response.ok)throw Error('Ativos da caminhada indisponíveis');const manifest=await response.json();
+ const response=await fetch(asset('runtime-manifest.json')+'?v=nature-r1',{cache:'no-cache'});if(!response.ok)throw Error('Ativos da caminhada indisponíveis');const manifest=await response.json();
  if(manifest.masterSHA256!==expectedMaster||manifest.bakeStatus!=='complete'||manifest.coordinateSystem!=='three-y-up-final-world'||!Array.isArray(manifest.groups)||!manifest.groups.length)throw Error('Mestre/iluminação incompatíveis');
  const meshes=[];scene.traverseVisible(o=>{if(o.isMesh)meshes.push(o);});
  if(meshes.length!==manifest.sourceMeshCount)throw Error('Índices da cena alterados');

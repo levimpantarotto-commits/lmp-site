@@ -9,7 +9,8 @@ export async function createMaterials(THREE,renderer,{mobile=false}={}){
  const [roofMap,roofNormal]=await Promise.all([load('telha-diff.jpg',{color:true,repeat:2}),load('telha-normal.jpg',{repeat:2})]);
  // Amostra ajustada em metros do estudo, não medida do jardim. Evita ampliar
  // lâminas a dezenas de centímetros; UV das caixas é metro/2.
- const [grassMap,grassNormal]=await Promise.all([load('prado-diff.jpg',{color:true,repeat:.8}),load('prado-normal.jpg',{repeat:.8})]);
+ const [grassMap,grassNormal]=await Promise.all([load('lawn-green-diff.webp',{color:true,repeat:2/1.4}),load('lawn-green-normal.jpg',{repeat:2/1.4})]);
+ const grassRoughness=await load('lawn-green-rough.jpg',{repeat:2/1.4});
  const [plasterMap,plasterNormal]=await Promise.all([load('reboco-diff.jpg',{color:true,repeat:2}),load('reboco-normal.jpg',{repeat:2})]);
  const [pavingMap,pavingNormal]=await Promise.all([load('cascalho-diff.jpg',{color:true,repeat:2}),load('cascalho-normal.jpg',{repeat:2})]);
  const [tileMap,tileNormal]=await Promise.all([load('concreto-diff.jpg',{color:true,repeat:2/2.6}),load('concreto-normal.jpg',{repeat:2/2.6})]);
@@ -39,6 +40,6 @@ export async function createMaterials(THREE,renderer,{mobile=false}={}){
  return {
   graniteWall:standard({color:0xf0eee5,map:graniteMap,normalMap:graniteNormal,normalScale:new THREE.Vector2(.28,.28),roughnessMap:graniteRough,roughness:1,metalness:0}),
   fabricTaupe:fabric(0xb7a58e),fabricGrey:fabric(0x94918b),fabricWhite:fabric(0xece9dd),ceramic:neutral(0xf4f2ec,.22),stainless:neutral(0xb1b5b8,.24,{metalness:.88}),basinStone:standard({color:0xc2bdb5,map:basinMap,normalMap:basinNormal,normalScale:new THREE.Vector2(.11,.11),roughness:.48}),
-  stone:standard({color:0xffffff,map:stoneMap,normalMap:stoneNormal,roughnessMap:stoneRoughness,roughness:.9,metalness:0}),wood:wood(),deck:wood(),furnitureWood:furnitureWood(),timber:timber(),tile:tile(),roof:standard({color:0xffffff,map:roofMap,normalMap:roofNormal,roughness:.88}),grass:standard({color:0xa5c994,map:grassMap,normalMap:grassNormal,roughness:1}),plaster:standard({color:0xffffff,map:plasterMap,normalMap:plasterNormal,roughness:.92}),linen:fabric(0xd8cdbc),white:neutral(0xffffff,.8),woodDark:timber(),metal:neutral(0x292929,.38,{metalness:.65}),black:neutral(0x171717,.28),glass:neutral(0x4e6b69,.10,{transparent:true,opacity:.57,depthWrite:false,metalness:.15}),mirror:neutral(0xb9cbd0,.14,{metalness:.75}),light:neutral(0xffe3b2,.6,{emissive:0xffc56b,emissiveIntensity:2}),paving:standard({color:0xffffff,map:pavingMap,normalMap:pavingNormal,roughness:.9})
+  stone:standard({color:0xffffff,map:stoneMap,normalMap:stoneNormal,roughnessMap:stoneRoughness,roughness:.9,metalness:0}),wood:wood(),deck:wood(),furnitureWood:furnitureWood(),timber:timber(),tile:tile(),roof:standard({color:0xffffff,map:roofMap,normalMap:roofNormal,roughness:.88}),grass:standard({color:0xb2c8a1,map:grassMap,normalMap:grassNormal,normalScale:new THREE.Vector2(.38,.38),roughnessMap:grassRoughness,roughness:.96}),plaster:standard({color:0xffffff,map:plasterMap,normalMap:plasterNormal,roughness:.92}),linen:fabric(0xd8cdbc),white:neutral(0xffffff,.8),woodDark:timber(),metal:neutral(0x292929,.38,{metalness:.65}),black:neutral(0x171717,.28),glass:neutral(0x4e6b69,.10,{transparent:true,opacity:.57,depthWrite:false,metalness:.15}),mirror:neutral(0xb9cbd0,.14,{metalness:.75}),light:neutral(0xffe3b2,.6,{emissive:0xffc56b,emissiveIntensity:2}),paving:standard({color:0xffffff,map:pavingMap,normalMap:pavingNormal,roughness:.9})
  };
 }

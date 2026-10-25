@@ -2,7 +2,8 @@ import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {buildDiningSet} from './interior-detail.js';
 import {roofPlanes} from './roof-layout.js?v=details-r2';
 import {proportionStudy,planX,planZ} from './proportion-study.js';
-import {exteriorReference,buildReferenceBoundary,addBoundaryFoliage,distantCanopyPlacements,distantCanopyBudget} from './exterior-reference.js';
+import {exteriorReference,buildReferenceBoundary,addBoundaryFoliage,distantCanopyPlacements,distantCanopyBudget} from './exterior-reference.js?v=nature-r1';
+import {varyLeafGeometry} from './leaf-variation.js?v=nature-r1';
 export {roofPlanes} from './roof-layout.js?v=details-r2';
 
 // Formas observáveis nas fotos 03/04/05. Escala e profundidade permanecem estimadas.
@@ -63,11 +64,33 @@ export function buildExterior(THREE,scene,M,box,cylinder,walls=[]){
  for(const x of[-.36,6.15])cylinder(x,1.33,-1.95,.035,2.66,M.metal,12);
 }
 
-export async function addReferenceTrees(THREE,scene,{mobile=false}={}){
- const gltf=await new GLTFLoader().loadAsync(new URL(mobile?'./assets/trees-mobile.glb':'./assets/trees-real.glb',import.meta.url).href),horizon=proportionStudy?distantCanopyPlacements.slice(0,mobile?2:3):[],pointsByVariant=[...treePlacements,...horizon],stats={trees:treePlacements.length,distantCanopy:{instances:horizon.length,triangles:0,classification:'ambientação estimada, não paisagem reconstruída'},triangles:0};
- if(proportionStudy){stats.boundary=addBoundaryFoliage(THREE,scene,gltf,{mobile,planX,planZ});stats.triangles+=stats.boundary.triangles;}
+export async function addReferenceTrees(THREE,scene,{mobile=false,groundMaterial}={}){
+ // Context only, outside the modeled property: a receiving surface prevents
+ // the distant tree bases ending against empty sky. No cadastral dimensions.
+ if(groundMaterial){const geometry=new THREE.PlaneGeometry(180,180),p=geometry.attributes.position,uv=geometry.attributes.uv;for(let i=0;i<p.count;i++)uv.setXY(i,p.getX(i)/2,p.getY(i)/2);const ground=new THREE.Mesh(geometry,groundMaterial);ground.rotation.x=-Math.PI/2;ground.position.set(4,-.025,1);ground.receiveShadow=true;ground.name='estimated-context-ground';scene.add(ground);}
+ const horizon=proportionStudy?distantCanopyPlacements.slice(0,mobile?2:3):[],pointsByVariant=[...treePlacements,...horizon],stats={trees:treePlacements.length,distantCanopy:{instances:horizon.length,triangles:0,classification:'ambientação estimada, não paisagem reconstruída'},triangles:0};
+ let gltf;try{gltf=await new GLTFLoader().loadAsync(new URL(mobile?'./assets/trees-mobile.glb':'./assets/trees-real.glb',import.meta.url).href);}catch(error){console.warn('Árvores indisponíveis; caminhada preservada.');return {...stats,trees:0,distantCanopy:{...stats.distantCanopy,instances:0},partial:true,assetFailure:'trees'};}
+ if(proportionStudy){const loader=new THREE.TextureLoader(),leafMaps=[];for(let i=0;i<8;i++){try{const map=await loader.loadAsync(new URL(`./assets/nature/${mobile?'mobile/':''}leaf-${i}.webp`,import.meta.url).href);map.flipY=false;map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=mobile?2:4;leafMaps.push(map);}catch{console.warn('Folha '+i+' indisponível; variante omitida para preservar recorte e caminhada.');leafMaps.push(null);}}stats.boundary=addBoundaryFoliage(THREE,scene,gltf,{mobile,planX,planZ,leafMaps});stats.triangles+=stats.boundary.triangles;}
  for(const variant of[0,1]){const root=gltf.scene.getObjectByName(`v${variant}_mid`);if(!root)throw new Error('Árvore da base não encontrada');root.updateWorldMatrix(true,true);const bounds=new THREE.Box3().setFromObject(root),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3()),points=pointsByVariant.filter(p=>p[4]===variant);
-root.traverse(source=>{if(!source.isMesh)return;const geometry=source.geometry.clone().applyMatrix4(source.matrixWorld);geometry.translate(-center.x,-bounds.min.y,-center.z);geometry.scale(1/size.y,1/size.y,1/size.y);const material=source.material.clone();material.alphaTest=Math.max(material.alphaTest||0,.35);material.transparent=false;material.depthWrite=true;material.color.multiplyScalar(1.10);const instances=new THREE.InstancedMesh(geometry,material,points.length),matrix=new THREE.Matrix4(),q=new THREE.Quaternion(),tone=new THREE.Color(),triangles=(geometry.index?.count||geometry.attributes.position.count)/3;points.forEach(([x,z,y,height],i)=>{q.setFromAxisAngle(new THREE.Vector3(0,1,0),i*2.399+.31*(i%2));matrix.compose(new THREE.Vector3(proportionStudy?planX(x):x,y,proportionStudy?planZ(z):z),q,new THREE.Vector3(height*(.84+(i*7%5)*.035),height,height*(.87+(i*11%5)*.032)));instances.setMatrixAt(i,matrix);tone.setHSL(.25+(i%3)*.012,.16,.76+(i%4)*.025);instances.setColorAt(i,tone);});instances.castShadow=instances.receiveShadow=true;scene.add(instances);stats.triangles+=triangles*points.length;if(variant===1)stats.distantCanopy.triangles+=triangles*horizon.length;});
+root.traverse(source=>{
+ if(!source.isMesh)return;
+ const base=source.geometry.clone().applyMatrix4(source.matrixWorld);base.translate(-center.x,-bounds.min.y,-center.z);base.scale(1/size.y,1/size.y,1/size.y);
+ const material=source.material.clone(),isLeaf=source.material.alphaTest>0;
+ if(isLeaf){material.alphaTest=Math.max(material.alphaTest,.35);material.side=THREE.DoubleSide;}
+ material.transparent=false;material.depthWrite=true;
+ // Preserve the photographed green and bark. A green HSL multiplier on all
+ // primitives used to tint the woody branches as well as the foliage.
+ const shapes=isLeaf?3:1;
+ for(let shape=0;shape<shapes;shape++){
+  const chosen=points.filter((p,i)=>!isLeaf||i%shapes===shape);if(!chosen.length)continue;
+  const geometry=isLeaf?varyLeafGeometry(THREE,base,319+variant*79+shape*113):base;
+  const instances=new THREE.InstancedMesh(geometry,material,chosen.length),matrix=new THREE.Matrix4(),q=new THREE.Quaternion(),tone=new THREE.Color(),triangles=(geometry.index?.count||geometry.attributes.position.count)/3;
+  chosen.forEach(([x,z,y,height],i)=>{const identity=points.indexOf(chosen[i]);q.setFromAxisAngle(new THREE.Vector3(0,1,0),identity*2.399+.31*(identity%2));matrix.compose(new THREE.Vector3(proportionStudy?planX(x):x,y,proportionStudy?planZ(z):z),q,new THREE.Vector3(height*(.84+(identity*7%5)*.035),height,height*(.87+(identity*11%5)*.032)));instances.setMatrixAt(i,matrix);tone.setRGB(1,1,1).multiplyScalar(.92+(identity%5)*.025);instances.setColorAt(i,tone);});
+  instances.name=`reference-tree-${variant}-${isLeaf?'leaves-'+shape:'bark'}`;instances.userData.leafVariation=geometry.userData.leafVariation||null;instances.castShadow=instances.receiveShadow=true;instances.instanceMatrix.needsUpdate=true;instances.instanceColor.needsUpdate=true;scene.add(instances);stats.triangles+=triangles*chosen.length;
+  if(variant===1)stats.distantCanopy.triangles+=triangles*chosen.filter(p=>horizon.includes(p)).length;
+ }
+ if(isLeaf)base.dispose();
+});
  }
  if(proportionStudy&&stats.distantCanopy.triangles>distantCanopyBudget[mobile?'mobile':'desktop'].triangles)throw Error('Orçamento da copa distante excedido');
  return stats;

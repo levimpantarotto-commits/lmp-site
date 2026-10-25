@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three.module.js';
-import {createMaterials} from './materials.js?v=scale-r1';
+import {createMaterials} from './materials.js?v=nature-r1';
 import {buildInteriorAssets} from './interior-assets.js?v=scale-r1';
 import {buildDeckDetails} from './deck-details.js';
 import {buildObservedDetails} from './observed-details.js?v=scale-r1';
@@ -10,18 +10,18 @@ import {buildBathDetails} from './bath-details.js';
 import {takeMirrorSurfaces,buildMirrors} from './mirror-detail.js?v=walk-master-r1';
 import {secondaryRoofs,roofPlanes} from './roof-layout.js?v=scale-r1';
 import {proportionStudy,planX,planZ,derivative,terrace,upperWidth,buildStudyStructure} from './proportion-study.js';
-import {addPottedPlants} from './plant-detail.js?v=scale-r1';
-import {buildExterior,addReferenceTrees} from './exterior.js?v=scale-r1';
+import {addPottedPlants} from './plant-detail.js?v=nature-r1';
+import {buildExterior,addReferenceTrees} from './exterior.js?v=nature-r1';
 import {addGrassClusters,buildGrassDetail} from './grass-detail.js?v=scale-r1';
-import {buildNaturalGrass} from './exterior-natural.js';
-import {exteriorReference} from './exterior-reference.js';
+import {buildNaturalGrass} from './exterior-natural.js?v=nature-r1';
+import {exteriorReference} from './exterior-reference.js?v=nature-r1';
 import {HDRLoader} from './vendor/HDRLoader.js';
 import {createFootsteps} from './footsteps.js';
 import {exportBakeSource,applyBakedLighting} from './baked-lighting.js?v=scale-r1';
 import {facadeAxis,worldX,worldYaw,movement as baseMovement} from './view-transform.js';
 import {rooms,floorAreas,walls,furniture,stairs,move,roomAt,isWalkable,doorSystem,calibration,exteriorObstacles} from './nav.js?v=walk-master-r1';
 import {buildTileFloor} from './tile-floor-reference.js';
-import {loadMasterWalk} from './master-walk.js?v=physical-rnm-r1';
+import {loadMasterWalk} from './master-walk.js?v=nature-r1';
 import {buildMasterReflections} from './master-reflections.js?v=physical-r1';
 import {applyMasterNavigation} from './master-navigation.js?v=walk-master-r1';
 const $=id=>document.getElementById(id),canvas=$('cena'),mobile=matchMedia('(pointer:coarse)').matches;
@@ -38,8 +38,8 @@ async function startScene(){
  const sun=new THREE.DirectionalLight(0xffefd9,proportionStudy?.8:3.15);sun.position.set(-9,18,-12);sun.target.position.set(4,0,5);sun.castShadow=true;sun.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);Object.assign(sun.shadow.camera,{left:-20,right:20,top:20,bottom:-20,near:1,far:55});sun.shadow.normalBias=proportionStudy?.005:.025;sun.shadow.bias=-.0002;scene.add(sun,sun.target);
  const random=n=>{const v=Math.sin(n*97.13+11.5)*43958.27;return v-Math.floor(v);};
  const started=performance.now(),M=await createMaterials(THREE,renderer,{mobile});M.wood.normalScale.set(.35,.35);M.deck.normalScale.set(.35,.35);M.stone.normalScale.set(.65,.65);
- M.grass.normalScale.set(.12,.12); // grama curta: relevo sutil, não solo ondulado
- if(proportionStudy){M.roof.map.repeat.set(.26,.65);M.roof.normalMap.repeat.set(.26,.65);M.roof.normalScale.set(.40,.40);M.grass.color.set(0xc4ccae);M.glass.color.set(0xc4d0ce);M.glass.opacity=.22;M.glass.metalness=.03;}
+ M.grass.normalScale.set(proportionStudy?.28:.12,proportionStudy?.28:.12);
+ if(proportionStudy){M.roof.map.repeat.set(.26,.65);M.roof.normalMap.repeat.set(.26,.65);M.roof.normalScale.set(.40,.40);M.glass.color.set(0xc4d0ce);M.glass.opacity=.22;M.glass.metalness=.03;}
  M.plaster.color.set(0xeadfc9);M.plaster.normalScale.set(.16,.16);M.tile.normalScale.set(.15,.15);M.tile.roughness=.48;M.woodDark.normalScale.set(.25,.25);M.woodDark.color.set(0x9b7860);M.woodDark.roughness=.8;
  // Fotos01/11 distinguem vigas de madeira mel e esquadrias escuras. Usar o
  // mesmo marrom quase preto em ambas apagava o veio e alterava essa leitura.
@@ -128,7 +128,7 @@ async function startScene(){
  const mirrorSystem=metricBuild(()=>buildMirrors(THREE,scene,mirrorSpecs,{mobile}));
  window.__igorDetails={stats:()=>({area:calibration,kitchen:{triangles:kitchenStats.triangles,budget:kitchenStats.budget},masonry:{triangles:masonryStats.triangles,budget:masonryStats.budget},deck:{triangles:deckStats.triangles,budget:deckStats.budget},bath:{triangles:bathStats.triangles,budget:bathStats.budget},observed:{triangles:observedStats.triangles,budget:observedStats.budget},mirrors:mirrorSystem.diagnostics()})};
  const vegetationBefore=new Set(scene.children);
- const vegetationStats=await addReferenceTrees(THREE,scene,{mobile});
+ const vegetationStats=await addReferenceTrees(THREE,scene,{mobile,groundMaterial:M.grass});
  const grassStats=proportionStudy?buildNaturalGrass(THREE,scene,M,{mobile}):await addGrassClusters(THREE,scene,{mobile});vegetationStats.grassTriangles=grassStats.triangles;vegetationStats.grass={instances:grassStats.instances,triangles:grassStats.triangles,drawCalls:grassStats.drawCalls,budget:grassStats.budget};
  const plantStats=await addPottedPlants(THREE,scene,M);vegetationStats.potted=plantStats;
  for(const node of scene.children)if(!vegetationBefore.has(node))calibrateNode(node,planScale);
@@ -147,7 +147,7 @@ async function startScene(){
  function toggleDoor(){const id=doorSystem.nearest(state)?.id;if(!id)return;stopMoving();const result=doorSystem.toggle(id,state);doorMessageId=result.ok?null:id;$('door-message').textContent=result.ok?'':result.status==='passagem_obstruida'?'Afaste-se um passo para liberar a abertura da porta.':'Aproxime-se da porta.';requestRender();}
  $('door-toggle').onclick=toggleDoor;
  addEventListener('keydown',e=>{if(e.code==='KeyE'&&!e.repeat&&walking&&!$('photoDialog').open&&$('cover').hidden){e.preventDefault();toggleDoor();}});
- function render(){camera.position.set((planX(facadeAxis)-planX(state.x))*planScale,state.y+1.65,planZ(state.z)*planScale);camera.rotation.set(pitch,worldYaw(yaw),0);syncRoom();updateDoorControl();mirrorSystem.update(state);renderer.render(scene,camera);}
+ function render(){camera.position.set((planX(facadeAxis)-planX(state.x))*planScale,state.y+1.65,planZ(state.z)*planScale);camera.rotation.set(pitch,worldYaw(yaw),0);const nearGrass=grassStats.update?.({...state,yaw});if(nearGrass){vegetationStats.grass.activeInstances=nearGrass.instances;vegetationStats.grass.activeTriangles=nearGrass.triangles;vegetationStats.grass.patchUpdates=grassStats.updates;}syncRoom();updateDoorControl();mirrorSystem.update(state);renderer.render(scene,camera);}
  function footSurface(){if(state.y>.15&&state.y<2.85)return proportionStudy&&state.x<0?'stone':'wood';const a=floorAreas.find(a=>Math.abs(a.level-state.y)<.2&&state.x>a.rect[0]&&state.x<a.rect[2]&&state.z>a.rect[1]&&state.z<a.rect[3]);if(a?.material==='grass'&&state.z<0){const p=proportionStudy?exteriorReference.patio:[[-6,0],[-6,-8.4],[-.8,-7],[5.5,-3.9],[10.3,-3.9],[10.3,0]];let inside=false;for(let i=0,j=p.length-1;i<p.length;j=i++){if((p[i][1]>state.z)!==(p[j][1]>state.z)&&state.x<(p[j][0]-p[i][0])*(state.z-p[i][1])/(p[j][1]-p[i][1])+p[i][0])inside=!inside;}if(inside)return 'stone';}return a?.material||'stone';}
  function tick(t){frame=0;if(stopped)return;const dt=Math.min(.04,(t-(lastTime||t))/1000);lastTime=t;if(walking&&keys.size&&!$('photoDialog').open){let f=(keys.has('forward')?1:0)-(keys.has('back')?1:0),s=(keys.has('right')?1:0)-(keys.has('left')?1:0),n=Math.hypot(f,s)||1;f/=n;s/=n;const delta=movement(yaw,f,s),before=state;state=move(state,delta.x*dt*2.3/planScale,delta.z*dt*2.3/planScale);footsteps.moved(metricPosition(before,planScale),metricPosition(state,planScale),footSurface());}if(!$('photoDialog').open)doorSystem.advance(dt,state);render();if((walking&&keys.size&&!$('photoDialog').open)||(doorSystem.isAnimating()&&!$('photoDialog').open))frame=requestAnimationFrame(tick);else{lastTime=0;void footsteps.stop();}}
  function requestRender(){if(!stopped&&!frame)frame=requestAnimationFrame(tick);}

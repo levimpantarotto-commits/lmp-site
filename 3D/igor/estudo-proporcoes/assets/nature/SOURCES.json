@@ -1,0 +1,204 @@
+{
+  "revision": "nature-r1",
+  "at": "2026-10-25",
+  "grass": {
+    "method": "Procedural, declared by source asset page; not a scan of this house",
+    "source": "https://ambientcg.com/a/Grass001",
+    "license": "CC0 https://docs.ambientcg.com/license/",
+    "physicalWidthMetres": 1.4,
+    "files": "materials/lawn-green-*; desktop1024/mobile512"
+  },
+  "leaves": {
+    "method": "8 largest connected alpha components from the existing CC0 photographed atlas, separate padded texture per leaf; no generated new species",
+    "source": "https://polyhaven.com/a/island_tree_01",
+    "license": "CC0 https://polyhaven.com/license",
+    "sourceAtlasSHA256": "643b9282f9a2ae8cd8d0dec438663a8a0c6d86e42dd8734ac819a4c31b00668b",
+    "files": [
+      {
+        "index": 0,
+        "rect": [
+          0.013671875,
+          0.017578125,
+          0.1474609375,
+          0.5126953125
+        ],
+        "componentPixels": 33885,
+        "aspect": 0.2702169625246548,
+        "files": [
+          {
+            "file": "assets/nature/leaf-0.webp",
+            "bytes": 13950,
+            "sha256": "39c8fe26421f3cf3ac450a8c6d629b427b3f7b9bf370e36e47bd7ae5ccac145b"
+          },
+          {
+            "file": "assets/nature/mobile/leaf-0.webp",
+            "bytes": 6028,
+            "sha256": "97d78c5d70adab67ecec0add2482d0b8f3a107cd90b2b26466746901c947067e"
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "rect": [
+          0.162109375,
+          0.017578125,
+          0.33984375,
+          0.39453125
+        ],
+        "componentPixels": 42764,
+        "aspect": 0.47150259067357514,
+        "files": [
+          {
+            "file": "assets/nature/leaf-1.webp",
+            "bytes": 18268,
+            "sha256": "31a203416d819e6b272f00b1e2276226b4ad393e0d8d2f6e6ac6033e34f002a6"
+          },
+          {
+            "file": "assets/nature/mobile/leaf-1.webp",
+            "bytes": 7208,
+            "sha256": "0ce8843c132366a451704c349cbd8c70df854c70ae5537777a753b97042bb852"
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "rect": [
+          0.3583984375,
+          0.0283203125,
+          0.4853515625,
+          0.36328125
+        ],
+        "componentPixels": 26553,
+        "aspect": 0.37900874635568516,
+        "files": [
+          {
+            "file": "assets/nature/leaf-2.webp",
+            "bytes": 17472,
+            "sha256": "c1130427f6f55666436c6b4975ae62f335a7e674d3259699b7885bb69652ecb6"
+          },
+          {
+            "file": "assets/nature/mobile/leaf-2.webp",
+            "bytes": 7056,
+            "sha256": "d1e56a5003c58ac55511752e1eac136777ef0aec18888930a99ec6bd0b325a67"
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "rect": [
+          0.5146484375,
+          0.046875,
+          0.6513671875,
+          0.365234375
+        ],
+        "componentPixels": 29589,
+        "aspect": 0.4294478527607362,
+        "files": [
+          {
+            "file": "assets/nature/leaf-3.webp",
+            "bytes": 18892,
+            "sha256": "4d25c18d50f5d06d8c8e6f806c0fdd901b6b70857a17a0ad736770f6715bcfc0"
+          },
+          {
+            "file": "assets/nature/mobile/leaf-3.webp",
+            "bytes": 7604,
+            "sha256": "221f7b3ee954a48c8f97d98af101137aa0f99d196f7a9a5de94f5268d05b6ade"
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "rect": [
+          0.69140625,
+          0.017578125,
+          0.818359375,
+          0.416015625
+        ],
+        "componentPixels": 30425,
+        "aspect": 0.31862745098039214,
+        "files": [
+          {
+            "file": "assets/nature/leaf-4.webp",
+            "bytes": 18172,
+            "sha256": "6effef1c2888d1b4f63e239c58fad24ca19c1659e88e86f5aef6eb45398715e3"
+          },
+          {
+            "file": "assets/nature/mobile/leaf-4.webp",
+            "bytes": 6646,
+            "sha256": "62f58693869192d795b29c20c507b1455311f42fa583057e4e6cf293b3ce2b66"
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "rect": [
+          0.0146484375,
+          0.626953125,
+          0.1845703125,
+          1.0
+        ],
+        "componentPixels": 37234,
+        "aspect": 0.45549738219895286,
+        "files": [
+          {
+            "file": "assets/nature/leaf-5.webp",
+            "bytes": 20052,
+            "sha256": "e0296d9f7a6152d23e54c5cb5f417353dedcb887f9267b1958301934115e67d6"
+          },
+          {
+            "file": "assets/nature/mobile/leaf-5.webp",
+            "bytes": 7900,
+            "sha256": "5b1f011fb94291c042824da32e5c0e46dfd428a26146d6e0e6e8902ca0d6a3b8"
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "rect": [
+          0.21484375,
+          0.57421875,
+          0.357421875,
+          1.0
+        ],
+        "componentPixels": 37752,
+        "aspect": 0.3348623853211009,
+        "files": [
+          {
+            "file": "assets/nature/leaf-6.webp",
+            "bytes": 19434,
+            "sha256": "c0363684a92fc0ef418dc780c3db1ee716c04b47ecef74e45c223f77ba19b33d"
+          },
+          {
+            "file": "assets/nature/mobile/leaf-6.webp",
+            "bytes": 6970,
+            "sha256": "2822c3ee9ae62eba885522585681e808a311a75fc87f464b61ebcc4c78b82c65"
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "rect": [
+          0.419921875,
+          0.6005859375,
+          0.5634765625,
+          1.0
+        ],
+        "componentPixels": 29718,
+        "aspect": 0.3594132029339853,
+        "files": [
+          {
+            "file": "assets/nature/leaf-7.webp",
+            "bytes": 17360,
+            "sha256": "8ce0a586466cf895cb85d18e9f8c20c7b15b10bfd640eb503246cc85c996042b"
+          },
+          {
+            "file": "assets/nature/mobile/leaf-7.webp",
+            "bytes": 7508,
+            "sha256": "9dbce18399c55a6b2499d3ff65bbab056bc2ea28358415822148ebd9c3f0b9f3"
+          }
+        ]
+      }
+    ]
+  },
+  "classification": "Materiais de referencia; vegetacao e entorno estimados, nao scan botanico do imovel"
+}

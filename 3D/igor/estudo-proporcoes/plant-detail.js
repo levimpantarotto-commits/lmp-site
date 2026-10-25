@@ -1,6 +1,7 @@
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 import {proportionStudy,planX,planZ} from './proportion-study.js';
-import {exteriorReference} from './exterior-reference.js';
+import {exteriorReference} from './exterior-reference.js?v=nature-r1';
+import {varyLeafGeometry} from './leaf-variation.js?v=nature-r1';
 // Fotos04/27: cactus junto à entrada. Folhagem aproximada por ativo CC0,
 // não inventário botânico ou digitalização da planta do imóvel.
 export async function addPottedPlants(THREE,scene,M){
@@ -16,11 +17,16 @@ export async function addPottedPlants(THREE,scene,M){
   for(let i=0;i<p.count;i++){const a=Math.atan2(p.getZ(i),p.getX(i)),ny=p.getY(i),r=.047*(1+.12*Math.cos(a*9));p.setXYZ(i,p.getX(i)*r,ny*h/2,p.getZ(i)*r);}
   g.computeVertexNormals();add(g,cactus,x+dx,.395+h/2,z+dz);
  }
- const source=(await new GLTFLoader().loadAsync(new URL('./assets/potted-shrub.glb',import.meta.url).href)).scene;source.updateMatrixWorld(true);
+ let source;try{source=(await new GLTFLoader().loadAsync(new URL('./assets/potted-shrub.glb',import.meta.url).href)).scene;}catch{console.warn('Folhagem do vaso indisponível; cactus e caminhada preservados.');return {count:1,triangles,partial:true,assetFailure:'potted-shrub',exact:false};}source.updateMatrixWorld(true);
  const bounds=new THREE.Box3().setFromObject(source),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
  const plants=proportionStudy?[[...exteriorReference.pot,.88,.4],[-3,5.5,1.06,2.0],[-3,9.5,.97,4.5]]:[[5.5,-1.4,.88,.4],[-3,3,1.06,2.0],[-3,7,.97,4.5]];
  source.traverse(o=>{if(!o.isMesh)return;const g=o.geometry.clone().applyMatrix4(o.matrixWorld);g.translate(-center.x,-bounds.min.y,-center.z);g.scale(1/size.y,1/size.y,1/size.y);
-  const mat=o.material.clone();mat.side=THREE.DoubleSide;mat.roughness=Math.max(mat.roughness,.68);const mesh=new THREE.InstancedMesh(g,mat,plants.length),m=new THREE.Matrix4(),q=new THREE.Quaternion();
+  const mat=o.material.clone();mat.side=THREE.DoubleSide;mat.roughness=Math.max(mat.roughness,.68);const m=new THREE.Matrix4(),q=new THREE.Quaternion();
+  if(/leaves/i.test(mat.name)){
+   plants.forEach(([x,z,h,angle],i)=>{const leaf=varyLeafGeometry(THREE,g,83+i*127),mesh=new THREE.InstancedMesh(leaf,mat,1);q.setFromAxisAngle(new THREE.Vector3(0,1,0),angle);m.compose(new THREE.Vector3(proportionStudy?planX(x):x,proportionStudy&&i>0?1.8:0,proportionStudy?planZ(z):z),q,new THREE.Vector3(h*(.92+i*.07),h,h*(1.04-i*.04)));mesh.setMatrixAt(0,m);mesh.instanceMatrix.needsUpdate=true;mesh.castShadow=mesh.receiveShadow=true;mesh.userData.leafVariation=leaf.userData.leafVariation;scene.add(mesh);triangles+=(leaf.index?.count||leaf.attributes.position.count)/3;});
+   g.dispose();return;
+  }
+  const mesh=new THREE.InstancedMesh(g,mat,plants.length);
   plants.forEach(([x,z,h,angle],i)=>{q.setFromAxisAngle(new THREE.Vector3(0,1,0),angle);m.compose(new THREE.Vector3(proportionStudy?planX(x):x,proportionStudy&&i>0?1.8:0,proportionStudy?planZ(z):z),q,new THREE.Vector3(h,h,h));mesh.setMatrixAt(i,m);});mesh.castShadow=mesh.receiveShadow=true;scene.add(mesh);triangles+=(g.index?.count||g.attributes.position.count)/3*plants.length;
  });
  return {count:4,triangles,source:'CC0 potted_plant_01 + cactus derivado da foto27',exact:false};

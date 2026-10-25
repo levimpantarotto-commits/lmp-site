@@ -2,7 +2,7 @@
 // RNM stores direction, not another additive light contribution.
 export function createMasterMaterial(T,d,{lighting,scale,atlasScale=scale,vertexIrradiance=false,directional=[]}={}){
  const p=d.physical||{},parameters={
-  color:new T.Color(...(d.colorMap?[1,1,1]:d.color)),
+  color:new T.Color(...(d.colorMap?[1,1,1]:d.color).map((v,i)=>v*(d.albedoTint?.[i]??1))),
   roughness:d.roughnessMap?1:d.roughness,metalness:d.metalness||0,
   lightMap:lighting,lightMapIntensity:atlasScale,vertexColors:vertexIrradiance,
   envMapIntensity:.55
