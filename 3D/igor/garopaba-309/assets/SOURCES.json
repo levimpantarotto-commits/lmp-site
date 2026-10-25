@@ -1,0 +1,236 @@
+{
+  "at": "2026-10-25",
+  "license": "CC0 for reusable PBR; listing photographs from the supplied property309",
+  "materials": [
+    {
+      "file": "materials/movel-madeira-diff.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "c14681f72f59f17bff568cae7a837641443b607b899f0c279cd64a5638f877a7"
+    },
+    {
+      "file": "materials/movel-madeira-normal.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "1297acf7b4476d5ccd83cc8b27be96aa6110f7a9c3a40be0bd767bf81b17db01"
+    },
+    {
+      "file": "materials/movel-madeira-rough.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "ca2af5649b628ef05f196793d68cdca874c12ceb6e9ae566976546d9dd5a2604"
+    },
+    {
+      "file": "materials/viga-madeira-diff.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "781a173cfbe1b11a00d2f73a7736b7db6f908e47bbad8eaaf9d59c36490ab857"
+    },
+    {
+      "file": "materials/viga-madeira-normal.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "69ff5072f14469c391b5af28185cb3835b85858eff57e2d2902e1fbc9d882b68"
+    },
+    {
+      "file": "materials/viga-madeira-rough.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "50d8e159b648fa2a08c4e31d2979116ebf4f86648a1a442c7160aafca8009b56"
+    },
+    {
+      "file": "materials/fachada-madeira-diff.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "2a1c07687b6dbb214c4b9213739c6d92d425f1f0fc8ab3ac157f105d78240789"
+    },
+    {
+      "file": "materials/fachada-madeira-normal.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "452247f0d0d1b7fc7f8324ff3b6ed60bcc6de1405f4284eeb8d9bce90d4939c2"
+    },
+    {
+      "file": "materials/fachada-madeira-rough.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "061f1e1293251b2d28c76e3fac1ea9452b0e8648bb8f9b3728e09db386166e5c"
+    },
+    {
+      "file": "materials/reboco-diff.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "f2e50b78665abce868abcfeb8068e09aaf3b6addeca114029076daa68034cf71"
+    },
+    {
+      "file": "materials/reboco-normal.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "1d06229749b9979299413f9998afc955c4feb6aca456af8e2630e6995e704af0"
+    },
+    {
+      "file": "materials/concreto-diff.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "f267c4357e629f5ca2ab86f30da4fb0ae8c655a566cec6d81278df8d78dcca4a"
+    },
+    {
+      "file": "materials/concreto-normal.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "fdfb9fe192d438176508290fe873e181d88c5e6444a43bbab2ec156c9a78aa33"
+    },
+    {
+      "file": "materials/concreto-rough.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "478b5cad03a064b9b25369223f8334d26c1bdc2cba08e3398c16234a4b2a1aaf"
+    },
+    {
+      "file": "materials/telha-diff.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "f20e712fe53d0247487f3322377f4b9810de61c3fdb60943207bf220a8263524"
+    },
+    {
+      "file": "materials/telha-normal.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "9f75016890d818d1cf42e3599f26934c3a8e0ef761ec1f46191a14506f443bb5"
+    },
+    {
+      "file": "materials/lawn-green-normal.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "e61730faae92a698d515eb713e19f7a0ecefd35b2dcdad016999cadae18bebb6"
+    },
+    {
+      "file": "materials/lawn-green-rough.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "1a8518462269e070d8dfa8bac3af736f267d57724fc54f05600d1822d1d13b00"
+    },
+    {
+      "file": "materials/lawn-green-diff.webp",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "f15e635f8ebe76a58745ecf6787fac560d3efcc588b3cb8d8c3cff424ef3d0a3"
+    },
+    {
+      "file": "materials/sandstone-diff.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "d17c322d9e793ab9fc198948a34f2632595560471ff8714f2b0e052bc75c9ee3"
+    },
+    {
+      "file": "materials/sandstone-normal.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "ab42361855310d8de9b11470c6b21e512c9926decd5548dc9e9d72bd6cc06f3e"
+    },
+    {
+      "file": "materials/sandstone-rough.jpg",
+      "source": "CC0; provenance copied alongside",
+      "sha256": "4f4d27fc3186e18db5423ddbd41902cd5c5bd5642d4cdea89610c1b5d1f9821d"
+    },
+    {
+      "file": "materials/pale-oak-diff.jpg",
+      "source": "CC0 oak_veneer_01; lighter neutral finish matched to fixed cabinets in photo0",
+      "sha256": "4e7772c610bb0cbca63fed91ef77be0fd9250d9eb7c627c24004d83a980ee1f1"
+    },
+    {
+      "file": "materials/terracotta-diff.jpg",
+      "source": "CC0 roof tile PBR; orange fired-clay albedo calibrated to photo4, not painted shadows",
+      "sha256": "5ca8dd6636639ec081899dc98196ebc7e5a755135b0298ff2ff7a525dacd6d88"
+    },
+    {
+      "file": "materials/floor-clean-diff.jpg",
+      "source": "CC0 Poly Haven interior_tiles; one rectified tile, no bitmap grout; tangent normal rotated with UV",
+      "sha256": "8fdb2f97462f9b96bb0c059f132d7457ae57d5ddceed1be6aa368b33ea43895c"
+    },
+    {
+      "file": "materials/floor-clean-normal.jpg",
+      "source": "CC0 Poly Haven interior_tiles; one rectified tile, no bitmap grout; tangent normal rotated with UV",
+      "sha256": "5f74bdcc4de4e67edbdf5ff74d6489432340f88dd82993da3b525150e8d75e2b"
+    },
+    {
+      "file": "materials/floor-clean-rough.jpg",
+      "source": "CC0 Poly Haven interior_tiles; one rectified tile, no bitmap grout; tangent normal rotated with UV",
+      "sha256": "712ff9ec42e2d7d87a4c48abdcd4675fca2ade88d4e3244c65163f1aa50ad815"
+    },
+    {
+      "file": "materials/stone-0-diff.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "13fd839ca0d5f993bfbce8ee5912fd714ad55d56e3fd6a69b4576a559af2099c"
+    },
+    {
+      "file": "materials/stone-0-normal.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "8168764c0873db903d83cd12e28a54bda2fbc7a46388e5e3d94601f338f16a8e"
+    },
+    {
+      "file": "materials/stone-0-rough.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "cdb7b5a69607e7f849d7145ee78d942183af20dbe3bd6d617252b58a6edd9a61"
+    },
+    {
+      "file": "materials/stone-1-diff.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "dac897552dc132c02c803ca705df2ca12682d5537ac3954784003a6d60be85f3"
+    },
+    {
+      "file": "materials/stone-1-normal.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "5ea5e11480c05a3dab5c1d6bf9a71fc3c00d49360b2c3afd1875318c4dad2c1d"
+    },
+    {
+      "file": "materials/stone-1-rough.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "43316f8cce7253a3949a82c6c7c94d90e72d2519259dbe6dabd5d0b973cae76d"
+    },
+    {
+      "file": "materials/stone-2-diff.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "1e3abfcf2678a2a4561e44e1b5e834822dcad2e2c68b7548b3d30f01d152cd78"
+    },
+    {
+      "file": "materials/stone-2-normal.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "52c37a0b14c8556c66eebc69fda86ae1cdb2db6117fa09b7adeb5b1e69d3998c"
+    },
+    {
+      "file": "materials/stone-2-rough.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "b79db5b00aa9a832b5d0b3f36e1c9155f29dd7323b297d1283779c244c0b3393"
+    },
+    {
+      "file": "materials/stone-3-diff.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "6fda2a02e2d3b37ebf24f8e9ed21eef84a2c8b15590fa5ebbd3186feec957498"
+    },
+    {
+      "file": "materials/stone-3-normal.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "e0c2c5a5a98afc0b785e7c32f5aae75e21342446d5e8e32e8e584e14efa3941f"
+    },
+    {
+      "file": "materials/stone-3-rough.jpg",
+      "source": "https://polyhaven.com/a/granite_wall (CC0); face crop, albedo neutralized/lightened",
+      "sha256": "b62cb75089a8a7bf318248f1f8f7e63427d40e00000017cb5b2efd21f84d5af1"
+    },
+    {
+      "file": "materials/marble-diff.jpg",
+      "source": "https://ambientcg.com/a/Marble001; CC0; approximate white veined finish, not a scan of house",
+      "sha256": "820466155020f4c3e5e6ad1ecf6176d4b47317d44ef7005a76355bec8ea8f250"
+    },
+    {
+      "file": "materials/marble-normal.jpg",
+      "source": "https://ambientcg.com/a/Marble001; CC0; approximate white veined finish, not a scan of house",
+      "sha256": "dacfcb9a3ca2cc826d67773413e2cfc8e92e6dc9b3de828962292aa3d77225a7"
+    },
+    {
+      "file": "materials/marble-rough.jpg",
+      "source": "https://ambientcg.com/a/Marble001; CC0; approximate white veined finish, not a scan of house",
+      "sha256": "3892f51812ff80d83094a3a234f5ec3d9b37e2309f3bc3b412c88bf4b0b9bd19"
+    }
+  ],
+  "horizon": {
+    "source": "fontes/7.jfif",
+    "kind": "cropped distant photographic reference, not panoramic/georeferenced capture"
+  },
+  "excluded": [
+    "Marble006 dark candidate rejected after preview",
+    "old property geometry, furniture, private data and lightmaps"
+  ],
+  "packaging": "PBR source images are embedded in scene.glb. The listed local derivation names are provenance, not separate runtime downloads.",
+  "lighting": {
+    "environment": "Procedural Blender Nishita open sky; estimated solar direction",
+    "bake": "Cycles sky+sun indirect; sky direct; runtime direct sun",
+    "glazing": "Clear glazing is excluded from diffuse/shadow rays only to approximate thin architectural glass; camera/reflection/transmission retained",
+    "browserEnvironmentCalibration": 0.06
+  },
+  "audio": "Locally synthesized filtered-noise footsteps, no field recording",
+  "distantContext": {
+    "valley": "Photo7, cropped; approximate distant background only",
+    "planting": "10 generic CC0 trees and40 simplified distant field shrubs; species/location/scale estimated, not a scan"
+  }
+}

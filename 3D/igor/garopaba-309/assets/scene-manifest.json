@@ -1,0 +1,936 @@
+{
+  "revision": "309-r15",
+  "source": {
+    "retrievedAt": "2026-10-25T18:20:45.276Z",
+    "listingURL": "https://imobiliariapraiadorosa.com.br/property/casa-com-vista-incrivel-em-garopaba~309",
+    "apiURL": "https://imobiliariapraiadorosa.com.br/api/imoveis/eddea82a135",
+    "photos": [
+      {
+        "file": "0.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/0.jfif",
+        "bytes": 264351,
+        "sha256": "b633848315bbbc8d7e4f9e18547495b17796add50e587493878397d0137f7962"
+      },
+      {
+        "file": "1.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/1.jfif",
+        "bytes": 177307,
+        "sha256": "868c78535a46fffecce8ce4a86f0a81e295a9b1c81ebec40e704baf137587742"
+      },
+      {
+        "file": "3.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/3.jfif",
+        "bytes": 242487,
+        "sha256": "28120f31034df01040628c6a5451aa9e5dbea1f6ab17e25cdb5a234438a808ed"
+      },
+      {
+        "file": "4.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/4.jfif",
+        "bytes": 293006,
+        "sha256": "6d3140dea746442bf02c29813e60fb44311684a309b024873e73f8bcb62dcccb"
+      },
+      {
+        "file": "5.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/5.jfif",
+        "bytes": 305079,
+        "sha256": "b9068446bb500abb0d03b8a8a3d82f27ecc298c7d49384b123ea891ad795bbdb"
+      },
+      {
+        "file": "7.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/7.jfif",
+        "bytes": 240903,
+        "sha256": "fd9003875699937833c88b2f8b723980083f73f5dbf73bbe1c4ee857d4e0f180"
+      },
+      {
+        "file": "8.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/8.jfif",
+        "bytes": 221000,
+        "sha256": "037056b4a456e3aa05b12bcf73369f316ae26275928448f8735f46de70e3caef"
+      },
+      {
+        "file": "10.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/10.jfif",
+        "bytes": 246199,
+        "sha256": "f043043a6ea61322e3f0f8cc2d96903a7cdd40352c365aefacf0a91ef83bdd9a"
+      },
+      {
+        "file": "11.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/11.jfif",
+        "bytes": 262072,
+        "sha256": "20dd078d42fdb726f80de5b9074075251eb6de8e8ac7e1c7e4bd7190a2cc4db1"
+      },
+      {
+        "file": "13.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/13.jfif",
+        "bytes": 176269,
+        "sha256": "5ab661282c1036d42cc248932f8c0bd0815b1cb97d20c37871560fad911068c4"
+      },
+      {
+        "file": "14.jfif",
+        "url": "https://imobiliariapraiadorosa.com.br/assets/imoveis/eddea82a135/14.jfif",
+        "bytes": 186155,
+        "sha256": "d89d38672557e31d7cbe21ddc39def99fa46326f2d787860bfde7f7c165f8fc9"
+      }
+    ],
+    "claims": {
+      "builtArea": {
+        "value": 102,
+        "unit": "m\u00b2",
+        "classification": "informada pelo anuncio, nao medida"
+      },
+      "landArea": {
+        "value": 250,
+        "unit": "m\u00b2",
+        "source": "descricao textual; campo estruturado vazio",
+        "classification": "informada, nao medida"
+      },
+      "rooms": "escritorio e duas suites com varanda, informados na descricao"
+    },
+    "unknown": [
+      "planta e cotas",
+      "limites/topografia do lote",
+      "area interna util",
+      "conexoes nao visiveis",
+      "orientacao solar e georreferencia"
+    ]
+  },
+  "model": {
+    "width": 5.8,
+    "depth": 7.49,
+    "upperLevel": 2.85,
+    "balconyDepth": 1.7
+  },
+  "area": {
+    "listedBuilt": 102,
+    "listedLandText": 250,
+    "modeledBuiltApprox": 102.017,
+    "estimatedInternal": 70.87,
+    "convention": "Hipotese102m2: pisos incluindo paredes e2varandas cobertas; vao da escada descontado. Convencao cadastral do anuncio nao informada; nao e levantamento.",
+    "levels": [
+      {
+        "level": 0,
+        "net": 37.7684
+      },
+      {
+        "level": 2.85,
+        "net": 33.1031
+      }
+    ],
+    "internalMethod": "exact axis-aligned union of estimated interior floor rectangles, subtracting model walls and stair hole, not an official measured area"
+  },
+  "assets": {
+    "glb": "./assets/scene.glb.gz",
+    "environment": "./assets/open-sky309.hdr",
+    "lightmaps": {
+      "architecture": "./assets/gi-architecture.webp",
+      "stone": "./assets/gi-stone.webp",
+      "details": "./assets/gi-details.webp"
+    },
+    "glbRaw": "./assets/scene.glb",
+    "glbSHA256": "aaf26aca3a3fd1490667d33ebbc77d5ca7fc5d638c8c081141fc6f2e315294bd",
+    "compression": "gzip",
+    "hashes": {
+      "./assets/gi-architecture.webp": "1c6aab1b58c9e4b5866a7692a37e941f35f416e1b024d6141b64f9ab6961cfed",
+      "./assets/gi-stone.webp": "2e11e892d53843351e75ffde20453dec470d53d70c910a116453609668c35cef",
+      "./assets/gi-details.webp": "e031b906a314580054ded9396c14cc54746c75138972304328bdfa2bf60d5b23",
+      "./assets/scene.glb.gz": "cfde235af6719e5753c690c43e4e08db6c390984f0f1b3b9811ae37514bdd634"
+    }
+  },
+  "rooms": [
+    {
+      "id": "entrada",
+      "title": "Acesso e p\u00e9rgola",
+      "photo": 1,
+      "spawn": [
+        3.3,
+        2.85,
+        -3.2
+      ],
+      "yaw": -3.141592653589793,
+      "pitch": 0
+    },
+    {
+      "id": "cozinha",
+      "title": "Cozinha",
+      "photo": 0,
+      "spawn": [
+        4.0,
+        2.85,
+        1.7
+      ],
+      "yaw": -3.141592653589793,
+      "pitch": -0.04
+    },
+    {
+      "id": "sala",
+      "title": "Sala com vista",
+      "photo": 11,
+      "spawn": [
+        3.5,
+        2.85,
+        5.6
+      ],
+      "yaw": -3.141592653589793,
+      "pitch": 0
+    },
+    {
+      "id": "varanda",
+      "title": "Varanda superior",
+      "photo": 4,
+      "spawn": [
+        3.5,
+        2.85,
+        8.290000000000001
+      ],
+      "yaw": -3.141592653589793,
+      "pitch": 0
+    },
+    {
+      "id": "banheiro",
+      "title": "Banheiro observado",
+      "photo": 13,
+      "spawn": [
+        1.7000000000000002,
+        2.85,
+        4.95
+      ],
+      "yaw": 3.0,
+      "pitch": -0.3
+    },
+    {
+      "id": "escada",
+      "title": "Escada",
+      "photo": 3,
+      "spawn": [
+        1.0999999999999996,
+        0,
+        4.55
+      ],
+      "yaw": 0,
+      "pitch": 0.35
+    },
+    {
+      "id": "suite",
+      "title": "Su\u00edte com vista",
+      "photo": 14,
+      "spawn": [
+        4.3,
+        0,
+        4.8
+      ],
+      "yaw": -3.141592653589793,
+      "pitch": -0.06
+    },
+    {
+      "id": "jardim",
+      "title": "Jardim e fachada",
+      "photo": 5,
+      "spawn": [
+        2.9,
+        0,
+        19
+      ],
+      "yaw": 0,
+      "pitch": 0.16
+    }
+  ],
+  "floors": [
+    {
+      "id": "upper-access",
+      "rect": [
+        -0.15000000000000036,
+        -5.3,
+        5.95,
+        0.18
+      ],
+      "y": 2.85
+    },
+    {
+      "id": "upper",
+      "rect": [
+        0.17999999999999972,
+        0.18,
+        5.62,
+        9.09
+      ],
+      "y": 2.85,
+      "holes": [
+        [
+          0.35999999999999943,
+          1.25,
+          1.75,
+          4.55
+        ]
+      ]
+    },
+    {
+      "id": "lower",
+      "rect": [
+        0.17999999999999972,
+        0.18,
+        5.62,
+        9.19
+      ],
+      "y": 0
+    },
+    {
+      "id": "garden",
+      "rect": [
+        -0.6500000000000004,
+        7.49,
+        6.45,
+        24
+      ],
+      "y": 0
+    }
+  ],
+  "stairs": {
+    "rect": [
+      0.35999999999999943,
+      1.25,
+      1.75,
+      4.55
+    ],
+    "upper": 2.85,
+    "topZ": 1.25,
+    "bottomZ": 4.55
+  },
+  "colliders": [
+    {
+      "rect": [
+        5.62,
+        0,
+        5.8,
+        7.49
+      ],
+      "level": 0,
+      "height": 2.72
+    },
+    {
+      "rect": [
+        0.0,
+        0,
+        0.17999999999999972,
+        7.49
+      ],
+      "level": 0,
+      "height": 2.72
+    },
+    {
+      "rect": [
+        0.0,
+        0.0,
+        5.8,
+        0.18
+      ],
+      "level": 0,
+      "height": 2.72
+    },
+    {
+      "rect": [
+        5.62,
+        7.3100000000000005,
+        5.8,
+        7.49
+      ],
+      "level": 0,
+      "height": 2.72
+    },
+    {
+      "rect": [
+        0.0,
+        7.3100000000000005,
+        0.17999999999999972,
+        7.49
+      ],
+      "level": 0,
+      "height": 2.72
+    },
+    {
+      "rect": [
+        4.736666666666666,
+        7.385,
+        5.62,
+        7.4350000000000005
+      ],
+      "level": 0,
+      "height": 2.35
+    },
+    {
+      "rect": [
+        2.9699999999999998,
+        7.385,
+        3.8533333333333335,
+        7.4350000000000005
+      ],
+      "level": 0,
+      "height": 2.35
+    },
+    {
+      "rect": [
+        1.9466666666666668,
+        7.385,
+        2.83,
+        7.4350000000000005
+      ],
+      "level": 0,
+      "height": 2.35
+    },
+    {
+      "rect": [
+        0.17999999999999972,
+        7.385,
+        1.0633333333333335,
+        7.4350000000000005
+      ],
+      "level": 0,
+      "height": 2.35
+    },
+    {
+      "rect": [
+        5.62,
+        0,
+        5.8,
+        7.49
+      ],
+      "level": 2.85,
+      "height": 2.56
+    },
+    {
+      "rect": [
+        0.0,
+        0,
+        0.17999999999999972,
+        5.05
+      ],
+      "level": 2.85,
+      "height": 2.56
+    },
+    {
+      "rect": [
+        0.0,
+        5.75,
+        0.17999999999999972,
+        7.49
+      ],
+      "level": 2.85,
+      "height": 2.56
+    },
+    {
+      "rect": [
+        0.0,
+        5.05,
+        0.17999999999999972,
+        5.75
+      ],
+      "level": 2.85,
+      "height": 1.6
+    },
+    {
+      "rect": [
+        4.82,
+        0.0,
+        5.8,
+        0.18
+      ],
+      "level": 2.85,
+      "height": 2.6200000000000006
+    },
+    {
+      "rect": [
+        0.0,
+        0.0,
+        3.82,
+        0.18
+      ],
+      "level": 2.85,
+      "height": 2.6200000000000006
+    },
+    {
+      "rect": [
+        5.62,
+        7.3100000000000005,
+        5.8,
+        7.49
+      ],
+      "level": 2.85,
+      "height": 2.56
+    },
+    {
+      "rect": [
+        0.0,
+        7.3100000000000005,
+        0.17999999999999972,
+        7.49
+      ],
+      "level": 2.85,
+      "height": 2.56
+    },
+    {
+      "rect": [
+        4.736666666666666,
+        7.385,
+        5.62,
+        7.4350000000000005
+      ],
+      "level": 2.85,
+      "height": 2.35
+    },
+    {
+      "rect": [
+        2.9699999999999998,
+        7.385,
+        3.8533333333333335,
+        7.4350000000000005
+      ],
+      "level": 2.85,
+      "height": 2.35
+    },
+    {
+      "rect": [
+        1.9466666666666668,
+        7.385,
+        2.83,
+        7.4350000000000005
+      ],
+      "level": 2.85,
+      "height": 2.35
+    },
+    {
+      "rect": [
+        0.17999999999999972,
+        7.385,
+        1.0633333333333335,
+        7.4350000000000005
+      ],
+      "level": 2.85,
+      "height": 2.35
+    },
+    {
+      "rect": [
+        1.5199999999999996,
+        1.0599999999999998,
+        2.3499999999999996,
+        1.24
+      ],
+      "level": 2.85,
+      "height": 2.65
+    },
+    {
+      "rect": [
+        0.17999999999999972,
+        1.0599999999999998,
+        0.7199999999999998,
+        1.24
+      ],
+      "level": 2.85,
+      "height": 2.65
+    },
+    {
+      "rect": [
+        2.21,
+        4.55,
+        2.3899999999999997,
+        5.2
+      ],
+      "level": 2.85,
+      "height": 2.5500000000000003
+    },
+    {
+      "rect": [
+        2.21,
+        6.03,
+        2.3899999999999997,
+        6.65
+      ],
+      "level": 2.85,
+      "height": 2.5500000000000003
+    },
+    {
+      "rect": [
+        0.17999999999999972,
+        4.46,
+        2.3,
+        4.64
+      ],
+      "level": 2.85,
+      "height": 2.5500000000000003
+    },
+    {
+      "rect": [
+        0.17999999999999972,
+        6.5600000000000005,
+        2.3,
+        6.74
+      ],
+      "level": 2.85,
+      "height": 2.5500000000000003
+    },
+    {
+      "rect": [
+        2.81,
+        3.5,
+        2.9899999999999998,
+        7.3100000000000005
+      ],
+      "level": 0,
+      "height": 2.65
+    },
+    {
+      "rect": [
+        3.9499999999999997,
+        3.06,
+        5.62,
+        3.2399999999999998
+      ],
+      "level": 0,
+      "height": 2.65
+    },
+    {
+      "rect": [
+        2.9699999999999998,
+        3.06,
+        3.15,
+        3.2399999999999998
+      ],
+      "level": 0,
+      "height": 2.65
+    },
+    {
+      "rect": [
+        0.3099999999999996,
+        4.545,
+        1.8250000000000002,
+        4.635
+      ],
+      "level": 2.85,
+      "height": 1.12
+    },
+    {
+      "rect": [
+        1.7400000000000002,
+        1.3,
+        1.8299999999999996,
+        4.64
+      ],
+      "level": 2.85,
+      "height": 1.12
+    },
+    {
+      "rect": [
+        -0.05999999999999961,
+        9.145,
+        5.859999999999999,
+        9.235
+      ],
+      "level": 2.85,
+      "height": 1.12
+    },
+    {
+      "rect": [
+        4.95,
+        0.26,
+        5.62,
+        3.57
+      ],
+      "level": 2.85,
+      "height": 0.88
+    },
+    {
+      "rect": [
+        4.74,
+        3.62,
+        5.6499999999999995,
+        4.07
+      ],
+      "level": 2.85,
+      "height": 3.3
+    },
+    {
+      "rect": [
+        1.4299999999999997,
+        6.0,
+        2.19,
+        6.53
+      ],
+      "level": 2.85,
+      "height": 1.0
+    },
+    {
+      "rect": [
+        1.0099999999999998,
+        5.83,
+        1.3899999999999997,
+        6.43
+      ],
+      "level": 2.85,
+      "height": 0.9
+    },
+    {
+      "rect": [
+        0.9299999999999997,
+        4.65,
+        0.9500000000000002,
+        6.53
+      ],
+      "level": 2.85,
+      "height": 2.1
+    }
+  ],
+  "doors": [
+    {
+      "id": "balcony_0_L",
+      "node": "Door_balcony_0_L",
+      "kind": "slide",
+      "position": [
+        4.295,
+        0,
+        7.41
+      ],
+      "closedStart": [
+        4.736666666666666,
+        0,
+        7.41
+      ],
+      "closedEnd": [
+        3.8533333333333335,
+        0,
+        7.41
+      ],
+      "axis": "x",
+      "width": 0.8833333333333333,
+      "height": 2.35,
+      "direction": -1,
+      "openOffset": 0.8303333333333333,
+      "initialOpen": false
+    },
+    {
+      "id": "balcony_0_R",
+      "node": "Door_balcony_0_R",
+      "kind": "slide",
+      "position": [
+        1.505,
+        0,
+        7.41
+      ],
+      "closedStart": [
+        1.9466666666666668,
+        0,
+        7.41
+      ],
+      "closedEnd": [
+        1.0633333333333335,
+        0,
+        7.41
+      ],
+      "axis": "x",
+      "width": 0.8833333333333334,
+      "height": 2.35,
+      "direction": -1,
+      "openOffset": 0.8303333333333334,
+      "initialOpen": false
+    },
+    {
+      "id": "balcony_2.85_L",
+      "node": "Door_balcony_2.85_L",
+      "kind": "slide",
+      "position": [
+        4.295,
+        2.85,
+        7.41
+      ],
+      "closedStart": [
+        4.736666666666666,
+        2.85,
+        7.41
+      ],
+      "closedEnd": [
+        3.8533333333333335,
+        2.85,
+        7.41
+      ],
+      "axis": "x",
+      "width": 0.8833333333333333,
+      "height": 2.35,
+      "direction": -1,
+      "openOffset": 0.8303333333333333,
+      "initialOpen": false
+    },
+    {
+      "id": "balcony_2.85_R",
+      "node": "Door_balcony_2.85_R",
+      "kind": "slide",
+      "position": [
+        1.505,
+        2.85,
+        7.41
+      ],
+      "closedStart": [
+        1.9466666666666668,
+        2.85,
+        7.41
+      ],
+      "closedEnd": [
+        1.0633333333333335,
+        2.85,
+        7.41
+      ],
+      "axis": "x",
+      "width": 0.8833333333333334,
+      "height": 2.35,
+      "direction": -1,
+      "openOffset": 0.8303333333333334,
+      "initialOpen": false
+    },
+    {
+      "id": "office",
+      "node": "Door_office",
+      "kind": "hinge",
+      "position": [
+        1.5199999999999996,
+        2.85,
+        1.15
+      ],
+      "closedEnd": [
+        0.7199999999999998,
+        2.85,
+        1.15
+      ],
+      "axis": "z",
+      "width": 0.7999999999999998,
+      "height": 2.12,
+      "direction": 1,
+      "openAngle": 1.4451326206513049,
+      "initialOpen": true
+    },
+    {
+      "id": "bath",
+      "node": "Door_bath",
+      "kind": "hinge",
+      "position": [
+        2.3,
+        2.85,
+        5.2
+      ],
+      "closedEnd": [
+        2.3,
+        2.85,
+        6.03
+      ],
+      "axis": "x",
+      "width": 0.8300000000000001,
+      "height": 2.12,
+      "direction": -1,
+      "openAngle": 1.4451326206513049,
+      "initialOpen": false
+    },
+    {
+      "id": "suite_left",
+      "node": "Door_suite_left",
+      "kind": "hinge",
+      "position": [
+        3.9499999999999997,
+        0,
+        3.15
+      ],
+      "closedEnd": [
+        3.15,
+        0,
+        3.15
+      ],
+      "axis": "z",
+      "width": 0.7999999999999998,
+      "height": 2.12,
+      "direction": -1,
+      "openAngle": 1.4451326206513049,
+      "initialOpen": true
+    },
+    {
+      "id": "entry",
+      "node": "Door_entry",
+      "kind": "hinge",
+      "position": [
+        4.82,
+        2.85,
+        0.09
+      ],
+      "closedEnd": [
+        3.82,
+        2.85,
+        0.09
+      ],
+      "axis": "z",
+      "width": 1.0,
+      "height": 2.12,
+      "direction": -1,
+      "openAngle": 1.4451326206513049,
+      "initialOpen": true
+    }
+  ],
+  "lighting": {
+    "sun": {
+      "position": [
+        10.8,
+        12,
+        18
+      ],
+      "target": [
+        3.8,
+        0,
+        4
+      ],
+      "intensity": 3.2,
+      "color": "#fff8eb"
+    },
+    "environmentIntensity": 0.06,
+    "exposure": 2.6390158215457884
+  },
+  "unknowns": [
+    "As102m2construidas e250m2terreno sao informados, nao medidos",
+    "Distribuicao/cotas e ligacoes ocultas estimadas; segunda suite e escritorio sem cobertura interna suficiente",
+    "Banheiros10e13podemserespelhados ou ambientesdistintos; nao afirmar mapeamento cadastral",
+    "Orientacao/geografia e limitesdo lote desconhecidos"
+  ],
+  "photoIds": [
+    0,
+    1,
+    3,
+    4,
+    5,
+    7,
+    8,
+    10,
+    11,
+    13,
+    14
+  ],
+  "masterSHA256": "408875dd3b8b4810e47936752c7ba19922533a7cd12a170ea1abadbb5ffe50af",
+  "bakeReady": true,
+  "masterSnapshot": "qa/masters/309-r15.blend",
+  "bake": {
+    "masterSHA256": "408875dd3b8b4810e47936752c7ba19922533a7cd12a170ea1abadbb5ffe50af",
+    "poseSHA256": "ad2f130ab39c7515ff1bcb881e7fe39edbbad869cbaee5ede5f0be329a59bea9",
+    "method": "indirect diffuse(sun, sky and fixed fixtures) plus direct sky/fixtures(sun off); runtime adds direct sun only; albedo stays native PBR",
+    "scales": {
+      "architecture": 6.24452630996704,
+      "stone": 3.028823618888855,
+      "details": 8.035112421512602
+    },
+    "postprocess": "OIDN on linear irradiance only, Standard sRGB encode, one HDR scale per atlas",
+    "planarFilter": {
+      "method": "Per coplanar UV island quadratic irradiance regression for white paint/timber/ceramic only. Preserves native PBR; direct sun remains dynamic. No atlas cross-island blur.",
+      "groups": {
+        "architecture": {
+          "planarIslands": 594,
+          "pixels": 1009165,
+          "sha256": "b1365c7f1b3682dd48f6828311dbd9cbf087c1a51c4dff60e894da381ff24966"
+        },
+        "details": {
+          "planarIslands": 4,
+          "pixels": 350,
+          "sha256": "67cc768ace2d4ea2181a4dbe185c6750f916b8c701b36202de4ada85be90a5ba"
+        }
+      }
+    }
+  }
+}
