@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>Área de teste | LMP</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; color: #17212b; background: #f5f7f8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+    main { width: min(100%, 580px); padding: 42px; background: #fff; border: 1px solid #dce3e8; border-radius: 12px; box-shadow: 0 12px 30px rgba(23, 33, 43, .08); }
+    .brand { margin: 0 0 28px; color: #596875; font-size: .8rem; font-weight: 700; letter-spacing: .12em; }
+    h1 { margin: 0 0 14px; font-size: clamp(1.6rem, 4vw, 2.1rem); line-height: 1.15; }
+    p { margin: 0 0 18px; color: #445260; line-height: 1.6; }
+    a { display: inline-block; margin-top: 8px; padding: 12px 18px; border-radius: 7px; background: #17212b; color: #fff; font-weight: 700; text-decoration: none; }
+    a:hover, a:focus-visible { background: #2e4658; }
+    .note { margin-top: 28px; margin-bottom: 0; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="brand">LMP · GEOOPS</p>
+    <h1>Área de teste Egon</h1>
+    <p>Envie o arquivo ZIP para processamento no computador do Levi. Para o teste funcionar, esse computador precisa permanecer ligado.</p>
+    <p>Use o link de acesso completo recebido do Levi.</p>
+    <a id="open-test" href="https://algorithm-grace-exists-bookmark.trycloudflare.com/">Abrir área de teste</a>
+    <p class="note">Esta é uma área de teste temporária; a disponibilidade depende da conexão em execução.</p>
+  </main>
+  <script>
+    (() => {
+      const appOrigin = "https://algorithm-grace-exists-bookmark.trycloudflare.com";
+      const fragment = window.location.hash;
+
+      if (fragment) {
+        window.location.replace(appOrigin + "/" + fragment);
+      }
+    })();
+  </script>
+</body>
+</html>
